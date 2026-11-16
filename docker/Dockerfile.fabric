@@ -87,7 +87,9 @@ RUN { echo "fabric=${FABRIC_COMMIT}"; echo "fabric_ca=${FABRIC_CA_COMMIT}"; echo
 
 FROM ${RUNTIME_IMAGE} AS runtime
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates \
-    && rm -rf /var/lib/apt/lists/* && echo 'hosts: files dns' > /etc/nsswitch.conf
+    && rm -rf /var/lib/apt/lists/* && echo 'hosts: files dns' > /etc/nsswitch.conf \
+    && mkdir -p /var/hyperledger/production /var/hyperledger/orderer /etc/hyperledger/fabric \
+    && chown -R 1000:1000 /var/hyperledger /etc/hyperledger
 COPY --from=builder /out/bin/ /usr/local/bin/
 COPY --from=builder /out/ccaas/bin/ /opt/ccaas/bin/
 COPY --from=builder /build-info/ /opt/qfp/build-info/
@@ -99,6 +101,7 @@ RUN dpkg-query -W > /opt/qfp/build-info/dpkg-runtime.txt \
 ARG FABRIC_COMMIT
 ARG FABRIC_CA_COMMIT
 LABEL org.qchain.qfp="1" org.qchain.qfp.fabric="${FABRIC_COMMIT}" org.qchain.qfp.fabric-ca="${FABRIC_CA_COMMIT}"
-ENV FABRIC_CFG_PATH=/etc/hyperledger/fabric
+# a new named volume mounted on these folders takes their owner (uid 1000, as on the live network)
+ENV FABRIC_CFG_PATH=/etc/hyperledger/fabric HOME=/tmp
 USER 1000:1000
 WORKDIR /tmp

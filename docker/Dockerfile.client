@@ -1,0 +1,27 @@
+# syntax=docker/dockerfile:1
+#
+# qfp/client: the load generator (client/), built and tested for arm64. The build context is the
+# client/ folder. go vet and the unit tests run during the build; a failure fails the build.
+ARG GO_IMAGE=golang:1.27.4-trixie@sha256:f18c3d73a184fb0582828510722e723b63a93f7188d11dd223d9be6f6880e65d
+ARG RUNTIME_IMAGE=debian:trixie-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2
+
+FROM ${GO_IMAGE} AS build
+ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOFLAGS=-trimpath
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
+COPY . .
+ARG HARNESS_COMMIT=unknown
+RUN mkdir -p /build-info && go vet ./... && (go test -count=1 ./... > /build-info/go-test.txt 2>&1; s=$?; cat /build-info/go-test.txt; exit $s) \
+    && go build -ldflags "-X main.buildCommit=${HARNESS_COMMIT}" -o /out/qfp-client . \
+    && go version > /build-info/go-version.txt && go list -m all > /build-info/go-modules.txt
+
+FROM ${RUNTIME_IMAGE}
+COPY --from=build /out/qfp-client /usr/local/bin/qfp-client
+COPY --from=build /build-info/ /opt/qfp/build-info/
+ARG HARNESS_COMMIT=unknown
+LABEL org.qchain.qfp="1" org.qchain.qfp.harness="${HARNESS_COMMIT}"
+ENV HOME=/tmp
+USER 1000:1000
+WORKDIR /tmp
+ENTRYPOINT ["/usr/local/bin/qfp-client"]

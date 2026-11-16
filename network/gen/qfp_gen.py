@@ -581,7 +581,9 @@ def topology(orgs, n_orgs, n_peers, identity, blocks):
         },
         "cmd": ["orderer"],
         "mounts": [
-            {"sub": "net/config/orderer.yaml", "dst": "/etc/hyperledger/fabric/orderer.yaml", "ro": True},
+            # live: orderer.yaml alone is mounted; a Docker volume sub-path must be a folder, so the
+            # config folder is mounted at FABRIC_CFG_PATH (orderer.yaml is the file the orderer reads)
+            {"sub": "net/config", "dst": "/etc/hyperledger/fabric", "ro": True},
             {"sub": "net/%s/msp" % ORD_DIR, "dst": "/var/hyperledger/orderer/msp", "ro": True},
             {"sub": "net/%s/tls" % ORD_DIR, "dst": "/var/hyperledger/orderer/tls", "ro": True},
             {"sub": "net/%s/pqc-keystore" % ORD_DIR, "dst": "/var/hyperledger/orderer/pqc-keystore", "ro": True},
@@ -620,7 +622,9 @@ def topology(orgs, n_orgs, n_peers, identity, blocks):
                 },
                 "cmd": ["peer", "node", "start"],
                 "mounts": [
-                    {"sub": "net/config/core.yaml", "dst": "/etc/hyperledger/fabric/core.yaml", "ro": True},
+                    # the config folder at FABRIC_CFG_PATH (live: core.yaml alone); it holds empty
+                    # msp/, tls/ and pqc-keystore/ folders as mount points for the three mounts below
+                    {"sub": "net/config", "dst": "/etc/hyperledger/fabric", "ro": True},
                     {"sub": "net/%s/msp" % p["dir"], "dst": "/etc/hyperledger/fabric/msp", "ro": True},
                     {"sub": "net/%s/tls" % p["dir"], "dst": "/etc/hyperledger/fabric/tls", "ro": True},
                     {"sub": "net/%s/pqc-keystore" % p["dir"], "dst": "/etc/hyperledger/fabric/pqc-keystore", "ro": True},
@@ -696,6 +700,8 @@ def generate(n_orgs, n_peers, identity, blocks):
         "scripts/05-commit.sh": sh_commit(orgs),
         "topology.json": json.dumps(topology(orgs, n_orgs, n_peers, identity, blocks), indent=1) + "\n",
         "client.json": json.dumps(client_view(orgs, n_orgs, n_peers, identity, blocks), indent=1) + "\n",
+        # mount points inside the read-only config folder (see topology())
+        "config/msp/.mountpoint": "", "config/tls/.mountpoint": "", "config/pqc-keystore/.mountpoint": "",
     }
     for o in orgs:
         files["fabric-ca/%s/fabric-ca-server-config.yaml" % o["key"]] = ca_config(o, identity)

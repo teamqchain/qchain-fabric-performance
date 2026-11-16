@@ -1,0 +1,12 @@
+# syntax=docker/dockerfile:1
+#
+# qfp/analysis: Python with the analysis libraries at fixed versions. The analysis code is not
+# baked in: scripts/qfp.py mounts the repository's analysis/ and results/ folders when it runs it.
+ARG PY_IMAGE=python:3.13-slim-trixie@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90
+FROM ${PY_IMAGE}
+RUN pip install --no-cache-dir numpy==2.3.4 scipy==1.16.3 matplotlib==3.10.7 \
+    && mkdir -p /opt/qfp/build-info && pip freeze > /opt/qfp/build-info/pip-freeze.txt
+LABEL org.qchain.qfp="1"
+ENV MPLBACKEND=Agg HOME=/tmp PYTHONDONTWRITEBYTECODE=1
+USER 1000:1000
+WORKDIR /work

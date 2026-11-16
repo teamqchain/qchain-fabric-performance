@@ -10,6 +10,7 @@ Everything not listed here is copied byte for byte from `qchain-network` (commit
 | Blocks | 10 transactions / 512 KB / 2 s | 100 transactions / 16 MB / 2 s (E3 keeps the live values) | Avoids a block-size bottleneck and a size-cut distortion at 8 organisations | Medium; measured by E3 |
 | Chaincode server | One shared | One per organisation | One Node.js server would be the bottleneck at 8 organisations | Small at 2 x 2 |
 | Client | Backend: new connection and Gateway per call | Same library versions, connections kept open | Thousands of TLS handshakes would swamp the bursts | Medium for single calls; measured by E2 |
+| Configuration mount | `core.yaml` / `orderer.yaml` mounted as single files | the generated config folder mounted at the same `FABRIC_CFG_PATH` | Docker volume sub-paths must be folders (Colima has no host mounts) | None (the nodes read the same file at the same path) |
 | Restart policy | `unless-stopped` | none | A silent restart would hide a crash inside a run | None (a crash is recorded as a failure) |
 | IPFS, MySQL, backend | Present | Absent | Not on the Fabric transaction path | None |
 | Ledger at start | Holds data | Empty network each time, plus untimed setup data | Every topology starts from the same state | Small |

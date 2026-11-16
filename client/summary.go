@@ -7,6 +7,7 @@ package main
 import (
 	"math"
 	"sort"
+	"syscall"
 	"time"
 )
 
@@ -79,6 +80,15 @@ type RunSummary struct {
 	BlocksUsed        int            `json:"blocks_used"`
 	AllPeersDelivered bool           `json:"all_peers_delivered"`
 	ClientDoneS       float64        `json:"client_done_s"`
+	ClientCPUS        float64        `json:"client_cpu_s"` // user + system CPU of this process
+}
+
+func processCPU() float64 {
+	var ru syscall.Rusage
+	if syscall.Getrusage(syscall.RUSAGE_SELF, &ru) != nil {
+		return -1
+	}
+	return float64(ru.Utime.Nano()+ru.Stime.Nano()) / 1e9
 }
 
 // Summarise computes the run's metrics from its transactions.
@@ -146,5 +156,6 @@ func Summarise(p RunParams, cfg *NetConfig, s *Signer, recs []TxRec, t0 time.Tim
 	sum.LatAll, sum.LatGw, sum.Response = dist(latAll), dist(latGw), dist(resp)
 	sum.Endorse, sum.Order, sum.Commit, sum.Spread = dist(endorse), dist(order), dist(commit), dist(spread)
 	sum.BlocksUsed = len(blocks)
+	sum.ClientCPUS = processCPU()
 	return sum
 }
