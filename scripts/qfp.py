@@ -60,7 +60,7 @@ LABEL = "org.qchain.qfp=1"
 TOPOLOGIES = [(1, 1), (1, 2), (1, 4), (1, 8), (2, 2), (2, 4), (2, 8), (4, 4), (4, 8), (8, 8)]
 T_LEVELS = [1, 10, 100, 1000, 10000]
 REPS = 5
-C_CANDIDATES = [200, 300, 400, 480]
+C_CANDIDATES = [60, 75, 90, 100]   # 17 Nov: were 200-480 (live 512 MB peers die there with ML-DSA-44); blocks of 50
 E4_FRACTIONS = [0.10, 0.25, 0.50, 0.75, 0.90, 1.00, 1.10]
 
 DEFAULT_THRESHOLDS = {
@@ -569,13 +569,16 @@ def make_plan(kind, seed, th):
     elif kind == "trial":
         for ident in ("mldsa44", "ecdsa"):
             items.append(item(1, 1, ident, "study", [{"fn": f, "t": t, "rep": 1} for f in ("issue", "get") for t in (1, 10, 100)]))
-        for ident in ("mldsa44", "ecdsa"):
-            runs = [{"fn": f, "t": 10000, "rep": 1, "c": c} for f in ("issue", "get") for c in C_CANDIDATES]
-            rng.shuffle(runs)
+        for ident in ("mldsa44", "ecdsa"):   # the E4 saturation reference and E2/E4 smoke checks
+            runs = [{"fn": f, "t": 10000, "rep": 1, "c": 75} for f in ("issue", "get")]
             items.append(item(2, 2, ident, "study", runs, ["e2_small", "e4_small"]))
-        for (o, p) in ((1, 8), (8, 8)):
-            items.append(item(o, p, "mldsa44", "study", [{"fn": f, "t": 10000, "rep": 1, "c": max(C_CANDIDATES)} for f in ("issue", "get")]))
-        items.append(item(2, 2, "mldsa44", "live", [{"fn": "issue", "t": 1000, "rep": 1}]))
+        # the heaviest topology decides C: the live 512 MB gateway peer must survive 10,000 writes
+        runs = [{"fn": "issue", "t": 10000, "rep": 1, "c": c} for c in C_CANDIDATES] + [{"fn": "get", "t": 10000, "rep": 1, "c": 75}]
+        items.append(item(8, 8, "mldsa44", "study", runs))
+        items.append(item(8, 8, "ecdsa", "study", [{"fn": "issue", "t": 10000, "rep": 1, "c": c} for c in (75, 100)] +
+                          [{"fn": "get", "t": 10000, "rep": 1, "c": 75}]))
+        items.append(item(1, 8, "mldsa44", "study", [{"fn": "issue", "t": 10000, "rep": 1, "c": 75}]))
+        items.append(item(2, 2, "mldsa44", "live", [{"fn": "issue", "t": 1000, "rep": 1, "c": 75}]))
     elif kind == "main":
         if not th.get("frozen"):
             raise SystemExit("thresholds are not frozen: run the trial, then `qfp.py freeze`")
@@ -848,21 +851,27 @@ def trial_report(args):
     if not runs:
         raise SystemExit("no runs in %s" % args.session)
     rep = {"session": args.session}
-    # C: the smallest candidate within 5 % of the best write throughput, in both arms
-    choice = {}
-    for ident in ("mldsa44", "ecdsa"):
-        cand = {}
-        for r in runs:
-            s = r["summary"]
-            if r["netid"] == "o2p2-%s-study" % ident and r["fn"] == "issue" and r["t"] == 10000 and s.get("ok", 0) > 0:
+    # C: from the heaviest topology (8x8, ML-DSA-44): among the candidates that completed all 10,000 writes
+    # with no failure and no killed container, the smallest within 5 % of the best throughput and at least
+    # 1.5 blocks in flight (75 for blocks of 50), so that blocks fill and memory stays low
+    cand, killed = {}, []
+    for r in runs:
+        s = r["summary"]
+        if r["netid"] == "o8p8-mldsa44-study" and r["fn"] == "issue" and r["t"] == 10000:
+            ok = s.get("ok", 0) == 10000 and not any(not v.get("running", True) or v.get("oom") for v in r.get("states", {}).values())
+            if ok:
                 cand[r["c"]] = s["throughput_all_peers_tps"]
-        if cand:
-            best = max(cand.values())
-            choice[ident] = min(c for c, v in cand.items() if v >= 0.95 * best)
-            rep["c_throughput_" + ident] = cand
-    rep["c_choice"] = max(choice.values()) if choice else None
+            else:
+                killed.append(r["c"])
+    rep["c_throughput_8x8_mldsa44"] = cand
+    rep["c_failed_8x8_mldsa44"] = sorted(killed)
+    best = max(cand.values()) if cand else None
+    ok_c = [c for c, v in cand.items() if best and v >= 0.95 * best and c >= 75]
+    rep["c_choice"] = min(ok_c) if ok_c else None
     sat = [r["summary"]["throughput_all_peers_tps"] for r in runs
            if r["netid"] == "o2p2-ecdsa-study" and r["fn"] == "issue" and r["t"] == 10000 and r["summary"].get("ok")]
+    rep["states_not_running"] = sorted({(r["netid"], r["run"], n) for r in runs for n, v in r.get("states", {}).items()
+                                        if not v.get("running", True) or v.get("oom")})
     rep["e4_saturation_tps"] = round(max(sat), 1) if sat else None
     # memory peaks and ledger bytes per transaction
     nets = os.path.join(session_dir(args.session), "nets")
