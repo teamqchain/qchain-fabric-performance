@@ -1,34 +1,38 @@
 # syntax=docker/dockerfile:1
 #
 # qfp/chaincode: QChain's chaincode `qchaincode` 2.0 as a service, for arm64.
-# The build context is network/live/chaincode (the verbatim copy of qchain-network/chaincode)
-# plus, when it has been recorded, the lock file of the live image (docker/chaincode-lock/).
+# The build context is network/live/chaincode (the verbatim copy of qchain-network/chaincode) plus
+# docker/chaincode-lock/ (what was read from the live image: see its README.txt).
 #
-# Live image (x86_64): the official node:18.20.8 (Debian 12) with the chaincode copied in.
-# Here: the same Node.js release for arm64; dependency versions are those of the live image when
-# docker/chaincode-lock/ holds its lock file, otherwise the newest versions the chaincode's
-# package.json allows (LOCK=none: only for smoke tests, the build prints a warning).
+# Live image (x86_64): node:18.20.8 (Debian 12), WORKDIR /usr/src/app, user node (uid 1000), the
+# ENTRYPOINT below, dependencies installed with npm. Here: the same Node.js release for arm64 (the slim
+# variant of the same Debian 12 image), the same folder, user, entry point and dependency tree.
+# LOCK=live (default): pins from lock/pins.txt and a check that `npm ls --all` equals the live tree;
+# LOCK=none: the newest versions package.json allows (smoke tests only).
 ARG NODE_IMAGE=node:18.20.8-bookworm-slim@sha256:f9ab18e354e6855ae56ef2b290dd225c1e51a564f87584b9bd21dd651838830e
 
 FROM ${NODE_IMAGE}
-ARG LOCK=none
-WORKDIR /opt/qchaincode
+ARG LOCK=live
+WORKDIR /usr/src/app
 COPY chaincode/package.json chaincode/index.js chaincode/QChaincode.js ./
 COPY lock/ /tmp/lock/
 RUN set -e; mkdir -p /opt/qfp/build-info; \
+    npm install --omit=dev --no-audit --no-fund; \
     case "$LOCK" in \
-      yarn) cp /tmp/lock/yarn.lock . && yarn install --frozen-lockfile --production --non-interactive ;; \
-      npm)  cp /tmp/lock/package-lock.json . && npm ci --omit=dev ;; \
-      none) echo "WARNING: no lock file of the live image; dependency versions are not pinned" >&2; \
-            npm install --omit=dev --no-audit --no-fund ;; \
-      *) echo "LOCK must be yarn, npm or none" >&2; exit 1 ;; \
+      live) npm install --omit=dev --no-audit --no-fund --no-save $(cat /tmp/lock/pins.txt); \
+            npm ls --all 2>/dev/null > /opt/qfp/build-info/chaincode-modules.txt || true; \
+            norm() { sed 's/[`|]/ /g; s/+--/   /; s/ *$//' "$1" | tr -s ' ' | grep -v '^ *$'; }; \
+            norm /tmp/lock/live-npm-ls.txt > /tmp/a; norm /opt/qfp/build-info/chaincode-modules.txt > /tmp/b; \
+            if ! diff /tmp/a /tmp/b; then echo "dependency tree differs from the live image" >&2; exit 1; fi; \
+            echo "dependency tree = live image (16 Nov 2026)" > /opt/qfp/build-info/chaincode-tree-check.txt ;; \
+      none) echo "WARNING: dependency versions not pinned to the live image" >&2; \
+            npm ls --all > /opt/qfp/build-info/chaincode-modules.txt 2>&1 || true ;; \
+      *) echo "LOCK must be live or none" >&2; exit 1 ;; \
     esac; \
     echo "lock=$LOCK" > /opt/qfp/build-info/chaincode.txt; node --version >> /opt/qfp/build-info/chaincode.txt; \
-    npm ls --all --omit=dev > /opt/qfp/build-info/chaincode-modules.txt 2>&1 || true; \
     sha256sum package.json index.js QChaincode.js > /opt/qfp/build-info/chaincode-files.sha256; \
-    rm -rf /tmp/lock /root/.npm /usr/local/share/.cache
+    chown -R node:node /usr/src/app; rm -rf /tmp/lock /root/.npm
 LABEL org.qchain.qfp="1"
-ENV NODE_ENV=production
-USER 1000:1000
-# fabric-shim's server mode; the peer dials CHAINCODE_SERVER_ADDRESS, CHAINCODE_ID is the package ID
-CMD ["sh", "-c", "exec node_modules/.bin/fabric-chaincode-node server --chaincode-address=\"$CHAINCODE_SERVER_ADDRESS\" --chaincode-id=\"$CHAINCODE_ID\""]
+ENV CHAINCODE_SERVER_ADDRESS=0.0.0.0:9998
+USER node
+ENTRYPOINT ["/bin/sh","-c","exec node_modules/.bin/fabric-chaincode-node server --chaincode-address=$CHAINCODE_SERVER_ADDRESS --chaincode-id=$CHAINCODE_ID"]

@@ -7,7 +7,7 @@ from the Docker API, applies the quality rules (flags and repeats), and keeps a 
 state. The Mac-side conditions (preflight, paused services, Wi-Fi, caffeinate, host monitor)
 are the launcher's job: scripts/run-mac.sh, which calls this script.
 
-    qfp.py build [--lock yarn|npm|none]       the four images (needs the internet)
+    qfp.py build [--lock live|none]           the four images (needs the internet)
     qfp.py selfcheck                          generator and verbatim checks, Docker reachable
     qfp.py plan <kind> <session> [--seed N]   write a session plan: smoke | trial | main
     qfp.py run <session>                      execute or resume a session
@@ -261,8 +261,7 @@ def build(args):
     shutil.copytree(os.path.join(REPO, "docker", "chaincode-lock"), os.path.join(cc, "lock"))
     lock = args.lock
     if lock == "auto":
-        lock = "yarn" if os.path.exists(os.path.join(cc, "lock", "yarn.lock")) else (
-            "npm" if os.path.exists(os.path.join(cc, "lock", "package-lock.json")) else "none")
+        lock = "live" if os.path.exists(os.path.join(cc, "lock", "live-npm-ls.txt")) else "none"
     bx("Dockerfile.chaincode", cc, "qfp/chaincode:%s-%s" % (lock, tag), {"LOCK": lock})
     out["chaincode_lock"] = lock
     bx("Dockerfile.client", os.path.join(REPO, "client"), "qfp/client:%s" % tag, {"HARNESS_COMMIT": commit})
@@ -1047,7 +1046,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("build")
-    b.add_argument("--lock", default="auto", choices=["auto", "yarn", "npm", "none"])
+    b.add_argument("--lock", default="auto", choices=["auto", "live", "none"])
     sub.add_parser("selfcheck")
     p = sub.add_parser("plan")
     p.add_argument("kind", choices=["smoke", "trial", "main"])
