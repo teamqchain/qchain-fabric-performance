@@ -14,6 +14,9 @@ are the launcher's job: scripts/run-mac.sh, which calls this script.
     qfp.py status <session>                   progress and projected end
     qfp.py trial-report <session>             C, memory, disk, time projection, E4 decision
     qfp.py freeze --c N --e4 yes|no           freeze the thresholds after the trial
+    qfp.py analyse <session>                  tables and figures (in the analysis image)
+    qfp.py analysis-selftest                  the analysis on a synthetic session
+    qfp.py publish <session>                  copy into results/<session>, privacy scan, SHA256SUMS
     qfp.py down                               remove every study container and network volume
 
 Every container, volume and network of the study carries the label org.qchain.qfp=1 and a
@@ -894,6 +897,116 @@ def freeze(args):
     print(json.dumps(th, indent=1))
 
 
+def analysis_image():
+    return images()["tags"]["analysis"]
+
+
+def analyse(args):
+    """Runs analysis/run_all.py in the analysis image on one session; the session's files go in and the
+    tables and figures come out as tar streams (the Colima VM has no host mounts)."""
+    sdir = session_dir(args.session)
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tf:
+        tf.add(os.path.join(REPO, "analysis"), arcname="analysis",
+               filter=lambda ti: None if "__pycache__" in ti.name else ti)
+        nets = os.path.join(sdir, "nets")
+        for netid in sorted(os.listdir(nets)):
+            for sub in ("network.json", "runs", "out", os.path.join("gen", "client.json")):
+                p = os.path.join(nets, netid, sub)
+                if os.path.exists(p):
+                    tf.add(p, arcname=os.path.join("session", "nets", netid, sub))
+    script = ("mkdir -p /tmp/w && tar -x -C /tmp/w && cd /tmp/w && "
+              "python3 analysis/run_all.py session out >&2; s=$?; tar -c -C /tmp/w out; exit $s")
+    r = docker("run", "--rm", "-i", "--label", LABEL, "--entrypoint", "sh", analysis_image(), "-c", script,
+               inp=buf.getvalue(), check=False)
+    sys.stderr.write(r.stderr.decode(errors="replace"))
+    dest = os.path.join(sdir, "analysis")
+    shutil.rmtree(dest, ignore_errors=True)
+    with tarfile.open(fileobj=io.BytesIO(r.stdout)) as tf:
+        tf.extractall(sdir + ".analysis.tmp")
+    os.replace(os.path.join(sdir + ".analysis.tmp", "out"), dest)
+    shutil.rmtree(sdir + ".analysis.tmp", ignore_errors=True)
+    print("analysis written to results/raw/%s/analysis (exit %d)" % (args.session, r.returncode))
+    sys.exit(r.returncode)
+
+
+def analysis_selftest(args):
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tf:
+        tf.add(os.path.join(REPO, "analysis"), arcname="analysis", filter=lambda ti: None if "__pycache__" in ti.name else ti)
+    r = docker("run", "--rm", "-i", "--label", LABEL, "--entrypoint", "sh", analysis_image(), "-c",
+               "mkdir -p /tmp/w && tar -x -C /tmp/w && cd /tmp/w && python3 analysis/selftest.py",
+               inp=buf.getvalue(), check=False, capture=False)
+    sys.exit(r.returncode)
+
+
+def privacy_patterns():
+    """The Mac's identifying strings (host and user names, home path, addresses, serial): held in memory only."""
+    pats = set()
+    for cmd in (["hostname"], ["hostname", "-s"], ["scutil", "--get", "ComputerName"], ["scutil", "--get", "LocalHostName"],
+                ["id", "-un"], ["id", "-F"]):
+        r = sh(cmd, check=False)
+        pats.add(r.stdout.decode().strip())
+    pats.add(os.path.expanduser("~"))
+    ifc = sh(["ifconfig", "-a"], check=False).stdout.decode()
+    pats.update(m for m in re.findall(r"inet (\d+\.\d+\.\d+\.\d+)", ifc) if not m.startswith("127."))
+    pats.update(re.findall(r"ether ([0-9a-f:]{17})", ifc))
+    io_ = sh(["ioreg", "-rd1", "-c", "IOPlatformExpertDevice"], check=False).stdout.decode()
+    pats.update(re.findall(r'"IOPlatform(?:SerialNumber|UUID)" = "([^"]+)"', io_))
+    return sorted(p for p in pats if len(p) >= 4)
+
+
+def publish(args):
+    """Copies a session's results into results/<session>/ (committed): the analysis, the per-network records
+    and the client's files, without the generated configuration; scans every file for the Mac's identifying
+    text and writes SHA256SUMS last."""
+    import gzip
+    import hashlib
+    sdir = session_dir(args.session)
+    dest = os.path.join(REPO, "results", args.session)
+    if os.path.exists(dest):
+        raise SystemExit("%s exists" % dest)
+    tmp = dest + ".tmp"
+    shutil.rmtree(tmp, ignore_errors=True)
+    for name in ("plan.json", "state.json", "driver.log", "trial-report.json", "session-host.txt"):
+        if os.path.exists(os.path.join(sdir, name)):
+            os.makedirs(tmp, exist_ok=True)
+            shutil.copy2(os.path.join(sdir, name), tmp)
+    for sub in ("analysis", "host"):
+        if os.path.isdir(os.path.join(sdir, sub)):
+            shutil.copytree(os.path.join(sdir, sub), os.path.join(tmp, sub))
+    nets = os.path.join(sdir, "nets")
+    for netid in sorted(os.listdir(nets)):
+        for sub in ("network.json", "runs", "out", "setup.log", os.path.join("gen", "client.json"), os.path.join("gen", "topology.json")):
+            src = os.path.join(nets, netid, sub)
+            dst = os.path.join(tmp, "nets", netid, sub)
+            if os.path.isdir(src):
+                shutil.copytree(src, dst)
+            elif os.path.exists(src):
+                os.makedirs(os.path.dirname(dst), exist_ok=True)
+                shutil.copy2(src, dst)
+    pats = [p.lower() for p in privacy_patterns()]
+    bad = []
+    for root, _, files in os.walk(tmp):
+        for fn in files:
+            p = os.path.join(root, fn)
+            data = gzip.open(p).read() if fn.endswith(".gz") else open(p, "rb").read()
+            low = data.decode(errors="replace").lower()
+            if any(x in low for x in pats):
+                bad.append(os.path.relpath(p, tmp))
+    if bad:
+        raise SystemExit("privacy scan: identifying text in %d file(s), nothing published:\n  %s" % (len(bad), "\n  ".join(bad[:20])))
+    lines = []
+    for root, _, files in os.walk(tmp):
+        for fn in sorted(files):
+            p = os.path.join(root, fn)
+            lines.append("%s  ./%s" % (hashlib.sha256(open(p, "rb").read()).hexdigest(), os.path.relpath(p, tmp)))
+    with open(os.path.join(tmp, "SHA256SUMS"), "w") as f:
+        f.write("\n".join(sorted(lines, key=lambda l: l.split("  ", 1)[1])) + "\n")
+    os.replace(tmp, dest)
+    print("published %d files to results/%s (privacy scan passed)" % (len(lines), args.session))
+
+
 def selfcheck(args):
     bad = qfp_gen.selfcheck()
     r = subprocess.run(["shasum", "-a", "256", "-c", "SHA256SUMS"], cwd=os.path.join(REPO, "network", "live"),
@@ -948,11 +1061,17 @@ def main():
     f.add_argument("--e4", required=True, choices=["yes", "no"])
     f.add_argument("--saturation", type=float, default=None)
     f.add_argument("--force", action="store_true")
+    an = sub.add_parser("analyse")
+    an.add_argument("session")
+    sub.add_parser("analysis-selftest")
+    pb = sub.add_parser("publish")
+    pb.add_argument("session")
     d = sub.add_parser("down")
     d.add_argument("--all", action="store_true", help="also the results volume")
     a = ap.parse_args()
     {"build": build, "selfcheck": selfcheck, "plan": plan_cmd, "run": run_cmd, "status": status_cmd,
-     "trial-report": trial_report, "freeze": freeze, "down": down}[a.cmd](a)
+     "trial-report": trial_report, "freeze": freeze, "down": down, "analyse": analyse,
+     "analysis-selftest": analysis_selftest, "publish": publish}[a.cmd](a)
 
 
 if __name__ == "__main__":
