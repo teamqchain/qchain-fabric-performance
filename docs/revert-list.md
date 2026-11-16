@@ -34,9 +34,13 @@ Test machine: the project lead's MacBook Air (the only machine of this study). T
 | R8 | Run results and logs written inside this repository and, for large raw files, under the repository's ignored `results/raw/` | steps 5 to 7 | raw files deleted after the analysis; the repository stays | not made yet |
 | R9 | Source clones (Fabric, Fabric CA, fabric-lib-go) are only read from `/Applications/Programs for Fun/teamqchain/`; they are copied into Docker build contexts, never modified | steps 3 to 4 | nothing to revert | not made yet |
 
+## 2b. Disk clean-up of 16 November 2026 (done with the project lead's approval; not revertable, caches only)
+
+Free space before: 75 GiB. After: 80 GiB. Removed: VS Code `Cache`, `CachedData`, `CachedExtensionVSIXs`; `~/.gradle/wrapper` (Android build files); the pip cache; the Teams cache folder; conda's index cache (`conda clean --all`: nothing else was unused, the 5.1 GB in `miniconda3/pkgs` is in use by the base environment). Kept by decision: `Code-AI/Project - Coffee Plantation`, `Code-AI/AI-ENV`, `Desktop/Masters_Planning`, the Claude app's VM files, OneNote and Teams data.
+
 ## 3. Final check (to be filled in at the end)
 
 - [ ] `brew list` equals the baseline formulae and casks
 - [ ] colima, docker, docker-compose absent; `~/.colima`, `~/.docker`, `~/.lima` absent
 - [ ] Wi-Fi on, Low Power Mode off, no process left stopped, no `caffeinate`
-- [ ] free disk back to about 75 GiB or more
+- [ ] free disk back to about 80 GiB or more
