@@ -1,0 +1,34 @@
+# syntax=docker/dockerfile:1
+#
+# qfp/chaincode: QChain's chaincode `qchaincode` 2.0 as a service, for arm64.
+# The build context is network/live/chaincode (the verbatim copy of qchain-network/chaincode)
+# plus, when it has been recorded, the lock file of the live image (docker/chaincode-lock/).
+#
+# Live image (x86_64): the official node:18.20.8 (Debian 12) with the chaincode copied in.
+# Here: the same Node.js release for arm64; dependency versions are those of the live image when
+# docker/chaincode-lock/ holds its lock file, otherwise the newest versions the chaincode's
+# package.json allows (LOCK=none: only for smoke tests, the build prints a warning).
+ARG NODE_IMAGE=node:18.20.8-bookworm-slim@sha256:f9ab18e354e6855ae56ef2b290dd225c1e51a564f87584b9bd21dd651838830e
+
+FROM ${NODE_IMAGE}
+ARG LOCK=none
+WORKDIR /opt/qchaincode
+COPY chaincode/package.json chaincode/index.js chaincode/QChaincode.js ./
+COPY lock/ /tmp/lock/
+RUN set -e; mkdir -p /opt/qfp/build-info; \
+    case "$LOCK" in \
+      yarn) cp /tmp/lock/yarn.lock . && yarn install --frozen-lockfile --production --non-interactive ;; \
+      npm)  cp /tmp/lock/package-lock.json . && npm ci --omit=dev ;; \
+      none) echo "WARNING: no lock file of the live image; dependency versions are not pinned" >&2; \
+            npm install --omit=dev --no-audit --no-fund ;; \
+      *) echo "LOCK must be yarn, npm or none" >&2; exit 1 ;; \
+    esac; \
+    echo "lock=$LOCK" > /opt/qfp/build-info/chaincode.txt; node --version >> /opt/qfp/build-info/chaincode.txt; \
+    npm ls --all --omit=dev > /opt/qfp/build-info/chaincode-modules.txt 2>&1 || true; \
+    sha256sum package.json index.js QChaincode.js > /opt/qfp/build-info/chaincode-files.sha256; \
+    rm -rf /tmp/lock /root/.npm /usr/local/share/.cache
+LABEL org.qchain.qfp="1"
+ENV NODE_ENV=production
+USER 1000:1000
+# fabric-shim's server mode; the peer dials CHAINCODE_SERVER_ADDRESS, CHAINCODE_ID is the package ID
+CMD ["sh", "-c", "exec node_modules/.bin/fabric-chaincode-node server --chaincode-address=\"$CHAINCODE_SERVER_ADDRESS\" --chaincode-id=\"$CHAINCODE_ID\""]

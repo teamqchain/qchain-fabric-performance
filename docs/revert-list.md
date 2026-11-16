@@ -33,6 +33,7 @@ Test machine: the project lead's MacBook Air (the only machine of this study). T
 | R7 | `caffeinate` during runs | each run | automatic (ends with the run) | not made yet |
 | R8 | Run results and logs written inside this repository and, for large raw files, under the repository's ignored `results/raw/` | steps 5 to 7 | raw files deleted after the analysis; the repository stays | not made yet |
 | R9 | Source clones (Fabric, Fabric CA, fabric-lib-go) are only read from `/Applications/Programs for Fun/teamqchain/`; they are copied into Docker build contexts, never modified | steps 3 to 4 | nothing to revert | not made yet |
+| R10 | Go 1.27.4 toolchain (darwin-arm64 tarball from go.dev, checksum verified) unpacked in the assistant's session scratchpad (`/private/tmp/claude-501/.../scratchpad/gotool`), with its module cache and build cache in the same folder. Used only to compile-check and unit-test the client while coding. Nothing is installed: no Homebrew package, no file outside that folder, no PATH change | step 2 (16 Nov) | delete the folder `scratchpad/gotool` (a restart clears the scratchpad too) | **made 16 Nov** |
 
 ## 2b. Disk clean-up of 16 November 2026 (done with the project lead's approval; not revertable, caches only)
 
