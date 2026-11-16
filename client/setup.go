@@ -61,14 +61,25 @@ func parallel(n, c int, f func(i int) error) error {
 func submit(contract *client.Contract, fn string, args ...string) ([]byte, error) {
 	var res []byte
 	var err error
-	for attempt := 0; attempt < 3; attempt++ {
+	// A new network's gateway peer needs a moment to learn the other organisations' peers through
+	// gossip ("no combination of peers can be derived which satisfy the endorsement policy"): wait
+	// for it, up to a minute. Any other error is retried twice.
+	deadline := time.Now().Add(60 * time.Second)
+	other := 0
+	for {
 		res, err = contract.SubmitTransaction(fn, args...)
 		if err == nil {
 			return res, nil
 		}
-		time.Sleep(time.Second)
+		if strings.Contains(err.Error(), "no combination of peers") {
+			if time.Now().After(deadline) {
+				return nil, err
+			}
+		} else if other++; other >= 3 {
+			return nil, err
+		}
+		time.Sleep(1500 * time.Millisecond)
 	}
-	return nil, err
 }
 
 // Setup registers the holders, issues the read pool and warms the network up.

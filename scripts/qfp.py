@@ -631,6 +631,29 @@ def canary_drift(state, th):
     return (ref - rate) / ref * 100 > th["canary_drift_pct"]
 
 
+def container_states(names):
+    """Running, OOM-killed, exit code and restart count of every container (docker inspect)."""
+    out = {}
+    for n in names:
+        r = docker("inspect", "-f", "{{.State.Running}}|{{.State.OOMKilled}}|{{.State.ExitCode}}|{{.RestartCount}}|{{.State.Error}}", n, check=False)
+        p = r.stdout.decode().strip().split("|")
+        if len(p) < 5:
+            out[n] = {"running": False, "missing": True}
+        else:
+            out[n] = {"running": p[0] == "true", "oom": p[1] == "true", "exit": int(p[2] or 0), "restarts": int(p[3] or 0), "error": p[4]}
+    return out
+
+
+def save_diag(session, netid, tag, bad):
+    """The last log lines of every container that is not running or was OOM-killed."""
+    path = os.path.join(session_dir(session), "nets", netid, "diag-%s.txt" % tag)
+    with open(path, "w") as f:
+        for n, s in bad.items():
+            f.write("== %s %s\n" % (n, json.dumps(s)))
+            r = docker("logs", "--tail", "40", n, check=False)
+            f.write((r.stdout + r.stderr).decode(errors="replace")[-6000:] + "\n")
+
+
 def do_run(session, netid, topo, api, run, attempt, th, state):
     rid = run["id"] + ("" if attempt == 1 else "-a%d" % attempt)
     out = "/out/%s/%s/runs/%s" % (session, netid, rid)
@@ -660,10 +683,14 @@ def do_run(session, netid, topo, api, run, attempt, th, state):
                        "mem_peak": peak.get(n, 0)}
         else:
             host[n] = {"error": a.get("error") or b.get("error")}
+    states = container_states(names)
+    bad = {n: s for n, s in states.items() if not s.get("running") or s.get("oom") or s.get("restarts")}
+    if bad:
+        save_diag(session, netid, run["id"] + "-a%d" % attempt, bad)
     flags = run_flags(session, th, t_from, t_to, swap0, swap1)
     rec = {"id": run["id"], "attempt": attempt, "run_dir": rid, "fn": run["fn"], "t": run["t"], "rep": run["rep"], "c": c,
            "seed": run["seed"], "start_ns": t_from, "end_ns": t_to, "result": res, "error": err, "flags": flags,
-           "swap_mb": [swap0, swap1], "containers": host}
+           "swap_mb": [swap0, swap1], "containers": host, "states": states}
     write_json(os.path.join(session_dir(session), "nets", netid, "runs", rid + ".json"), rec)
     return rec
 
