@@ -1,0 +1,42 @@
+# Revert list
+
+Rule (from the KPI study): **every change to the test machine is written here BEFORE it is made.** At the end of the study every row is reverted and the result is checked against the baseline below.
+
+Test machine: the project lead's MacBook Air (the only machine of this study). The VM and the Windows laptop are not used.
+
+## 1. Baseline (read-only, 16 November 2026, before any change)
+
+| Item | State |
+|---|---|
+| Machine | MacBookAir10,1, Apple M1 (4 performance + 4 efficiency cores), 8 GB, arm64 |
+| macOS | 27.2 (build 26B123) |
+| Disk | 228 GiB volume, **75 GiB free** (Data volume 115 GiB used); container free space 80.8 GB |
+| Homebrew | 7.0.9. Formulae: ca-certificates cairo fontconfig freetype gettext glib gmp gnupg gnutls gpgme gpgmepp jpeg-turbo libassuan libgcrypt libgpg-error libidn2 libksba libpng libtasn1 libtiff libunistring libusb libx11 libxau libxcb libxdmcp libxext libxrender little-cms2 lz4 lzo nettle npth nspr nss openjpeg p11-kit pcre2 pinentry pixman poppler readline xorgproto xz zstd. Casks: libreoffice, racket |
+| Absent (must be absent again at the end) | colima, docker, docker-compose, go, node, npm, gh, cmake, pkg-config, limactl, qemu |
+| Absent directories | `~/.colima`, `~/.docker`, `~/.lima` |
+| Wi-Fi (en0) | On |
+| Low Power Mode | Off |
+| Power | on battery (60 %) at the time of the check; every run needs the adapter connected |
+| Thermal | no warning level recorded |
+| Background services seen running (paused during runs only, resumed afterwards) | suggestd, spotlightknowledged (importer, updater), knowledge-agent, siriknowledged, mediaanalysisd |
+
+## 2. Planned changes (all "not made yet")
+
+| # | Change | When | Revert | Status |
+|---|---|---|---|---|
+| R1 | `brew install colima docker docker-compose` (plus the dependencies Homebrew adds: record them from `brew list` before and after) | step 3, right before testing | `brew uninstall colima docker docker-compose`, then `brew autoremove` for the dependencies listed here; check against the baseline formulae | not made yet |
+| R2 | Colima VM `qfp` (`--vm-type vz --cpu 4 --memory 5 --disk 60`); its disk lives under `~/.colima` | step 3 | `colima delete qfp`, remove `~/.colima` | not made yet |
+| R3 | Docker CLI config `~/.docker` (created by the Docker CLI / Colima) | step 3 | remove `~/.docker` if it did not exist before (it did not) | not made yet |
+| R4 | Docker images, containers, networks and volumes inside the Colima VM (arm64 builds of Fabric, Fabric CA, chaincode, client) | steps 3 to 6 | deleted with the VM (R2); `docker system prune -a --volumes` before that | not made yet |
+| R5 | Wi-Fi switched off during runs, on again afterwards (by the launcher, on every exit path, only if it was on) | each run | automatic; verify Wi-Fi is on at the end | not made yet |
+| R6 | Background services paused with SIGSTOP during runs and resumed (by the launcher) | each run | automatic; verify none is left stopped | not made yet |
+| R7 | `caffeinate` during runs | each run | automatic (ends with the run) | not made yet |
+| R8 | Run results and logs written inside this repository and, for large raw files, under the repository's ignored `results/raw/` | steps 5 to 7 | raw files deleted after the analysis; the repository stays | not made yet |
+| R9 | Source clones (Fabric, Fabric CA, fabric-lib-go) are only read from `/Applications/Programs for Fun/teamqchain/`; they are copied into Docker build contexts, never modified | steps 3 to 4 | nothing to revert | not made yet |
+
+## 3. Final check (to be filled in at the end)
+
+- [ ] `brew list` equals the baseline formulae and casks
+- [ ] colima, docker, docker-compose absent; `~/.colima`, `~/.docker`, `~/.lima` absent
+- [ ] Wi-Fi on, Low Power Mode off, no process left stopped, no `caffeinate`
+- [ ] free disk back to about 75 GiB or more

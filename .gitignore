@@ -1,0 +1,30 @@
+# OS / editor noise.
+.DS_Store
+.vscode/
+.idea/
+
+# Python analysis environment.
+/analysis/.venv/
+__pycache__/
+
+# Local build output and scratch work.
+/bin/
+/scratch/
+*.tmp
+
+# Keys, identities and generated crypto material: never committed.
+crypto-material/
+**/crypto-material/
+pqc-keystore/
+**/pqc-keystore/
+wallet/
+*.id
+*_sk
+*.pem
+*.key
+channel-artifacts/*.block
+channel-artifacts/*.tx
+
+# Raw run data (large); summaries and checksums under results/ are committed.
+results/raw/
+*.ledger
