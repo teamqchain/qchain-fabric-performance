@@ -54,10 +54,11 @@ ARG FABRIC_COMMIT
 ARG FABRIC_CA_COMMIT
 ARG FABRIC_LIB_COMMIT
 
-# the vendored provider must be the pinned fabric-lib-go
-RUN diff -r /src/fabric/vendor/github.com/hyperledger/fabric-lib-go/bccsp-pqc /home/mohammedobeid88/fabric-lib-go/bccsp-pqc \
-    && diff -r /src/fabric-ca/vendor/github.com/hyperledger/fabric-lib-go/bccsp-pqc /home/mohammedobeid88/fabric-lib-go/bccsp-pqc \
-    && echo "vendored bccsp-pqc = fabric-lib-go ${FABRIC_LIB_COMMIT}" > /build-info/vendor-check.txt
+# the vendored provider and factory must be the pinned fabric-lib-go (Go's vendoring drops tests,
+# test data and mocks, so those are not compared)
+RUN set -e; L=/home/mohammedobeid88/fabric-lib-go; for f in fabric fabric-ca; do for d in bccsp-pqc bccsp; do \
+      diff -r -x '*_test.go' -x testdata -x mocks /src/$f/vendor/github.com/hyperledger/fabric-lib-go/$d $L/$d; done; done; \
+    echo "vendored bccsp-pqc and bccsp = fabric-lib-go ${FABRIC_LIB_COMMIT} (tests, test data and mocks excluded)" > /build-info/vendor-check.txt
 
 # --- Fabric (Makefile: go install -tags "$(GO_TAGS)" -ldflags "$(GO_LDFLAGS)" -buildvcs=false) ---
 WORKDIR /src/fabric
