@@ -6,7 +6,8 @@ machine colours, and the output folder is passed in. The rules are the same:
 - Every logarithmic axis says "(log scale)" in its label, and its ticks are written in plain units.
 - Bar charts print the value at the end of every bar.
 - save() checks every figure after drawing it: no two texts overlap and nothing falls outside the image.
-- The KPI's machine colours (Mac #0072B2, laptop #009E73, VM #D55E00) are not used for anything here.
+- The two arms keep blue (ECDSA) and vermillion (ML-DSA-44) in every figure; this is a separate paper, so the
+  KPI study's machine colours do not apply (project lead, 16 Nov 2026).
 """
 import os
 
@@ -18,7 +19,7 @@ from matplotlib.transforms import Bbox  # noqa: E402
 
 # The two identity arms, fixed in every figure and always in this order (classical first).
 ARMS = ["ecdsa", "mldsa44"]
-ARMCOL = {"ecdsa": "#555555", "mldsa44": "#CC79A7"}   # dark grey, reddish purple (Okabe-Ito)
+ARMCOL = {"ecdsa": "#0072B2", "mldsa44": "#D55E00"}   # blue, vermillion (Okabe-Ito)
 ARMMARK = {"ecdsa": "o", "mldsa44": "s"}
 ARMNAME = {"ecdsa": "ECDSA P-256", "mldsa44": "ML-DSA-44"}
 # parts of a transaction (bytes) and stages of a write: their own palettes
