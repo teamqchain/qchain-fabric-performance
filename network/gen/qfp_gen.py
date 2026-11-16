@@ -41,7 +41,7 @@ ORD_DIR = "crypto-material/ordererOrganizations/%s/orderers/%s" % (ORD_DOMAIN, O
 BLOCKS = {
     # name: (MaxMessageCount, AbsoluteMaxBytes, PreferredMaxBytes, BatchTimeout)
     "live": (10, "99 MB", "512 KB", "2s"),
-    "study": (100, "99 MB", "16 MB", "2s"),
+    "study": (50, "99 MB", "16 MB", "2s"),   # 16 Nov: 100; 17 Nov: 50 (decisions log)
 }
 BLOCK_BYTES = {"512 KB": 512 * 1024, "16 MB": 16 * 1024 * 1024}
 
