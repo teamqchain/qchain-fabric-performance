@@ -1,0 +1,58 @@
+# PQC network (2026-10-31). Changes from the classical network, tag classical-network-final (see CHANGES-PQC.md):
+#   - image qchain-pqc/fabric-ca-server:e82caf43 (fabric-ca pkcs11,pqc); project qchainpqc, names qchainpqc_*.
+#   - exec-form command (the image has no shell, so `sh -c ...` cannot work); no -b flag: the bootstrap
+#     identity is in the registry of fabric-ca-server-config.yaml (as in the proven Docker CA).
+#   - CA home = ../fabric-ca/<org> bind-mounted at /var/hyperledger/production (uid-1000 path in the image);
+#     the CA cert/key come from cryptogen (D7, cafiles/), the server TLS from external ECDSA files (tls/),
+#     both written by scripts/generate-crypto-pqc.sh.
+#   - ca.orderer dropped (design b1: the orderer org has only cryptogen identities).
+#   - ports 127.0.0.1:27054 (government), 127.0.0.1:28054 (general); operations 37054/38054, not published.
+name: qchainpqc
+
+x-ca: &ca
+  user: "1000:1000"
+  read_only: true
+  tmpfs: ["/tmp:mode=1777"]
+  restart: unless-stopped
+  stop_grace_period: 10s
+  mem_limit: 256m
+
+networks:
+  fabric_net:
+    name: qchainpqc_net
+
+services:
+
+  ca.government.uae.com:
+    <<: *ca
+    image: qchain-pqc/fabric-ca-server:e82caf43
+    container_name: qchainpqc_ca.government.uae.com
+    hostname: ca.government.uae.com
+    environment:
+      - FABRIC_CA_HOME=/var/hyperledger/production
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:37054
+    command: ["start", "-H", "/var/hyperledger/production"]
+    volumes:
+      - ../fabric-ca/government:/var/hyperledger/production
+    ports:
+      - 127.0.0.1:27054:27054
+    networks:
+      fabric_net:
+        aliases: [ca.government.uae.com]
+
+  ca.general.uae.com:
+    <<: *ca
+    image: qchain-pqc/fabric-ca-server:e82caf43
+    container_name: qchainpqc_ca.general.uae.com
+    hostname: ca.general.uae.com
+    environment:
+      - FABRIC_CA_HOME=/var/hyperledger/production
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:38054
+    command: ["start", "-H", "/var/hyperledger/production"]
+    volumes:
+      - ../fabric-ca/general:/var/hyperledger/production
+    ports:
+      - 127.0.0.1:28054:28054
+    networks:
+      fabric_net:
+        aliases: [ca.general.uae.com]
