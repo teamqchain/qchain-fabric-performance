@@ -34,6 +34,7 @@ Test machine: the project lead's MacBook Air (the only machine of this study). T
 | R8 | Run results and logs written inside this repository and, for large raw files, under the repository's ignored `results/raw/` | steps 5 to 7 | raw files deleted after the analysis; the repository stays | not made yet |
 | R9 | Source clones (Fabric, Fabric CA, fabric-lib-go) are only read from `/Applications/Programs for Fun/teamqchain/`; they are copied into Docker build contexts, never modified | steps 3 to 4 | nothing to revert | not made yet |
 | R10 | Go 1.27.4 toolchain (darwin-arm64 tarball from go.dev, checksum verified) unpacked in the assistant's session scratchpad (`/private/tmp/claude-501/.../scratchpad/gotool`), with its module cache and build cache in the same folder. Used only to compile-check and unit-test the client while coding. Nothing is installed: no Homebrew package, no file outside that folder, no PATH change | step 2 (16 Nov) | delete the folder `scratchpad/gotool` (a restart clears the scratchpad too) | **made 16 Nov** |
+| R11 | macOS automatic updates switched off by the project lead (System Settings > General > Software Update > Automatic updates: "Download new updates when available" and "Install macOS updates"); both were **on** at the check of 16 Nov (`AutomaticDownload=1`, `AutomaticallyInstallMacOSUpdates=1`); the launcher refuses trial and main sessions while they are on | before the trial | switch both back on | not made yet |
 
 ## 2b. Disk clean-up of 16 November 2026 (done with the project lead's approval; not revertable, caches only)
 
@@ -44,4 +45,5 @@ Free space before: 75 GiB. After: 80 GiB. Removed: VS Code `Cache`, `CachedData`
 - [ ] `brew list` equals the baseline formulae and casks
 - [ ] colima, docker, docker-buildx absent; `~/.colima`, `~/.docker`, `~/.lima` absent
 - [ ] Wi-Fi on, Low Power Mode off, no process left stopped, no `caffeinate`
+- [ ] automatic macOS updates back on (R11)
 - [ ] free disk back to about 80 GiB or more
