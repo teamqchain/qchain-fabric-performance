@@ -1,6 +1,10 @@
-# Plan: QChain Fabric performance, ECDSA against ML-DSA-44 identities
+# QChain Fabric Performance: Consolidated Plan
 
-Approved by the project lead on 16 November 2026. Master copy of the plan; changes go to `decisions-log.md` first.
+**Version 1.0, 16 November 2026.** Status: **plan approved (16 Nov); coding next.** The study: ECDSA against ML-DSA-44 identities on QChain's Fabric network, as workload, peers and organisations grow.
+
+This copy lives in the repository as `docs/plan.md`; it is the planning snapshot. Changes to the design are recorded in `docs/decisions-log.md` first; where the two differ, the decisions log wins.
+
+---
 
 ## 1. Aim and research questions
 
