@@ -87,8 +87,8 @@ def main():
     out = tempfile.mkdtemp()
     try:
         make(root)
-        r = subprocess.run([sys.executable, os.path.join(HERE, "run_all.py"), root, out], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        print(r.stdout.decode())
+        proc = subprocess.run([sys.executable, os.path.join(HERE, "run_all.py"), root, out], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(proc.stdout.decode())
         with open(os.path.join(out, "tables", "cells.csv")) as f:
             cells = list(csv.DictReader(f))
         with open(os.path.join(out, "tables", "ratios.csv")) as f:
@@ -114,8 +114,8 @@ def main():
                 bad.append("bytes %s: certificates %s" % (b["netid"], b["cert_bytes"]))
         figs = sorted(os.listdir(os.path.join(out, "figures")))
         print("figures: %s" % ", ".join(f for f in figs if f.endswith(".png")))
-        if r.returncode not in (0,):
-            bad.append("run_all.py exited %d" % r.returncode)
+        if proc.returncode != 0:
+            bad.append("run_all.py exited %d" % proc.returncode)
         print("selftest: %s" % ("ok" if not bad else "FAILED\n  " + "\n  ".join(bad)))
         sys.exit(1 if bad else 0)
     finally:

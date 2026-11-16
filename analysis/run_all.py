@@ -87,7 +87,7 @@ def run_metrics(rec, txs):
         }
         for k, v in st.items():
             m["stage_%s_ms" % k] = float(np.median(v)) / 1e6 if v else float("nan")
-        m["blocks"] = len({t["block"] for t in ok})
+        m["blocks_used"] = len({t["block"] for t in ok})
         n_conf = len(done)
     else:
         conf = np.array([int(t["gw_commit_ns"]) for t in ok], dtype=float)
@@ -327,9 +327,10 @@ def cell(cs, ident, o, p, blocks, fn, t):
 
 
 def lines_vs_t(cs, outdir, o, p, metric, ylabel, name, title, fmt, log_y=True, unit="ms"):
-    fig, axes = fs.new_fig(7.0, 2.8, 1, 2)
+    fig, axes = fs.new_fig(7.0, 3.0, 1, 2)
     for ax, fn in zip(axes, ("issue", "get")):
-        texts = []
+        series = {}
+        allv = []
         for ident in fs.ARMS:
             pts = [(t, cell(cs, ident, o, p, "study", fn, t)) for t in (1, 10, 100, 1000, 10000)]
             pts = [(t, c) for t, c in pts if c and c[metric] == c[metric]]
@@ -337,13 +338,19 @@ def lines_vs_t(cs, outdir, o, p, metric, ylabel, name, title, fmt, log_y=True, u
                 continue
             xs = [t for t, _ in pts]
             ys = [c[metric] for _, c in pts]
+            allv += ys + [c[metric + "_lo"] for _, c in pts if c[metric + "_lo"] == c[metric + "_lo"]] + \
+                [c[metric + "_hi"] for _, c in pts if c[metric + "_hi"] == c[metric + "_hi"]]
             lo = [c[metric] - c[metric + "_lo"] if c[metric + "_lo"] == c[metric + "_lo"] else 0 for _, c in pts]
             hi = [c[metric + "_hi"] - c[metric] if c[metric + "_hi"] == c[metric + "_hi"] else 0 for _, c in pts]
             ax.errorbar(xs, ys, yerr=[lo, hi], color=fs.ARMCOL[ident], marker=fs.ARMMARK[ident], markersize=3.5,
                         capsize=2, label=fs.ARMNAME[ident])
-            for x, y in zip(xs, ys):
-                texts.append(ax.annotate(fmt(y), (x, y), xytext=(0, 5 if ident == "mldsa44" else -9), textcoords="offset points",
-                                         ha="center", fontsize=5.5, color=fs.ARMCOL[ident]))
+            series[ident] = dict(zip(xs, ys))
+        # at each burst size the higher value is labelled above its point, the lower one below
+        for x in sorted({x for s in series.values() for x in s}):
+            here = sorted(((s[x], ident) for ident, s in series.items() if x in s), reverse=True)
+            for rank, (y, ident) in enumerate(here):
+                ax.annotate(fmt(y), (x, y), xytext=(0, 6 if rank == 0 else -10), textcoords="offset points",
+                            ha="center", fontsize=5.5, color=fs.ARMCOL[ident])
         fs.log_axis(ax, "x", [(1, "1"), (10, "10"), (100, "100"), (1000, "1,000"), (10000, "10,000")],
                     "transactions in the burst")
         if log_y:
@@ -355,6 +362,9 @@ def lines_vs_t(cs, outdir, o, p, metric, ylabel, name, title, fmt, log_y=True, u
                 fs.log_axis(ax, "y", [(1, "1/s"), (10, "10/s"), (100, "100/s"), (1000, "1,000/s")], ylabel)
         else:
             ax.set_ylabel(ylabel)
+        if allv and log_y:
+            ax.set_ylim(min(v for v in allv if v > 0) / 3, max(allv) * 3)
+        ax.set_xlim(0.5, 20000)
         ax.set_title({"issue": "write (issueCredential)", "get": "read (getCredential)"}[fn])
         ax.grid(True, which="major")
     h, lab = axes[0].get_legend_handles_labels()
@@ -379,9 +389,9 @@ def bars_vs(cs, outdir, xs, keyfn, metric, xlabel, ylabel, name, title, fmt, fn=
     ax.set_xticklabels([str(x) for x in xs])
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
-    fs.fit_labels(fig, ax, texts, orient="v")
     h, lab = ax.get_legend_handles_labels()
     fs.headline(fig, title, h, lab, ncol=2)
+    fs.fit_labels(fig, ax, texts, orient="v")
     fs.save(fig, name, outdir)
 
 
@@ -394,15 +404,15 @@ def heatmap(rat, outdir, rows, cols, keyfn, name, title, xlabel, ylabel):
                 r = keyfn(rv, cv, fn)
                 if r:
                     m[i, j] = r["tps_ratio"]
-        im = ax.imshow(m, cmap="PuOr", vmin=0.5, vmax=1.5, aspect="auto", origin="lower")
+        im = ax.imshow(m, cmap="PRGn", vmin=0.5, vmax=1.5, aspect="auto", origin="lower")  # neither arm's hue
         for i in range(len(rows)):
             for j in range(len(cols)):
                 if m[i, j] == m[i, j]:
                     ax.text(j, i, "%.2f×" % m[i, j], ha="center", va="center", fontsize=6)
         ax.set_xticks(range(len(cols)))
-        ax.set_xticklabels([str(c) for c in cols])
+        ax.set_xticklabels(["{:,}".format(c) for c in cols])
         ax.set_yticks(range(len(rows)))
-        ax.set_yticklabels([str(r) for r in rows])
+        ax.set_yticklabels(["{:,}".format(r) for r in rows])
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
         ax.set_title({"issue": "write", "get": "read"}[fn])
@@ -423,9 +433,9 @@ def stacked(rows, labels, parts, partcol, partname, outdir, name, title, ylabel,
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=6)
     ax.set_ylabel(ylabel)
-    fs.fit_labels(fig, ax, texts, orient="v")
     h, lab = ax.get_legend_handles_labels()
     fs.headline(fig, title, h, lab, ncol=3)
+    fs.fit_labels(fig, ax, texts, orient="v")
     fs.save(fig, name, outdir)
 
 
@@ -478,9 +488,9 @@ def figures(cs, rat, byt, e2, e4, outdir):
         ax.set_xticklabels(["%d×%d" % (b["orgs"], b["peers"]) for b in sel], fontsize=6)
         ax.set_xlabel("organisations × peers")
         ax.set_ylabel("GB per million writes, per peer")
-        fs.fit_labels(fig, ax, texts, orient="v")
         from matplotlib.patches import Patch
         fs.headline(fig, "Ledger growth per peer", [Patch(color=fs.ARMCOL[a]) for a in fs.ARMS], [fs.ARMNAME[a] for a in fs.ARMS], ncol=2)
+        fs.fit_labels(fig, ax, texts, orient="v")
         fs.save(fig, "F10-ledger-growth", outdir)
     sel = []
     for o in (1, 2, 4, 8):
@@ -524,8 +534,8 @@ def figures(cs, rat, byt, e2, e4, outdir):
         ax.set_yticks(y)
         ax.set_yticklabels(["%s, %s" % (fs.ARMNAME[r[0]], r[1].replace("_", " ")) for r in rows], fontsize=6)
         ax.set_xlabel("median time of one read")
-        fs.fit_labels(fig, ax, texts)
         fs.headline(fig, "A read on an open connection and on a new one (TLS handshake)")
+        fs.fit_labels(fig, ax, texts)
         fs.save(fig, "F14-connection-setup", outdir)
     ek = lambda ident, blocks, fn, t: cell(cs, ident, 2, 2, blocks, fn, t)  # noqa: E731
     if any(c["blocks"] == "live" for c in cs):
@@ -550,9 +560,9 @@ def figures(cs, rat, byt, e2, e4, outdir):
             ax.set_xticklabels(["100", "1,000", "10,000"])
             ax.set_xlabel("transactions in the burst")
             ax.set_ylabel("throughput (transactions per second)")
-            fs.fit_labels(fig, ax, texts, orient="v")
             h, lab = ax.get_legend_handles_labels()
             fs.headline(fig, "The live block settings against the study's, 2 organisations × 1 peer (%s)" % {"issue": "writes", "get": "reads"}[fn], h, lab, ncol=2)
+            fs.fit_labels(fig, ax, texts, orient="v")
             fs.save(fig, "F15-live-blocks-%s" % fn, outdir)
     if e4:
         fig, ax = fs.new_fig(5.2, 2.8)
