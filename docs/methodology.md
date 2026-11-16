@@ -58,7 +58,7 @@ Files: `tx.csv.gz` (every transaction), `arrivals.csv.gz` (every block on every 
 | M7 | Blocks | per block: bytes, data and metadata bytes, orderer signature bytes, transactions, the orderer's byte count |
 | M8 | Bytes per transaction | `txbytes.csv.gz`: envelope, certificates (every serialized identity's `id_bytes`: creator twice, one per endorser), signatures (envelope + endorsements), call arguments, read-write set and result, the rest |
 | M9 | Ledger growth | `du -sb` of every peer's and the orderer's data volume after the network's runs |
-| M10 | CPU and memory | per container, from the Docker Engine API: cumulative CPU before and after the run, memory sampled every 5 s (peak); the client's own CPU from `getrusage` |
+| M10 | CPU and memory | per container, from the Docker Engine API: cumulative CPU before and after the run, memory sampled every 5 s (peak; usage minus the reclaimable file cache, as `docker stats` shows it); the client's own CPU from `getrusage` |
 | M11 | Network | per container: bytes sent and received during the run (Docker API) |
 | M12 | Setup times | every bring-up step |
 

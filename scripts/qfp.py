@@ -177,9 +177,13 @@ class DockerAPI:
         """Cumulative CPU (ns), current memory (bytes), network bytes of one container."""
         d = self.get("/containers/%s/stats?stream=false&one-shot=true" % name)
         nets = d.get("networks") or {}
+        ms = d.get("memory_stats", {})
+        # as `docker stats` reports it: usage without the reclaimable file cache (cgroup v2 inactive_file)
+        mem = ms.get("usage", 0) - (ms.get("stats") or {}).get("inactive_file", 0)
         return {
             "cpu_ns": d.get("cpu_stats", {}).get("cpu_usage", {}).get("total_usage", 0),
-            "mem": d.get("memory_stats", {}).get("usage", 0),
+            "mem": mem,
+            "mem_raw": ms.get("usage", 0),
             "rx": sum(v.get("rx_bytes", 0) for v in nets.values()),
             "tx": sum(v.get("tx_bytes", 0) for v in nets.values()),
         }
