@@ -24,7 +24,7 @@ Test machine: the project lead's MacBook Air (the only machine of this study). T
 
 | # | Change | When | Revert | Status |
 |---|---|---|---|---|
-| R1 | `brew install colima docker docker-buildx` (plus the dependencies Homebrew adds: record them from `brew list` before and after). No docker-compose: the driver starts containers with `docker run` | step 3, right before testing | `brew uninstall colima docker docker-buildx`, then `brew autoremove` for the dependencies listed here; check against the baseline formulae | not made yet |
+| R1 | `brew install colima docker docker-buildx` (plus the dependencies Homebrew adds: record them from `brew list` before and after). No docker-compose: the driver starts containers with `docker run` | step 3, right before testing | `brew uninstall colima docker docker-buildx`, then `brew autoremove` for the dependencies listed here; check against the baseline formulae | **in progress 16 Nov** |
 | R2 | Colima VM profile `qfp` (`colima start --profile qfp --vm-type vz --arch aarch64 -c 4 -m 5 -d 60`, through `scripts/run-mac.sh colima-up`); its disk lives under `~/.colima` | step 3 | `colima delete qfp`, remove `~/.colima` | not made yet |
 | R3 | Docker CLI config `~/.docker` (created by the Docker CLI / Colima) | step 3 | remove `~/.docker` if it did not exist before (it did not) | not made yet |
 | R4 | Docker images, containers, networks and volumes inside the Colima VM (arm64 builds of Fabric, Fabric CA, chaincode, client) | steps 3 to 6 | deleted with the VM (R2); `docker system prune -a --volumes` before that | not made yet |
