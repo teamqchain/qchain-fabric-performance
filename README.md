@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Go-1.27-00ADD8" alt="Go" />
   <img src="https://img.shields.io/badge/liboqs-0.16.0-6E40C9" alt="liboqs" />
   <img src="https://img.shields.io/badge/Machine-MacBook%20Air%20M1%20%C2%B7%20Colima-2F3134" alt="Machine" />
-  <img src="https://img.shields.io/badge/Status-plan%20approved%2C%20coding%20next-F2A900" alt="Status" />
+  <img src="https://img.shields.io/badge/Status-code%20written%2C%20not%20run%20yet-F2A900" alt="Status" />
   <img src="https://img.shields.io/badge/License-Proprietary-red" alt="License" />
 </p>
 
@@ -27,10 +27,10 @@
 |---|---|
 | **Plan** | approved by the project lead on 16 November 2026 ([docs/plan.md](docs/plan.md)) |
 | **Literature review** | done: 45 papers, kept outside this repository |
-| **Code** | not started (next step) |
+| **Code** | written and unit-tested on 16 November 2026 (client tests, generator self-check, plan checks); images not built yet |
 | **Measurements** | not started |
 | **Test machine** | one MacBook Air M1; every change to it is recorded in [docs/revert-list.md](docs/revert-list.md) before it is made |
-| **Next** | the harness, the arm64 images, the trial (E0), then the unattended main run |
+| **Next** | installs (revert list first), the arm64 image builds, the trial (E0), then the unattended main run |
 
 > ⚠️ **Private until publication.** This repository becomes public when the paper is published. Credentials never enter
 > any file, and every run folder will pass an automatic privacy scan before it is committed.
@@ -137,20 +137,27 @@ The full list (M1 to M12) is in [docs/plan.md](docs/plan.md) §6.
 qchain-fabric-performance/
 ├── README.md                this file
 ├── LICENSE
-├── docker/                  Dockerfiles for the arm64 images (planned)
-├── network/                 network files copied from qchain-network, and the topology generator (planned)
-├── client/                  Go load generator and block decoder (planned)
-├── scripts/                 preflight, build, trial, run, teardown, revert (planned)
-├── monitor/                 host monitor and canary (planned)
-├── analysis/                statistics, figures and tables (planned)
-├── results/                 summaries and checksums (planned)
-└── docs/                    plan, decisions log, revert list, differences from the live network
+├── docker/                  Dockerfiles: fabric (peer, orderer, CA, tools; arm64, -tags pqc), chaincode, client, analysis
+│   └── chaincode-lock/      the live chaincode image's lock file (recorded in step 3)
+├── network/
+│   ├── live/                qchain-network's files, byte for byte (SHA256SUMS)
+│   └── gen/qfp_gen.py       one network from the live files: O organisations, P peers, ECDSA or ML-DSA-44, blocks
+├── client/                  qfp-client (Go): setup, bursts, per-peer block events, E2, E4, block decoder, canary, tests
+├── scripts/
+│   ├── run-mac.sh           the Mac launcher: Colima, build, start/resume a session with the KPI's conditions
+│   └── qfp.py               the driver: images, networks, runs, Docker statistics, quality, trial report, analysis, publish
+├── monitor/monitor-mac.sh   the host monitor (the KPI's)
+├── analysis/                run_all.py (tables, figures F2–F16), figstyle.py, selftest.py
+├── config/                  thresholds.json, frozen after the trial (written by `qfp.py freeze`)
+├── results/                 published sessions (raw/ is local and ignored)
+└── docs/                    plan, methodology, data dictionary, provenance, decisions, revert list, differences from live
 ```
 
 ---
 
 ## Recent updates
 
+- **16 November 2026: code written.** Network generator (self-checked against the live files), client, driver, launcher, Dockerfiles, analysis, documentation.
 - **16 November 2026: planning done.** Literature review (45 papers), plan approved, repository created.
 
 ---
@@ -160,7 +167,8 @@ qchain-fabric-performance/
 - [x] Literature review
 - [x] Research plan approved
 - [x] Repository and revert list
-- [ ] Harness, images and network generator
+- [x] Harness and network generator
+- [ ] Installs and arm64 images
 - [ ] Trial (E0)
 - [ ] Main run (E1, E2, E3, optional E4)
 - [ ] Analysis, figures and tables
@@ -176,6 +184,9 @@ qchain-fabric-performance/
 |---|---|
 | [docs/README.md](docs/README.md) | **start here**: reading order and conventions |
 | [docs/plan.md](docs/plan.md) | the research plan: questions, experiments, setup, metrics, statistics, time budget |
+| [docs/methodology.md](docs/methodology.md) | what the code does when it measures |
+| [docs/data-dictionary.md](docs/data-dictionary.md) | every file and column a session writes |
+| [docs/provenance.md](docs/provenance.md) | every copied file and pinned version |
 | [docs/decisions-log.md](docs/decisions-log.md) | dated decisions and their reasons |
 | [docs/live-differences.md](docs/live-differences.md) | where this network differs from QChain's live network, and by how much |
 | [docs/revert-list.md](docs/revert-list.md) | the Mac's baseline and every change made to it |

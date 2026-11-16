@@ -19,6 +19,9 @@
 | the research questions, experiments, setup, metrics, statistics and time budget | [plan.md](plan.md) |
 | why a choice was made | [decisions-log.md](decisions-log.md) |
 | how this network differs from QChain's live network | [live-differences.md](live-differences.md) |
+| what exactly the code measures, and how quality is controlled | [methodology.md](methodology.md) |
+| what every file and column of a session contains | [data-dictionary.md](data-dictionary.md) |
+| where every copied file and pinned version comes from | [provenance.md](provenance.md) |
 | what was changed on the test machine, and how it is put back | [revert-list.md](revert-list.md) |
 
 ---
@@ -30,9 +33,12 @@
 | [plan.md](plan.md) | snapshot (16 Nov 2026) | research questions, experiments, setup, grid, procedure, metrics, quality rules, outputs, paper outline, time budget, threats to validity |
 | [decisions-log.md](decisions-log.md) | log | dated decisions with their reasons |
 | [live-differences.md](live-differences.md) | reference | every difference from the live network, why, and how large |
+| [methodology.md](methodology.md) | reference | the two arms, networks, workload, one run, metrics, quality, statistics, from the code |
+| [data-dictionary.md](data-dictionary.md) | reference | every file and column of a session |
+| [provenance.md](provenance.md) | reference | copied files and pinned versions |
 | [revert-list.md](revert-list.md) | log | the Mac's baseline, every planned and made change, the final check |
 
-More documents (methodology as implemented, data dictionary, provenance of copied files, results, history, glossary) are added as the work produces them.
+Results documents are added after the runs.
 
 ---
 
