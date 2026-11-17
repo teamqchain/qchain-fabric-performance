@@ -39,7 +39,7 @@ Every file a session writes. Raw files live in `results/raw/<session>/` (not com
 
 | File | Content |
 |---|---|
-| `runs.csv` | every attempt with its recomputed metrics, flags, headline mark, CPU and egress per component, peak memory per component (`mem_peak_mb|<component>`) and total (`mem_total_peak_mb`) |
+| `runs.csv` | every attempt with its recomputed metrics, flags, headline mark, CPU and egress per component, peak memory per component (column `mem_peak_mb` plus a bar and the component name, e.g. the gateway peer) and total (`mem_total_peak_mb`) |
 | `cells.csv`, `cells.md` | per cell (identity, organisations, peers, function, T): medians with bootstrap intervals (`_lo`, `_hi`), CPU per transaction by component, orderer egress per transaction, peak memory per component and total |
 | `ratios.csv`, `ratios.md` | ML-DSA-44 / ECDSA per cell, with intervals and `_differs` |
 | `bytes.csv` | per topology and arm (a split network's halves averaged): mean bytes per write by part, transactions per block, ledger growth per peer |
