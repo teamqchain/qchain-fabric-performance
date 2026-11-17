@@ -16,9 +16,9 @@
 | If you want to know… | Read |
 |---|---|
 | what the study is, in five minutes | the repository [README](../README.md) |
-| the research questions, experiments, setup, metrics, statistics and time | [plan.md](plan.md) |
+| the research questions, experiments, setup, metrics, the trial, quality rules and time | [plan.md](plan.md) |
+| what happened, in order, and why (including every earlier version of the plan) | [history.md](history.md) |
 | why a choice was made | [decisions-log.md](decisions-log.md) |
-| how the plan changed, and every earlier value | [history.md](history.md) |
 | what comes from QChain, and how the study's networks differ from QChain's live network | [live-differences.md](live-differences.md) |
 | what exactly the code measures, and how quality is controlled | [methodology.md](methodology.md) |
 | what every file and column of a session contains | [data-dictionary.md](data-dictionary.md) |
@@ -31,16 +31,16 @@
 
 | Document | Kind | Content |
 |---|---|---|
-| [plan.md](plan.md) | current plan (version 1.1, 17 Nov 2026) | research questions, what comes from QChain, network configuration, experiments, grid, procedure, metrics, the trial, quality rules, outputs, paper outline, time, threats to validity |
-| [decisions-log.md](decisions-log.md) | reference | the decisions in force, by topic, with their reasons |
-| [history.md](history.md) | log | earlier plan versions, superseded values, failed and discarded sessions, and why each change was made |
-| [live-differences.md](live-differences.md) | reference | what is taken from QChain unchanged, and every difference from the live network, why, and its effect on the comparison |
-| [methodology.md](methodology.md) | reference | the two arms, networks, workload, one run, metrics, quality, statistics, from the code |
+| [plan.md](plan.md) | plan (version 1.1, 17 Nov 2026) | research questions, what comes from QChain, network configuration, experiments, grid, procedure, metrics, the trial, quality rules, outputs, paper outline, time, threats to validity; where it differs from what the code does, the reference documents below win |
+| [methodology.md](methodology.md) | reference | the two arms, networks, workload, one run, E2 and E3, metrics, the trial and the frozen values, order and quality, statistics |
 | [data-dictionary.md](data-dictionary.md) | reference | every file and column of a session |
 | [provenance.md](provenance.md) | reference | copied files and pinned versions |
+| [live-differences.md](live-differences.md) | reference | what is taken from QChain unchanged, and every difference from the live network, why, and its effect on the comparison |
+| [decisions-log.md](decisions-log.md) | log | dated decisions in force with their reasons |
+| [history.md](history.md) | narrative | the study from the first plan to the current one, with every earlier value and the failed first trial; the only document about earlier plans |
 | [revert-list.md](revert-list.md) | log | the Mac's baseline, every planned and made change, the final check |
 
-Results documents are added after the runs. Only `history.md` describes earlier designs; every other document describes the current one.
+Results documents are added after the runs.
 
 ---
 

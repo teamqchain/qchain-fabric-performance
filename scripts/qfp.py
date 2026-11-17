@@ -515,6 +515,18 @@ def ledger_sizes(netid, topo):
     return out
 
 
+def vm_meminfo():
+    """(MemTotal, MemAvailable) in bytes of the Colima VM, from its /proc/meminfo; (None, None) if unreadable.
+    With no network running, MemTotal - MemAvailable is the VM's own use (kernel, Docker)."""
+    r = sh(["colima", "ssh", "--profile", "qfp", "--", "cat", "/proc/meminfo"], check=False, timeout=60)
+    vals = {}
+    for line in r.stdout.decode(errors="replace").splitlines():
+        m = re.match(r"(MemTotal|MemAvailable):\s+(\d+) kB", line)
+        if m:
+            vals[m.group(1)] = int(m.group(2)) * 1024
+    return vals.get("MemTotal"), vals.get("MemAvailable")
+
+
 def colima_disk():
     """(used bytes, size bytes) of the Colima VM's Docker disk, or (None, None)."""
     r = sh(["colima", "ssh", "--profile", "qfp", "--", "df", "-P", "-k", "/var/lib/docker"], check=False, timeout=60)
@@ -1012,9 +1024,14 @@ def trial_report(args):
                                      if not v.get("running", True) or v.get("oom") or v.get("restarts")})
 
     # 3. per network: memory peaks, ledger bytes per write, timings
-    vm_mem = docker("info", "--format", "{{.MemTotal}}", check=False).stdout.decode().strip()
-    vm_mem = int(vm_mem) if vm_mem.isdigit() else 0
+    vm_mem, vm_avail = vm_meminfo()
+    if not vm_mem:
+        info = docker("info", "--format", "{{.MemTotal}}", check=False).stdout.decode().strip()
+        vm_mem = int(info) if info.isdigit() else 0
+    # the VM's own use at idle (the report is made with no network running): kernel, Docker, page cache excluded
+    baseline = (vm_mem - vm_avail) if vm_mem and vm_avail else 0
     rep["vm_memory_mb"] = round(vm_mem / 2**20)
+    rep["vm_baseline_mb"] = round(baseline / 2**20)
     nets = os.path.join(sdir, "nets")
     rep["networks"] = {}
     for netid in sorted(os.listdir(nets)):
@@ -1032,6 +1049,7 @@ def trial_report(args):
                 writes += read_json(os.path.join(root, "summary.json"), {}).get("ok", 0)
         led = nj.get("ledger_bytes", {})
         peer_b = [v for k, v in led.items() if k.startswith("peer") and v > 0]
+        orderer_b = [v for k, v in led.items() if k.startswith("orderer") and v > 0]
         tm = nj.get("timings") or {}
         m = re.match(r"o(\d+)p(\d+)-(ecdsa|mldsa44)$", netid)
         rep["networks"][netid] = {
@@ -1040,15 +1058,16 @@ def trial_report(args):
             "mem_gateway_peer_peak_mb": round(peaks.get("qfp_peer0.general.uae.com", 0) / 2**20),
             "mem_largest_container": max(peaks, key=peaks.get) if peaks else None,
             "mem_total_peak_mb": round(total / 2**20),
-            "mem_total_peak_pct_of_vm": round(total / vm_mem * 100, 1) if vm_mem else None,
+            "mem_total_peak_pct_of_vm": round((total + baseline) / vm_mem * 100, 1) if vm_mem else None,   # containers + the VM's own use
             "ledger_bytes_per_write_per_peer": round(statistics.mean(peer_b) / writes) if peer_b else None,
+            "ledger_bytes_orderer": orderer_b[0] if orderer_b else None,   # information only: it holds the Raft log too
             "network_up_s": tm.get("network_up_s"), "setup_s": tm.get("setup_s"), "blocks_dump_s": tm.get("blocks_dump_s"),
         }
     worst = max((v["mem_total_peak_pct_of_vm"] or 0) for v in rep["networks"].values())
     rep["memory_warning"] = worst > 85
-    rep["memory_note"] = ("a network used %.0f %% of the Colima VM's memory (above 85 %%): decide before the main run "
-                          "(stop the Fabric CAs during measurement, or a larger Colima VM)" % worst) if worst > 85 else \
-        "largest network total %.0f %% of the Colima VM's memory" % worst
+    rep["memory_note"] = ("a network used %.0f %% of the Colima VM's memory with the VM's own use (above 85 %%): "
+                          "the project lead decides before the main run" % worst) if worst > 85 else \
+        "largest network total %.0f %% of the Colima VM's memory, the VM's own use included" % worst
 
     # 4. projections for the main session, from the trial's networks (geometric interpolation over the
     # topology size log2(O) + log2(P); bytes per write linear in the endorsements)
@@ -1098,8 +1117,9 @@ def trial_report(args):
                 continue
             t = (up or 120) + w_e1 / w + w_e1 / r_ + 2 * len(T_LEVELS) * REPS * per_run + REPS * 3 * 2 \
                 + (dump or 0) * (w_e1 + setup_writes) + (e2_s if (o, p) == (2, 2) else 0)
-            disk = bpw * (w_e1 + setup_writes) * (p + 1) + 0.2e9 if bpw else None
-            disk1 = bpw * (0.6 * w_e1 + setup_writes) * (p + 1) + 0.2e9 if bpw else None
+            # the peers' ledgers plus the orderer's (its chain is about one peer's; 0.2 GB for its Raft log and the rest)
+            disk = bpw * (p + 1) * (w_e1 + setup_writes) + 0.2e9 if bpw else None
+            disk1 = bpw * (p + 1) * (0.6 * w_e1 + setup_writes) + 0.2e9 if bpw else None
             pct = disk_pct(disk) if disk else None
             plan_rows.append({"network": qfp_gen.net_id(o, p, a), "hours": round(t / 3600, 2),
                               "write_tps": round(w, 1), "read_tps": round(r_, 1),
@@ -1114,7 +1134,7 @@ def trial_report(args):
         up, dump, bpw = interp(m["up"], x), interp(m["dump"], x), interp(m["bpw"], 2, geometric=False)
         writes = sum(min(f * sat, cap[a] or f * sat) * th["e3_duration_s"] for f in E3_FRACTIONS) if sat else 0
         t = (up or 120) + len(E3_FRACTIONS) * (th["e3_duration_s"] + th["settle_s"] + 10) + (dump or 0) * (writes + setup_writes)
-        disk = bpw * (writes + setup_writes) * 3 + 0.2e9 if bpw else None
+        disk = bpw * 3 * (writes + setup_writes) + 0.2e9 if bpw else None
         plan_rows.append({"network": qfp_gen.net_id(2, 2, a) + "-e3r<k> (x%d)" % REPS, "hours": round(REPS * t / 3600, 2),
                           "writes_per_network": round(writes), "disk_gb": round(disk / 1e9, 1) if disk else None,
                           "disk_pct": disk_pct(disk) if disk else None})

@@ -12,7 +12,7 @@ Every file a session writes. Raw files live in `results/raw/<session>/` (not com
 | `session-host.txt`, `preflight-*.txt` | macOS version, model, Colima and Docker versions, preflight problems |
 | `host/host-all.csv` | host monitor: `utc_ns,other_pct,throttle,on_ac,alert,detail` every 5 s (KPI format) |
 | `host/paused.log`, `host/wifi.log` | services paused, Wi-Fi switched off |
-| `trial-report.json` | trial only: `c_cases` (per case and candidate: attempts, failed attempts, write throughput, the candidates within 5 %), `c_choice`, `e3_saturation_tps`, `write_tps_2x2_best`, `containers_down`, `vm_memory_mb`, per network (memory peaks, ledger bytes per write per peer, timings, errors), `memory_warning`, `colima_disk_now_gb`, `projection` (hours, per-network hours and disk, `split_proposed`) |
+| `trial-report.json` | trial only: `c_cases` (per case and candidate: attempts, failed attempts, write throughput, the candidates within 5 %), `c_choice`, `e3_saturation_tps`, `write_tps_2x2_best`, `containers_down`, `vm_memory_mb`, `vm_baseline_mb` (the VM's own use at idle), per network (memory peaks, ledger bytes per write per peer and the orderer's ledger bytes, timings, errors), `memory_warning`, `colima_disk_now_gb`, `projection` (hours, per-network hours and disk, `split_proposed`) |
 
 ## Per network: `nets/<netid>/`
 

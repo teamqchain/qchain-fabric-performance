@@ -40,7 +40,7 @@
 
 ## Overview
 
-QChain issues academic credentials on a Hyperledger Fabric network whose every identity (organisation CA, peer, orderer, admin, client and node TLS) is signed with **ML-DSA-44**, in a fork of Fabric built by the team (Fabric 3.1.5 line, build tag `pqc`). The same fork builds a classical network with ECDSA P-256 identities. Post-quantum certificates and signatures are 4 to 80 times larger than their ECDSA counterparts, and every transaction carries several of them, so the question is what that costs in practice.
+QChain issues academic credentials on a Hyperledger Fabric network whose every identity (organisation CA, peer, orderer, admin, client and node TLS) is signed with **ML-DSA-44**, in a fork of Fabric built by the team (Fabric 3.1.5 line, build tag `pqc`). The same fork builds a classical network with ECDSA P-256 identities. A post-quantum certificate is about 7 times the size of an ECDSA one (5.7 against 0.8 KB) and a signature about 34 times (2,420 against 70 bytes), and every transaction carries several of them, so the question is what that costs in practice.
 
 This repository answers it by repeating the design of Nasir, Qasse, Abu Talib and Bou Nassif (2018, *Security and Communication Networks*): the same three metrics (execution time, latency, throughput), the same stress-test style (all requests at once), and the same three views (more transactions, more peers, more organisations), with the same Fabric fork for both arms. QChain contributes its architecture (the fork, the identity type, the chaincode, the endorsement policy, the orderer, the node configuration); every network setting is the study's own and identical in both arms.
 
@@ -157,12 +157,42 @@ qchain-fabric-performance/
 
 ---
 
+## Running the study
+
+Everything runs from this folder in Terminal, on the Mac, with VS Code, Teams, Chrome, Edge and OneDrive closed, on the charger, with automatic macOS updates off. For a trial or main session the launcher checks this and refuses to start otherwise; it also pauses macOS background services and switches Wi-Fi off for the session, and undoes both when it ends. Keep the window open until it prints `session <name> finished`.
+
+```bash
+# 1. Once: the Colima VM (profile qfp) and the images (the build needs the internet)
+scripts/run-mac.sh colima-up
+scripts/run-mac.sh build
+
+# 2. The trial (E0), about 1.5 hours; then read its report and freeze the values
+scripts/run-mac.sh start trial trial-2
+python3 -I scripts/qfp.py trial-report trial-2        # C, E3's reference rate, memory, disk, time
+python3 -I scripts/qfp.py freeze --c <C> --saturation <rate> [--split o8p8-mldsa44 ...]
+
+# 3. The main session (E1, E2, E3), in one or more sittings
+scripts/run-mac.sh start main main-1
+scripts/run-mac.sh status main-1
+scripts/run-mac.sh resume main-1                      # after an interruption: finished networks are kept
+
+# 4. After the runs
+python3 -I scripts/qfp.py analyse main-1              # tables and figures, inside the analysis image
+python3 -I scripts/qfp.py publish main-1              # privacy scan, SHA256SUMS, results/main-1/
+```
+
+Checks that need no session: `python3 -I scripts/qfp.py selfcheck` (generator against the live files, verbatim copies, the three Fabric clones, Docker) and `python3 -I scripts/qfp.py analysis-selftest` (the analysis on a synthetic session). `python3 -I scripts/qfp.py down` removes every study container and network volume left by an interrupted session. Raw results stay in the git-ignored `results/raw/<session>/`.
+
+---
+
 ## Recent updates
 
-- **17 November 2026: plan 1.1.** QChain gives the architecture, the study every setting: blocks of 100 everywhere, no container memory limits, the live-settings check dropped, the offered-load sweep (now E3) always run in its own networks, C chosen by the trial from 100, 200, 300. Code, images and documents updated; how and why the plan changed is in [docs/history.md](docs/history.md).
-- **16 November 2026: images built, smoke sessions passed.** Fabric fork and chaincode built for arm64; the chaincode's dependency tree matches the live image.
+- **17 November 2026: plan 1.1 approved.** QChain contributes its architecture; every network setting is the study's own and identical in both arms (blocks of 100 transactions, no container memory limits). Experiments E0 to E3. Code, images and documents updated and checked (generator self-check, client unit tests, analysis self-test, a real session through `analyse` and `publish`).
+- **16 November 2026: images built, smoke sessions passed.** Fabric fork and chaincode built for arm64; the chaincode's dependency tree matches the live image; (1,1) networks of both arms ran writes and reads without a failure.
 - **16 November 2026: code written.** Network generator (self-checked against the live files), client, driver, launcher, Dockerfiles, analysis, documentation.
 - **16 November 2026: planning done.** Literature review (45 papers), plan approved, repository created.
+
+The whole story, with the reasons for each turn and every earlier version of the plan, is in [docs/history.md](docs/history.md).
 
 ---
 
@@ -204,7 +234,7 @@ qchain-fabric-performance/
 - **Verbatim copies.** The chaincode and the network files are copied byte for byte from `qchain-network`, except the differences listed in [docs/live-differences.md](docs/live-differences.md). A check script compares them.
 - **Revert list.** Every change to the test machine is written in [docs/revert-list.md](docs/revert-list.md) before it is made, and reverted at the end.
 - **Frozen thresholds.** The quality thresholds are not changed after the trial (E0).
-- **Script names.** A script tied to one experiment starts with it (`eN-`); one tied to the Mac ends with `-mac`: `eN-<purpose>-<machine>`.
+- **Script names.** A script tied to the Mac ends with `-mac` (`run-mac.sh`, `monitor-mac.sh`); the driver `qfp.py` works on any machine with Docker.
 - **Commits.** No co-author lines.
 
 ---

@@ -1,8 +1,6 @@
 # Decisions log
 
-The decisions in force, with their reasons, grouped by topic. Each row is a decision of the project lead unless it says otherwise; the date is the day it took its current form. Superseded decisions, and how each one changed, are in [history.md](history.md); the plan itself is [plan.md](plan.md).
-
-## Scope
+The decisions about the study (scope, machine, design, settings, run rules) and the decisions taken while building the harness, with their reasons. Each row is a decision of the project lead unless it says otherwise; the date is the day the decision took its current form. Only the decisions in force are listed: an earlier form of a decision, and why it changed, is in [history.md](history.md). The plan itself is [plan.md](plan.md). Newest last.
 
 | Date | Decision | Why |
 |---|---|---|
@@ -10,58 +8,33 @@ The decisions in force, with their reasons, grouped by topic. Each row is a deci
 | 15 Nov | Same approach and rules as `qchain-kpi`; methodology and aim differ. | Proven way of working. |
 | 16 Nov | The design repeats Nasir, Qasse, Abu Talib and Bou Nassif (2018), "Performance Analysis of Hyperledger Fabric Platforms". | Reference paper from Prof. Qassim Nasir; Dr. Manar Abu Talib is a co-author. |
 | 16 Nov | Compare the same Fabric fork with ECDSA identities against ML-DSA-44 identities. No version comparison, no other post-quantum algorithms. | Isolates the identity algorithm; the KPI study covered algorithms. |
-| 17 Nov | Four research questions: more transactions (RQ1), more peers (RQ2), more organisations (RQ3), and the other costs: memory, CPU, sizes, ledger, traffic, TLS setup (RQ4). | The reference paper's three views plus the costs post-quantum identities add. |
-
-## What comes from QChain
-
-| Date | Decision | Why |
-|---|---|---|
-| 17 Nov | **QChain contributes only its architecture:** the Fabric fork, the identity type (the one variable), the chaincode, the endorsement policy (MAJORITY), one Raft orderer, the node configuration files `core.yaml` and `orderer.yaml` unchanged (goleveldb, gateway limit 500, block gossip off), a Fabric CA per organisation. Every other setting is the study's own and identical in both arms; QChain's deployed channel settings and container limits are not used. | One consistent rule: the study compares the identity cryptography, not QChain's deployment; taking some values from the deployment and others from the literature would be inconsistent. |
-| 16 Nov | Per-organisation Fabric CA exactly as on the live network; `issuer1@general` enrolled from GeneralCA with `role=issuer:ecert`; nodes and admins from cryptogen. | The client certificate is stored twice in every transaction, so its exact shape changes transaction size. |
-| 16 Nov | The chaincode and the cryptogen and network files are copied byte for byte from `qchain-network`; the generated files differ from them only as listed in `docs/live-differences.md`, checked by a self-check. | Faithfulness to QChain's architecture. |
-| 16 Nov | The chaincode image has the live image's entry point, folder, user and dependency tree (read from the live host); the build fails on any difference. | The chaincode's code path equals the live one. |
-
-## The study's settings
-
-| Date | Decision | Why |
-|---|---|---|
-| 17 Nov | Blocks: 100 transactions, 16 MB preferred, 99 MB absolute, 2 s timer, in every network. | Thakkar et al. (2018) and Ouadrassi et al. (2026): larger blocks avoid a block-size bottleneck at saturation. A 512 KB preferred size would cut blocks by size, and since an ML-DSA-44 write is about twice an ECDSA one, ML-DSA-44 blocks would hold fewer transactions than ECDSA blocks. 99 MB and 2 s are Fabric's sample values. |
-| 17 Nov | No memory or CPU limit on any container; peak memory is measured per container and for the whole network. | Limits are a deployment choice, not part of the research questions; the memory each arm needs is a result (RQ4). The ceiling is the Colima VM. |
-| 17 Nov | C (writes in flight) is chosen by the trial from 100, 200, 300: among the values that complete 10,000 writes with no container down, the smallest within 5 % of the best write throughput in both the heaviest case, (8,8) ML-DSA-44, and the fastest, (2,2) ECDSA. One C for every run. | C must fill a block of 100 and stay below the gateway's limit of 500; the smallest value that saturates both extremes adds the least queueing to the latencies. |
-| 16 Nov | Workload T in {1, 10, 100, 1,000, 10,000}; topologies (O,P) in (1,1) (1,2) (1,4) (1,8) (2,2) (2,4) (2,8) (4,4) (4,8) (8,8); O in {1, 2, 4, 8}. | Mac capacity (8 GB, 8 cores); MAJORITY gives 1, 2, 3, 5 endorsements. |
+| 16 Nov | Machine: this Mac only. No VM, no Obeid's laptop. Nothing is asked of Obeid. | The live network keeps running. |
 | 16 Nov | Functions: `issueCredential` (write) and `getCredential` (read). | QChain's two key operations; the same pair as the reference paper's invoke and query. |
+| 16 Nov | Workload T in {1, 10, 100, 1,000, 10,000}; topologies (O,P) in (1,1) (1,2) (1,4) (1,8) (2,2) (2,4) (2,8) (4,4) (4,8) (8,8); O in {1, 2, 4, 8}. | Mac capacity (8 GB, 8 cores); MAJORITY endorsement gives 1, 2, 3, 5 endorsements. |
+| 16 Nov | Per-organisation Fabric CA exactly as on the live network; `issuer1@general` enrolled from GeneralCA with `role=issuer:ecert`; nodes and admins from cryptogen. | The client certificate is stored twice in every transaction, so its exact shape changes transaction size. |
 | 16 Nov | One chaincode server per organisation. | One Node.js server would be an artificial bottleneck at 8 organisations. |
 | 16 Nov | Persistent client connections in the grid; the connection cost is measured separately (E2). | Thousands of TLS handshakes would swamp the bursts. |
-
-## Experiments
-
-| Date | Decision | Why |
-|---|---|---|
-| 17 Nov | Four experiments: E0 trial, E1 main grid, E2 connection setup inside E1's (2,2) networks, E3 offered-load sweep. | They answer the four research questions and nothing outside them. |
-| 17 Nov | E3 always runs, in its own (2,2) networks, one per arm and repetition (10 networks): writes at 10, 25, 50, 75, 90, 100, 110 % of the trial's ECDSA saturation at (2,2), 60 s each, at most 480 in flight. | One repetition writes about 100,000 transactions; inside E1's networks the sweep would add about 540,000 writes to one ledger (about 44 GB, near the disk guard) and distort that network's ledger growth. |
-| 17 Nov | No deadline for the experiments. The main session may run in sittings (it resumes by network); between sittings the images stay unchanged and automatic macOS updates stay off (they may be switched on during a long pause). | The Final Report comes first. |
-| 17 Nov | The trial reports the time, memory and disk projections; the project lead decides any reduction (nothing is capped automatically). An E1 network projected above 80 % of the Colima disk is proposed for a split into two networks (repetitions 1 to 3, then 4 and 5), decided at freeze. | No deadline; a 60 GiB disk. |
-
-## Machine and running
-
-| Date | Decision | Why |
-|---|---|---|
-| 16 Nov | Machine: this Mac only. No VM, no Obeid's laptop. Nothing is asked of Obeid. | The live network keeps running. |
-| 16 Nov | Mac conditions as in the KPI study (services paused, Wi-Fi off during runs, apps closed, `caffeinate`, adapter connected); the cooling pad is used for every run. | Noise control. |
-| 16 Nov | Automatic macOS updates off for the whole study (revert list R11). | An update or restart during a session would break it. |
+| 16 Nov | Mac conditions as in the KPI study (services paused, Wi-Fi off during runs, apps closed, `caffeinate`, adapter connected); the cooling pad exists and is used for every run. | Noise control. |
 | 16 Nov | Docker and Colima with Dockerfiles; images built natively for arm64, never emulated; installs only right before testing, each written to the revert list first. | KPI rule. |
-| 16 Nov | Colima disk 60 GiB (the Mac had 75 GiB free); the trial measures the real ledger growth. | Disk. |
-| 16 Nov | Code everything first, then run unattended. | The KPI study's loop of coding and running was slow. |
+| 16 Nov | The chaincode and the cryptogen and network files are copied byte for byte from `qchain-network`; the generated files differ from them only as listed in `docs/live-differences.md`, checked by a self-check. | Faithfulness to QChain's architecture. |
+| 16 Nov | The chaincode image has the live image's entry point, folder, user and dependency tree (read from the live host with one read-only command); the build fails on any difference. | The chaincode's code path equals the live one. |
 | 16 Nov | Repository name `qchain-fabric-performance` (private). Literature review folder `Performance Analysis of Hyperledger Fabric/Literature Review`. | |
+| 16 Nov | Code everything first, then run unattended. | Short time; the KPI loop of coding and running was slow. |
+| 16 Nov | The Colima disk is 60 GiB (the Mac had 75 GiB free). The trial measures the real ledger growth; an E1 network projected above 80 % of the disk is proposed for a split into two networks (repetitions 1 to 3, then 4 and 5), decided at freeze. | Disk: the largest network, (8,8) with ML-DSA-44, is expected to be the biggest. |
 | 16 Nov | Figure colours: ECDSA blue `#0072B2`, ML-DSA-44 vermillion `#D55E00`. | This is a separate paper; the KPI paper's machine colours do not constrain it. |
-
-## Tooling (proposals of the assistant, accepted)
-
-| Date | Decision | Why |
-|---|---|---|
-| 16 Nov | No docker-compose; the driver starts every container with `docker run` and the images are built with `docker buildx` (revert list R1). | One fewer install; the per-topology containers are generated, not hand-written. |
-| 16 Nov | The configuration folder is mounted at `FABRIC_CFG_PATH` instead of `core.yaml` / `orderer.yaml` alone. | Docker volume sub-paths must be folders (no host mounts in Colima); the nodes read the same file at the same path. |
-| 16 Nov | One image (`qfp/fabric`) carries peer, orderer, Fabric CA and the tools, on Debian 13 with a shell and openssl. | The live images are host-built and have no recipe; one image keeps the binaries identical across roles. |
-| 16 Nov | A Go 1.27.4 toolchain in the session scratchpad (revert list R10) for compile checks while coding. | Nothing installed on the Mac; the images build and test the client with their own Go. |
-| 16 Nov | The client records commit on every peer through per-peer filtered block events, and its own CPU through `getrusage`. | The working group's network-wide latency; the client container is short-lived, so its CPU cannot be read from Docker after it exits. |
+| 16 Nov | Automatic macOS updates are off for the whole study (revert list R11); they are switched on again at the end. | An update or restart during a session would break it. |
+| 16 Nov | No docker-compose: the driver starts every container with `docker run` and the images are built with `docker buildx` (revert list R1). Proposal of the assistant, accepted. | One fewer install; the per-topology containers are generated, not hand-written. |
+| 16 Nov | The generated configuration folder is mounted at `FABRIC_CFG_PATH` instead of `core.yaml` and `orderer.yaml` alone. Proposal of the assistant, accepted. | Docker volume sub-paths must be folders (no host mounts in Colima); the nodes read the same file at the same path. |
+| 16 Nov | One image (`qfp/fabric`) carries peer, orderer, Fabric CA and the tools, on Debian 13 with a shell and openssl. Proposal of the assistant, accepted. | The live images are host-built and have no recipe; one image keeps the binaries identical across roles. |
+| 16 Nov | A Go 1.27.4 toolchain in the session scratchpad (revert list R10) for compile checks while coding. Proposal of the assistant, accepted. | Nothing installed on the Mac; the images build and test the client with their own Go. |
+| 16 Nov | The client records commit on every peer through per-peer filtered block events, and its own CPU through `getrusage`. Proposal of the assistant, accepted. | The working group's network-wide latency; the client container is short-lived, so its CPU cannot be read from Docker after it exits. |
 | 17 Nov | The driver records every container's state (running, killed for memory, exit code) and last log lines after each run; a failed extra (E2, E3) or ledger read-back is recorded in the network's file instead of failing the network. | A dead container must be visible in the results, and one failure must not discard a network's other measurements. |
+| 17 Nov | **QChain contributes only its architecture:** the Fabric fork, the identity type (the one variable), the chaincode, the endorsement policy (MAJORITY), one Raft orderer, the node configuration files `core.yaml` and `orderer.yaml` unchanged (goleveldb, gateway limit 500, block gossip off), a Fabric CA per organisation. Every other setting is the study's own and identical in both arms; QChain's deployed channel settings and container limits are not used. | One consistent rule: the study compares the identity cryptography, not QChain's deployment; taking some values from the deployment and others from the literature would be inconsistent. |
+| 17 Nov | Four research questions: more transactions (RQ1), more peers (RQ2), more organisations (RQ3), and the other costs: memory, CPU, sizes, ledger, traffic, TLS setup (RQ4). | The reference paper's three views plus the costs post-quantum identities add. |
+| 17 Nov | Blocks: 100 transactions, 16 MB preferred, 99 MB absolute, 2 s timer, in every network. | Thakkar et al. (2018) and Ouadrassi et al. (2026): larger blocks avoid a block-size bottleneck at saturation. A 512 KB preferred size would cut blocks by size, and since an ML-DSA-44 write is about twice an ECDSA one, ML-DSA-44 blocks would hold fewer transactions than ECDSA blocks. 99 MB and 2 s are Fabric's sample values. |
+| 17 Nov | No memory or CPU limit on any container; peak memory is measured per container and for the whole network. | Limits are a deployment choice, not part of the research questions; the memory each arm needs is a result (RQ4). The ceiling is the Colima VM. |
+| 17 Nov | Four experiments: E0 trial, E1 main grid, E2 connection setup inside E1's (2,2) networks, E3 offered-load sweep. | They answer the four research questions and nothing outside them. |
+| 17 Nov | C (writes in flight) is chosen by the trial from 100, 200, 300: among the values that complete 10,000 writes with no container down, the smallest within 5 % of the best write throughput in both the heaviest case, (8,8) ML-DSA-44, and the fastest, (2,2) ECDSA. One C for every run. | C must fill a block of 100 and stay below the gateway's limit of 500; the smallest value that saturates both extremes adds the least queueing to the latencies. |
+| 17 Nov | E3 runs in its own (2,2) networks, one per arm and repetition (10 networks): writes at 10, 25, 50, 75, 90, 100, 110 % of the trial's ECDSA saturation at (2,2), 60 s each, at most 480 in flight. | One repetition writes about 100,000 transactions; its own network keeps that load out of every E1 ledger, whose growth is a measured result. |
+| 17 Nov | No deadline for the experiments. The main session may run in sittings (it resumes by network); between sittings the images stay unchanged and automatic macOS updates stay off (they may be switched on during a long pause). | The Final Report comes first. |
+| 17 Nov | The trial reports the time, memory and disk projections; the project lead decides any reduction (nothing is capped automatically). | No deadline; a 60 GiB disk and a 5 GiB VM. |

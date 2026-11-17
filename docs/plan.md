@@ -1,8 +1,8 @@
-# QChain Fabric Performance: Plan
+# QChain Fabric Performance: Consolidated Plan
 
-**Version 1.1, 17 November 2026.** Status: **plan approved by the project lead (17 Nov); code and images updated; the trial (E0) is next.** The study: ECDSA against ML-DSA-44 identities on QChain's Fabric architecture, as transactions, peers and organisations grow.
+**Version 1.1, 17 November 2026.** Status: **plan approved by the project lead (17 Nov); code, images and documents updated; the trial (E0) is next.** The study: ECDSA against ML-DSA-44 identities on QChain's Fabric architecture, as transactions, peers and organisations grow. Code and results live in the private repository `teamqchain/qchain-fabric-performance`; the machine is the project lead's MacBook Air M1 (§3).
 
-This is the current plan. The reason for each choice is in [decisions-log.md](decisions-log.md); how the plan reached this version, and every earlier value, is in [history.md](history.md).
+**This copy lives in the repository as `docs/plan.md`; it is the current plan. Where it disagrees with `docs/methodology.md` or `docs/data-dictionary.md`, those describe what the code does and win.** The reason for each choice is in `docs/decisions-log.md`; how the plan reached this version, and every earlier value, is in `docs/history.md`.
 
 ---
 
@@ -12,10 +12,10 @@ This is the current plan. The reason for each choice is in [decisions-log.md](de
 
 | RQ | Question | Expected result (hypothesis, with the reason) |
 |---|---|---|
-| RQ1 | How do execution time, latency (average and tails) and throughput change for both arms as the **number of transactions** grows from 1 to 10,000, for writes and reads? | T <= 100: no visible difference, the 2 s block timer dominates. T >= 1,000: write throughput lower with ML-DSA-44 (published range -10 to -28 %). Reads lose less: one client signature and one peer signature each. |
+| RQ1 | How do execution time, latency (average and tails) and throughput change for both arms as the **number of transactions** grows from 1 to 10,000, for writes and reads? | T = 1 and 10: no difference, the burst waits for the 2 s block timer. From T = 100, where a block of 100 fills at once, write throughput is lower with ML-DSA-44 (published: 10 to 28 % lower in two studies, 40 to 68 % in a thesis). Reads lose less: one client signature and one peer signature each. |
 | RQ2 | How do they change as the **number of peers** grows from 1 to 8? | The overhead grows: every peer checks every signature of every block and receives larger blocks; on one machine all peers share the CPU. |
-| RQ3 | How do they change as the **number of organisations**, and so endorsements, grows from 1 to 8? | Largest growth: each extra endorsement adds about 7.8 KB and one more signature to check with ML-DSA-44, against about 1 KB with ECDSA. |
-| RQ4 | What else do ML-DSA-44 identities cost: **peak memory, CPU, transaction and block size, ledger growth, network traffic and TLS connection setup**? | Bytes first (ledger about 2 to 3 times larger), higher peak memory under the same burst (larger endorsements held at the gateway peer), more CPU; TLS only when connections are opened. |
+| RQ3 | How do they change as the **number of organisations**, and so endorsements, grows from 1 to 8? | Largest growth: each extra endorsement adds about 8.1 KB (a certificate and a signature) and one more signature to check with ML-DSA-44, against about 0.9 KB with ECDSA. |
+| RQ4 | What else do ML-DSA-44 identities cost: **peak memory, CPU, transaction and block size, ledger growth, network traffic and TLS connection setup**? | Bytes first (a write is 2 to 3 times larger, so the ledger is too), higher peak memory under the same burst (larger endorsements held at the gateway peer), more CPU; TLS only when connections are opened. |
 
 RQ1 is read from topology (1,1); RQ2 from the topologies (1,P); RQ3 from the topologies (O,P); RQ4 from every network, with E2 and E3.
 
@@ -58,7 +58,7 @@ Every difference from QChain's live network is listed in [live-differences.md](l
 
 **E2:** one `getCredential` read on a fresh connection (new TLS handshake, new Gateway, then the read) against the same read on a connection already open. Reads never reach the orderer, so the block settings play no part.
 
-**E3:** writes sent open-loop at 10, 25, 50, 75, 90, 100 and 110 % of the ECDSA write saturation at (2,2) measured in the trial; the same rates for both arms, so the ML-DSA-44 arm reaches overload earlier. At most 480 writes in flight (below the gateway's limit of 500); a send beyond that is counted as dropped. Each repetition runs in a fresh (2,2) network: one repetition writes about 100,000 transactions, and inside an E1 network the sweep would fill the disk and distort that network's ledger growth (M9).
+**E3:** writes sent open-loop at 10, 25, 50, 75, 90, 100 and 110 % of the ECDSA write saturation at (2,2) measured in the trial; the same rates for both arms, so the ML-DSA-44 arm reaches overload earlier. At most 480 writes in flight (below the gateway's limit of 500); a send beyond that is counted as dropped. Each repetition runs in a fresh (2,2) network of its own: one repetition writes about 100,000 transactions, and its own network keeps that load out of every E1 ledger (ledger growth is a measured result, M9).
 
 ## 5. Grid
 
@@ -73,7 +73,7 @@ Long-running containers per topology = 1 orderer + P peers + O chaincode servers
 | (4,4) (4,8) | 1 / 2 | 3 | 13 / 17 |
 | (8,8) | 1 | 5 | 25 |
 
-Measured write size at one endorsement: 20.6 KB (ECDSA) and 39.9 KB (ML-DSA-44). Estimated: 2 endorsements 22 and 48 KB; 3: 23 and 55 KB; 5: 25 and 71 KB.
+Size of a credential write (`issueCredential`, 1,411 transactions per arm in a smoke session): at one endorsement 20.0 KB (ECDSA) and 39.4 KB (ML-DSA-44), of which certificates 2.4 and 17.0 KB; each further endorsement adds a certificate and a signature, about 0.9 KB (ECDSA) and 8.1 KB (ML-DSA-44). Estimated from these: 2 endorsements 20.9 and 47.5 KB; 3: 21.8 and 55.6 KB; 5: 23.6 and 71.8 KB (the study measures them).
 
 ## 6. Workload and procedure
 
@@ -117,7 +117,7 @@ Writes run with C rising, so that a network that runs out of memory at a high C 
 
 **E3's reference:** the best ECDSA write throughput at (2,2).
 
-**Memory:** the peak of every container and of each network's total, against the Colima VM's memory. Above 85 % in any network, the project lead decides before the main run (stop the CAs during measurement, or a larger VM).
+**Memory:** the peak of every container and of each network's total, against the Colima VM's memory (4,905 MB, of which the VM itself uses about 0.6 GB; there is no swap, so a shortage ends in the kernel killing a container). Above 85 % in any network, the project lead decides before the main run.
 
 **Disk:** each network's ledger is projected from the trial's bytes per write. An E1 network projected above 80 % of the Colima disk is proposed for a split into two networks (repetitions 1 to 3, then 4 and 5); during runs a network stops if the disk passes 85 %.
 
@@ -133,7 +133,7 @@ Flags: other macOS CPU above 5 %, thermal pressure above nominal, battery or Low
 
 E1: 200 cells x about 20 numbers, 100 ECDSA-against-ML-DSA-44 comparisons, about 2.2 million transaction records, one byte breakdown per network. E2: 2,000 connection timings per arm. E3: 2 curves of 7 points, 5 repetitions each.
 
-Figures: F1 transaction flow; F2-F4 execution time, latency, throughput against T at (1,1); F5 the same against P at T = 1,000 and 10,000; F6 ratio heatmap over P x T; F7 against O at P = 4 and P = 8; F8 ratio heatmap over O x P; F9 bytes per write by part against endorsements; F10 ledger growth; F11 CPU per write by component; F12 peak memory (network total and gateway peer) against O; F13 orderer egress against P; F14 stages of a write; F15 connection setup (E2); F16 latency against offered load (E3). ECDSA blue `#0072B2`, ML-DSA-44 vermillion `#D55E00`, values at bar ends, every log axis labelled "(log scale)". Tables: T1 setup, T2 what comes from QChain and what the study chooses, T3 topologies, T4 all cells (appendix), T5 ratios, T6 comparison with Nasir et al. 2018, the SmartCity repository, Hu and Lin, PQFabric.
+Figures: F1 transaction flow; F2-F4 execution time, latency, throughput against T at (1,1); F5 the same against P at T = 1,000 and 10,000; F6 ratio heatmap over P x T; F7 against O at P = 4 and P = 8; F8 ratio heatmap over O x P; F9 bytes per write by part against endorsements; F10 ledger growth; F11 CPU per write by component; F12 peak memory (network total and gateway peer) against O at 8 peers; F13 orderer egress against P; F14 stages of a write; F15 connection setup (E2); F16 latency against offered load (E3). ECDSA blue `#0072B2`, ML-DSA-44 vermillion `#D55E00`, values at bar ends, every log axis labelled "(log scale)". Tables: T1 setup, T2 what comes from QChain and what the study chooses, T3 topologies, T4 all cells (appendix), T5 ratios, T6 comparison with Nasir et al. 2018, the SmartCity repository, Hu and Lin, PQFabric.
 
 ## 11. Paper outline
 
@@ -142,7 +142,7 @@ Figures: F1 transaction flow; F2-F4 execution time, latency, throughput against 
 ## 12. Time
 
 - **Trial:** about 1.5 h.
-- **Main session:** projected by the trial, network by network. An earlier test (17 Nov) measured about 19 writes per second at (8,8) with ML-DSA-44, so one 10,000-write run there takes about 10 min; the main session may take 20 h or more.
+- **Main session:** projected by the trial, network by network. The networks with the most peers and endorsements take the longest, (8,8) with ML-DSA-44 above all: writes there are slowest, and each of the 5 repetitions sends 10,000 of them. The trial's projection is the reference.
 - **No deadline:** the main session may run in several sittings (it resumes by network). Between sittings the images stay unchanged and automatic macOS updates stay off; during a long pause the updates may be switched on and off again.
 
 ## 13. Threats to validity
