@@ -9,7 +9,7 @@
 #   scripts/run-mac.sh status <session>
 #
 # For trial and main sessions the machine must be quiet (KPI rules, carried over): mains power,
-# no thermal pressure, Low Power Mode off, automatic updates off, Teams, Chrome, Edge, VS Code and
+# no thermal pressure, Low Power Mode off, automatic updates off, Teams, Chrome, Edge, VS Code (found by its path) and
 # OneDrive closed, host CPU idle. During a session the macOS background analysis services are
 # paused, Wi-Fi is switched off, the Mac is kept awake and a host monitor records other CPU,
 # thermal pressure and power every 5 s; all of it is undone when the script ends, on every exit
@@ -41,9 +41,11 @@ preflight_host() {
     out="$(defaults read /Library/Preferences/com.apple.SoftwareUpdate "$key" 2>/dev/null || true)"
     [ "$out" != "1" ] || problem "automatic macOS updates are on ($key); turn them off in System Settings > General > Software Update > Automatic updates"
   done
-  for app in "MSTeams" "Microsoft Teams" "Google Chrome" "Microsoft Edge" "Code" "OneDrive"; do
+  for app in "MSTeams" "Microsoft Teams" "Google Chrome" "Microsoft Edge" "OneDrive"; do
     if pgrep -a -x -q "$app"; then problem "$app is running (close it during trial and main runs)"; fi
   done
+  # VS Code's main process is called Electron, so it is found by its path
+  if pgrep -f "Visual Studio Code.app/Contents/MacOS/" >/dev/null 2>&1; then problem "VS Code is running (close it during trial and main runs)"; fi
   free_kb="$(df -Pk "$HOME" | awk 'NR==2{print $4}')"
   [ "$free_kb" -ge 20971520 ] || problem "less than 20 GB free on the Mac"
   busy="$(top -l 3 -s 2 -n 0 | awk '/^CPU usage/{u=$3; s=$5} END{gsub("%","",u); gsub("%","",s); printf "%.0f", u+s}')"
