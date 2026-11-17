@@ -16,9 +16,10 @@
 | If you want to know… | Read |
 |---|---|
 | what the study is, in five minutes | the repository [README](../README.md) |
-| the research questions, experiments, setup, metrics, statistics and time budget | [plan.md](plan.md) |
+| the research questions, experiments, setup, metrics, statistics and time | [plan.md](plan.md) |
 | why a choice was made | [decisions-log.md](decisions-log.md) |
-| how this network differs from QChain's live network | [live-differences.md](live-differences.md) |
+| how the plan changed, and every earlier value | [history.md](history.md) |
+| what comes from QChain, and how the study's networks differ from QChain's live network | [live-differences.md](live-differences.md) |
 | what exactly the code measures, and how quality is controlled | [methodology.md](methodology.md) |
 | what every file and column of a session contains | [data-dictionary.md](data-dictionary.md) |
 | where every copied file and pinned version comes from | [provenance.md](provenance.md) |
@@ -30,15 +31,16 @@
 
 | Document | Kind | Content |
 |---|---|---|
-| [plan.md](plan.md) | snapshot (16 Nov 2026) | research questions, experiments, setup, grid, procedure, metrics, quality rules, outputs, paper outline, time budget, threats to validity |
-| [decisions-log.md](decisions-log.md) | log | dated decisions with their reasons |
-| [live-differences.md](live-differences.md) | reference | every difference from the live network, why, and how large |
+| [plan.md](plan.md) | current plan (version 1.1, 17 Nov 2026) | research questions, what comes from QChain, network configuration, experiments, grid, procedure, metrics, the trial, quality rules, outputs, paper outline, time, threats to validity |
+| [decisions-log.md](decisions-log.md) | reference | the decisions in force, by topic, with their reasons |
+| [history.md](history.md) | log | earlier plan versions, superseded values, failed and discarded sessions, and why each change was made |
+| [live-differences.md](live-differences.md) | reference | what is taken from QChain unchanged, and every difference from the live network, why, and its effect on the comparison |
 | [methodology.md](methodology.md) | reference | the two arms, networks, workload, one run, metrics, quality, statistics, from the code |
 | [data-dictionary.md](data-dictionary.md) | reference | every file and column of a session |
 | [provenance.md](provenance.md) | reference | copied files and pinned versions |
 | [revert-list.md](revert-list.md) | log | the Mac's baseline, every planned and made change, the final check |
 
-Results documents are added after the runs.
+Results documents are added after the runs. Only `history.md` describes earlier designs; every other document describes the current one.
 
 ---
 

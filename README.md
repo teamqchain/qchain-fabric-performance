@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>What does it cost to make every Hyperledger Fabric identity post-quantum?</b><br/>
-  A performance study of QChain's Fabric network with ECDSA identities against ML-DSA-44 identities, as workload, peers and organisations grow, in the design of Nasir et al. (2018): 5 experiments, 1,000 main runs, one machine
+  A performance study of QChain's Fabric network with ECDSA identities against ML-DSA-44 identities, as workload, peers and organisations grow, in the design of Nasir et al. (2018): 4 experiments, 1,000 main runs, one machine
 </p>
 
 <p align="center">
@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Go-1.27-00ADD8" alt="Go" />
   <img src="https://img.shields.io/badge/liboqs-0.16.0-6E40C9" alt="liboqs" />
   <img src="https://img.shields.io/badge/Machine-MacBook%20Air%20M1%20%C2%B7%20Colima-2F3134" alt="Machine" />
-  <img src="https://img.shields.io/badge/Status-code%20written%2C%20not%20run%20yet-F2A900" alt="Status" />
+  <img src="https://img.shields.io/badge/Status-trial%20next-F2A900" alt="Status" />
   <img src="https://img.shields.io/badge/License-Proprietary-red" alt="License" />
 </p>
 
@@ -25,12 +25,13 @@
 
 | | |
 |---|---|
-| **Plan** | approved by the project lead on 16 November 2026 ([docs/plan.md](docs/plan.md)) |
+| **Plan** | version 1.1, approved by the project lead on 17 November 2026 ([docs/plan.md](docs/plan.md); earlier versions in [docs/history.md](docs/history.md)) |
 | **Literature review** | done: 45 papers, kept outside this repository |
-| **Code** | written and unit-tested on 16 November 2026 (client tests, generator self-check, plan checks); images not built yet |
-| **Measurements** | not started |
+| **Code** | written 16 November, updated for plan 1.1 on 17 November 2026; client unit tests run in the image build, generator self-check and analysis self-test pass |
+| **Images** | built natively for arm64 in Colima (17 November 2026); the chaincode image's dependency tree equals the live image's |
+| **Measurements** | two smoke sessions passed (16 November); the trial (E0) is next |
 | **Test machine** | one MacBook Air M1; every change to it is recorded in [docs/revert-list.md](docs/revert-list.md) before it is made |
-| **Next** | installs (revert list first), the arm64 image builds, the trial (E0), then the unattended main run |
+| **Next** | the trial (E0), the frozen values (C, E3's reference rate), then the main session, in sittings if needed |
 
 > ⚠️ **Private until publication.** This repository becomes public when the paper is published. Credentials never enter
 > any file, and every run folder will pass an automatic privacy scan before it is committed.
@@ -41,14 +42,14 @@
 
 QChain issues academic credentials on a Hyperledger Fabric network whose every identity (organisation CA, peer, orderer, admin, client and node TLS) is signed with **ML-DSA-44**, in a fork of Fabric built by the team (Fabric 3.1.5 line, build tag `pqc`). The same fork builds a classical network with ECDSA P-256 identities. Post-quantum certificates and signatures are 4 to 80 times larger than their ECDSA counterparts, and every transaction carries several of them, so the question is what that costs in practice.
 
-This repository answers it by repeating the design of Nasir, Qasse, Abu Talib and Bou Nassif (2018, *Security and Communication Networks*): the same three metrics (execution time, latency, throughput), the same stress-test style (all requests at once), and the same three views (more transactions, more peers, more organisations), with the same Fabric fork for both arms.
+This repository answers it by repeating the design of Nasir, Qasse, Abu Talib and Bou Nassif (2018, *Security and Communication Networks*): the same three metrics (execution time, latency, throughput), the same stress-test style (all requests at once), and the same three views (more transactions, more peers, more organisations), with the same Fabric fork for both arms. QChain contributes its architecture (the fork, the identity type, the chaincode, the endorsement policy, the orderer, the node configuration); every network setting is the study's own and identical in both arms.
 
 | | Question |
 |---|---|
-| **RQ1** | How do execution time, latency (average and tails) and throughput change from 1 to 10,000 transactions, for writes and reads? |
-| **RQ2** | How does the overhead change as peers grow from 1 to 8? |
-| **RQ3** | How does it change as organisations, and so endorsements, grow from 1 to 8? |
-| **RQ4** | Where does the cost come from: bytes, CPU or TLS connection setup? |
+| **RQ1** | How do execution time, latency (average and tails) and throughput change for both arms as the number of transactions grows from 1 to 10,000, for writes and reads? |
+| **RQ2** | How do they change as the number of peers grows from 1 to 8? |
+| **RQ3** | How do they change as the number of organisations, and so endorsements, grows from 1 to 8? |
+| **RQ4** | What else do ML-DSA-44 identities cost: peak memory, CPU, transaction and block size, ledger growth, network traffic, TLS connection setup? |
 
 ---
 
@@ -62,12 +63,13 @@ This repository answers it by repeating the design of Nasir, Qasse, Abu Talib an
                                                  (4,4) (4,8)  (8,8)
 
  Colima VM (arm64, 4 vCPU, 5 GiB)
- ┌──────────────────────────────────────────────────────────────────────────────┐
+ ┌────────────────────────────────────────────────────────────────────────────────┐
  │  Go client ──gRPC/TLS──> peer0.general ──> endorsing peers (MAJORITY of orgs)  │
- │     │                          │                                              │
+ │     │                          │                                               │
  │     └── block events <─────────┴── orderer (Raft, 1 node) ── blocks ──> peers  │
- │  one chaincode server and one Fabric CA per organisation                      │
- └──────────────────────────────────────────────────────────────────────────────┘
+ │  one chaincode server and one Fabric CA per organisation                       │
+ │  study settings, same in both arms: blocks of 100, no container limits         │
+ └────────────────────────────────────────────────────────────────────────────────┘
         │                                         │
         ▼                                         ▼
   host monitor + canary                  results/ (every transaction, checksummed)
@@ -78,13 +80,12 @@ This repository answers it by repeating the design of Nasir, Qasse, Abu Talib an
 
 | Experiment | What it is |
 |---|---|
-| **E0** | smoke test and trial: fixes the burst cap, checks memory and disk, freezes the quality thresholds, projects the total time |
+| **E0** | the trial: fixes the burst cap C and E3's reference rate, checks memory and disk, freezes the quality thresholds, projects the main session's time |
 | **E1** | the main grid: 2 identities x 2 functions x 5 workloads x 10 topologies x 5 repetitions = 1,000 runs |
-| **E2** | connection-setup test: the cost of ML-DSA TLS when every call opens a new connection, as QChain's backend does |
-| **E3** | the live block settings (10 transactions, 512 KB) at the live topology, to tie the results to QChain as deployed |
-| **E4** | optional offered-load sweep, only if the trial projects the main run under 15 hours |
+| **E2** | connection setup, inside E1's (2,2) networks: a read on a new connection (TLS handshake) against one on an open connection |
+| **E3** | offered-load sweep in its own (2,2) networks: writes at 10 to 110 % of the ECDSA saturation, latency against load |
 
-Differences from QChain's live network, and why, are in [docs/live-differences.md](docs/live-differences.md).
+What comes from QChain unchanged, and every difference from its live network, is in [docs/live-differences.md](docs/live-differences.md).
 
 ---
 
@@ -97,6 +98,7 @@ Differences from QChain's live network, and why, are in [docs/live-differences.m
 | Stage times | endorse, order, commit, spread to all peers |
 | Bytes | per transaction (certificates, signatures, payload) and per block; ledger growth |
 | CPU and network | per transaction, per container |
+| Memory | peak per container and for the whole network (no container has a memory limit) |
 | Failures, blocks | counts by cause; transactions per block and why each block was cut |
 
 The full list (M1 to M12) is in [docs/plan.md](docs/plan.md) §6.
@@ -110,7 +112,7 @@ The full list (M1 to M12) is in [docs/plan.md](docs/plan.md) §6.
 | Processor | Apple M1, 4 performance + 4 efficiency cores |
 | Memory | 8 GB |
 | Runtime | Docker in Colima (Apple Virtualization), arm64, 4 vCPUs, 5 GiB, 60 GiB disk |
-| OS | macOS 27.2 |
+| OS | macOS 27.2.1 (automatic updates off during the study) |
 | Cooling | cooling pad, used for every run |
 
 > The VM and the Windows laptop of the KPI study are not used here. In the paper the live network's host is described only as *a tested environment*.
@@ -141,8 +143,8 @@ qchain-fabric-performance/
 │   └── chaincode-lock/      the live chaincode image's lock file (recorded in step 3)
 ├── network/
 │   ├── live/                qchain-network's files, byte for byte (SHA256SUMS)
-│   └── gen/qfp_gen.py       one network from the live files: O organisations, P peers, ECDSA or ML-DSA-44, blocks
-├── client/                  qfp-client (Go): setup, bursts, per-peer block events, E2, E4, block decoder, canary, tests
+│   └── gen/qfp_gen.py       one network from the live files: O organisations, P peers, ECDSA or ML-DSA-44
+├── client/                  qfp-client (Go): setup, bursts, per-peer block events, E2, E3, block decoder, canary, tests
 ├── scripts/
 │   ├── run-mac.sh           the Mac launcher: Colima, build, start/resume a session with the KPI's conditions
 │   └── qfp.py               the driver: images, networks, runs, Docker statistics, quality, trial report, analysis, publish
@@ -150,13 +152,15 @@ qchain-fabric-performance/
 ├── analysis/                run_all.py (tables, figures F2–F16), figstyle.py, selftest.py
 ├── config/                  thresholds.json, frozen after the trial (written by `qfp.py freeze`)
 ├── results/                 published sessions (raw/ is local and ignored)
-└── docs/                    plan, methodology, data dictionary, provenance, decisions, revert list, differences from live
+└── docs/                    plan, decisions, history, methodology, data dictionary, provenance, revert list, differences from live
 ```
 
 ---
 
 ## Recent updates
 
+- **17 November 2026: plan 1.1.** QChain gives the architecture, the study every setting: blocks of 100 everywhere, no container memory limits, the live-settings check dropped, the offered-load sweep (now E3) always run in its own networks, C chosen by the trial from 100, 200, 300. Code, images and documents updated; how and why the plan changed is in [docs/history.md](docs/history.md).
+- **16 November 2026: images built, smoke sessions passed.** Fabric fork and chaincode built for arm64; the chaincode's dependency tree matches the live image.
 - **16 November 2026: code written.** Network generator (self-checked against the live files), client, driver, launcher, Dockerfiles, analysis, documentation.
 - **16 November 2026: planning done.** Literature review (45 papers), plan approved, repository created.
 
@@ -168,9 +172,9 @@ qchain-fabric-performance/
 - [x] Research plan approved
 - [x] Repository and revert list
 - [x] Harness and network generator
-- [ ] Installs and arm64 images
+- [x] Installs and arm64 images
 - [ ] Trial (E0)
-- [ ] Main run (E1, E2, E3, optional E4)
+- [ ] Main run (E1, E2, E3)
 - [ ] Analysis, figures and tables
 - [ ] Test machine reverted
 - [ ] Paper draft
@@ -183,12 +187,13 @@ qchain-fabric-performance/
 | Document | What it covers |
 |---|---|
 | [docs/README.md](docs/README.md) | **start here**: reading order and conventions |
-| [docs/plan.md](docs/plan.md) | the research plan: questions, experiments, setup, metrics, statistics, time budget |
+| [docs/plan.md](docs/plan.md) | the current research plan: questions, what comes from QChain, experiments, setup, metrics, the trial, statistics, time |
 | [docs/methodology.md](docs/methodology.md) | what the code does when it measures |
 | [docs/data-dictionary.md](docs/data-dictionary.md) | every file and column a session writes |
 | [docs/provenance.md](docs/provenance.md) | every copied file and pinned version |
-| [docs/decisions-log.md](docs/decisions-log.md) | dated decisions and their reasons |
-| [docs/live-differences.md](docs/live-differences.md) | where this network differs from QChain's live network, and by how much |
+| [docs/decisions-log.md](docs/decisions-log.md) | the decisions in force and their reasons |
+| [docs/history.md](docs/history.md) | how the plan changed: earlier versions, superseded values, failed sessions |
+| [docs/live-differences.md](docs/live-differences.md) | what comes from QChain unchanged, and where the study's networks differ from its live network |
 | [docs/revert-list.md](docs/revert-list.md) | the Mac's baseline and every change made to it |
 
 ---
