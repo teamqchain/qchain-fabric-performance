@@ -44,8 +44,8 @@ preflight_host() {
   for app in "MSTeams" "Microsoft Teams" "Google Chrome" "Microsoft Edge" "OneDrive"; do
     if pgrep -a -x -q "$app"; then problem "$app is running (close it during trial and main runs)"; fi
   done
-  # VS Code's main process is called Electron, so it is found by its path
-  if pgrep -f "Visual Studio Code.app/Contents/MacOS/" >/dev/null 2>&1; then problem "VS Code is running (close it during trial and main runs)"; fi
+  # VS Code is found by its application path (a name check missed it)
+  if pgrep -f "Visual Studio Code.app" >/dev/null 2>&1; then problem "VS Code is running (close it during trial and main runs)"; fi
   free_kb="$(df -Pk "$HOME" | awk 'NR==2{print $4}')"
   [ "$free_kb" -ge 20971520 ] || problem "less than 20 GB free on the Mac"
   busy="$(top -l 3 -s 2 -n 0 | awk '/^CPU usage/{u=$3; s=$5} END{gsub("%","",u); gsub("%","",s); printf "%.0f", u+s}')"
