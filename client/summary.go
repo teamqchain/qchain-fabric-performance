@@ -1,6 +1,6 @@
 package main
 
-// A run's summary (M1 to M6 of docs/plan.md §6). The analysis recomputes
+// A run's summary (M1 to M6 of docs/plan.md §7). The analysis recomputes
 // everything from tx.csv.gz; the summary is the driver's quick view and the
 // trial's input.
 

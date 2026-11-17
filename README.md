@@ -101,7 +101,7 @@ What comes from QChain unchanged, and every difference from its live network, is
 | Memory | peak per container and for the whole network (no container has a memory limit) |
 | Failures, blocks | counts by cause; transactions per block and why each block was cut |
 
-The full list (M1 to M12) is in [docs/plan.md](docs/plan.md) §6.
+The full list (M1 to M12) is in [docs/plan.md](docs/plan.md) §7.
 
 ---
 
