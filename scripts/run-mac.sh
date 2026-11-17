@@ -4,7 +4,8 @@
 #   scripts/run-mac.sh colima-up                       start the Colima VM (profile qfp: vz, 4 CPUs, 5 GiB, 60 GiB)
 #   scripts/run-mac.sh build                           build the images (needs Wi-Fi)
 #   scripts/run-mac.sh start <kind> <session> [--seed N] [--force]
-#                                                      kind: smoke | trial | main; writes the plan, then runs it
+#                                                      kind: smoke | trial | memtest | main; writes the plan, then runs it
+#                                                      (memtest needs --gomemlimit, for example 300MiB)
 #   scripts/run-mac.sh resume <session> [--force]      continue a session (finished networks are kept)
 #   scripts/run-mac.sh status <session>
 #
@@ -137,12 +138,14 @@ trap 'cleanup; exit 143' TERM
 # ------------------------------------------------------------ commands
 cmd="${1:-}"; shift || true
 force=0
+gomem=""
 seed=20261116
 args=()
 while [ $# -gt 0 ]; do
   case "$1" in
     --force) force=1 ;;
     --seed) seed="$2"; shift ;;
+    --gomemlimit) gomem="$2"; shift ;;
     *) args+=("$1") ;;
   esac
   shift
@@ -186,10 +189,10 @@ case "$cmd" in
       || note "warning: Wi-Fi seems off; the build downloads base images and liboqs"
     python3 -I "$repo/scripts/qfp.py" build ;;
   start)
-    [ "${#args[@]}" = 2 ] || die "usage: run-mac.sh start <smoke|trial|main> <session> [--seed N] [--force]"
+    [ "${#args[@]}" = 2 ] || die "usage: run-mac.sh start <smoke|trial|memtest|main> <session> [--seed N] [--gomemlimit X] [--force]"
     kind="${args[0]}"; session="${args[1]}"
     [[ "$session" =~ ^[A-Za-z0-9._-]+$ ]] || die "session names use letters, digits, . _ - only"
-    python3 -I "$repo/scripts/qfp.py" plan "$kind" "$session" --seed "$seed" || exit 1
+    python3 -I "$repo/scripts/qfp.py" plan "$kind" "$session" --seed "$seed" ${gomem:+--gomemlimit "$gomem"} || exit 1
     session_run "$kind" "$session" ;;
   resume)
     [ "${#args[@]}" = 1 ] || die "usage: run-mac.sh resume <session> [--force]"

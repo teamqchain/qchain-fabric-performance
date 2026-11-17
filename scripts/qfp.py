@@ -9,7 +9,7 @@ are the launcher's job: scripts/run-mac.sh, which calls this script.
 
     qfp.py build [--lock live|none]           the four images (needs the internet)
     qfp.py selfcheck                          generator and verbatim checks, Docker reachable
-    qfp.py plan <kind> <session> [--seed N]   write a session plan: smoke | trial | main
+    qfp.py plan <kind> <session> [--seed N]   write a session plan: smoke | trial | memtest | main
     qfp.py run <session>                      execute or resume a session
     qfp.py status <session>                   progress and projected end
     qfp.py trial-report <session>             C, E3 saturation, memory, disk and time projections
@@ -69,6 +69,7 @@ C_CANDIDATES = [100, 200, 300]
 C_CASES = [("heaviest", "o8p8-mldsa44"), ("fastest", "o2p2-ecdsa")]
 E3_FRACTIONS = [0.10, 0.25, 0.50, 0.75, 0.90, 1.00, 1.10]   # offered load, as fractions of the ECDSA saturation
 E3_SMALL_RATE = 25            # the trial's short check of the load client (transactions per second, 20 s)
+GO_ROLES = ("peer", "orderer", "ca")   # the containers that run Go programs (the chaincode server is Node.js)
 DISK_SPLIT_PCT = 80           # a projected network above this share of the Colima disk is proposed for a split
 
 DEFAULT_THRESHOLDS = {
@@ -414,9 +415,10 @@ def bring_up(session, item):
     load_volume(netid, gen)
     timings["crypto_s"] = tools(session, netid, "01-crypto.sh")
     t = time.time()
+    go_env = item.get("go_env") or {}
     for c in topo["containers"]:
         if c["stage"] == "ca":
-            start_container(netid, c)
+            start_container(netid, c, go_env)
     for c in topo["containers"]:
         if c["stage"] == "ca":
             wait_ready(c["name"], c["ready"])
@@ -425,7 +427,7 @@ def bring_up(session, item):
     t = time.time()
     for c in topo["containers"]:
         if c["stage"] == "node":
-            start_container(netid, c)
+            start_container(netid, c, go_env)
     for c in topo["containers"]:
         if c["stage"] == "node":
             wait_ready(c["name"], c["ready"])
@@ -592,8 +594,10 @@ def run_flags(session, th, t_from_ns, t_to_ns, swap0, swap1):
 
 # ---------------------------------------------------------------- plans
 
-def item(orgs, peers, identity, runs, extras=(), tag=None, e3_rep=None):
+def item(orgs, peers, identity, runs, extras=(), tag=None, e3_rep=None, go_env=None):
     it = {"net": {"orgs": orgs, "peers": peers, "identity": identity}, "runs": runs, "extras": list(extras)}
+    if go_env:
+        it["go_env"] = go_env   # environment of the Go containers (peers, orderer, CAs), for the memory test
     if tag:
         it["tag"] = tag
     if e3_rep:
@@ -607,7 +611,7 @@ def grid_runs(rng, reps=REPS, fns=("issue", "get"), tlevels=T_LEVELS):
     return runs
 
 
-def make_plan(kind, seed, th):
+def make_plan(kind, seed, th, gomemlimit=None):
     rng = random.Random(seed)
     items = []
     if kind == "smoke":
@@ -632,6 +636,13 @@ def make_plan(kind, seed, th):
         top = C_CANDIDATES[-1]
         items.append(item(1, 8, "mldsa44", [{"fn": "get", "t": 10000, "rep": 1, "c": top},
                                             {"fn": "issue", "t": 10000, "rep": 1, "c": top}]))
+    elif kind == "memtest":
+        # the (8,8) ML-DSA-44 network with a Go memory target (GOMEMLIMIT) on its Go containers: 10,000 writes at
+        # C = 100 and then 300. A test of whether such a target keeps the network inside the VM; not reported.
+        if not gomemlimit:
+            raise SystemExit("memtest needs --gomemlimit, for example 300MiB")
+        items.append(item(8, 8, "mldsa44", [{"fn": "issue", "t": 10000, "rep": 1, "c": c} for c in (100, 300)],
+                          go_env={"GOMEMLIMIT": gomemlimit}))
     elif kind == "main":
         if not th.get("frozen"):
             raise SystemExit("thresholds are not frozen: run the trial, then `qfp.py freeze`")
@@ -656,7 +667,7 @@ def make_plan(kind, seed, th):
                 else:
                     items.append(item(o, p, ident, runs, extras))
     else:
-        raise SystemExit("plan kind must be smoke, trial or main")
+        raise SystemExit("plan kind must be smoke, trial, memtest or main")
     for i, it in enumerate(items):
         it["seed"] = rng.randrange(1, 2**62)
         for j, r in enumerate(it["runs"]):
@@ -670,7 +681,7 @@ def plan_cmd(args):
     sdir = session_dir(args.session)
     if os.path.exists(os.path.join(sdir, "plan.json")):
         raise SystemExit("session %s already has a plan" % args.session)
-    p = make_plan(args.kind, args.seed, thresholds())
+    p = make_plan(args.kind, args.seed, thresholds(), args.gomemlimit)
     write_json(os.path.join(sdir, "plan.json"), p)
     n_runs = sum(len(i["runs"]) for i in p["items"])
     print("session %s: %d networks, %d runs (%s)" % (args.session, len(p["items"]), n_runs, args.kind))
@@ -1315,9 +1326,10 @@ def main():
     b.add_argument("--lock", default="auto", choices=["auto", "live", "none"])
     sub.add_parser("selfcheck")
     p = sub.add_parser("plan")
-    p.add_argument("kind", choices=["smoke", "trial", "main"])
+    p.add_argument("kind", choices=["smoke", "trial", "memtest", "main"])
     p.add_argument("session")
     p.add_argument("--seed", type=int, default=20261116)
+    p.add_argument("--gomemlimit", default=None, help="memtest: GOMEMLIMIT of the Go containers, e.g. 300MiB")
     r = sub.add_parser("run")
     r.add_argument("session")
     r.add_argument("--stop-on-error", action="store_true")

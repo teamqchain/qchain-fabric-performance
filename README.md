@@ -181,6 +181,8 @@ python3 -I scripts/qfp.py analyse main-1              # tables and figures, insi
 python3 -I scripts/qfp.py publish main-1              # privacy scan, SHA256SUMS, results/main-1/
 ```
 
+A memory test (not part of the study's results): `scripts/run-mac.sh start memtest <session> --gomemlimit 300MiB` runs the (8,8) ML-DSA-44 network with that Go memory target on its peers, orderer and Fabric CAs, 10,000 writes at C = 100 and then 300, under the same quiet-Mac conditions as a trial.
+
 Checks that need no session: `python3 -I scripts/qfp.py selfcheck` (generator against the live files, verbatim copies, the three Fabric clones, Docker) and `python3 -I scripts/qfp.py analysis-selftest` (the analysis on a synthetic session). `python3 -I scripts/qfp.py down` removes every study container and network volume left by an interrupted session. Raw results stay in the git-ignored `results/raw/<session>/`.
 
 ---

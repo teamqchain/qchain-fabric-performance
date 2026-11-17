@@ -6,7 +6,7 @@ Every file a session writes. Raw files live in `results/raw/<session>/` (not com
 
 | File | Content |
 |---|---|
-| `plan.json` | kind, seed, harness commit, image IDs, thresholds, every network (`net`: organisations, peers, identity; `tag` for a split half or an E3 network; `e3_rep`; `seed`; `extras`) with its runs (id, function, T, repetition, seed, C for the trial) |
+| `plan.json` | kind, seed, harness commit, image IDs, thresholds, every network (`net`: organisations, peers, identity; `tag` for a split half or an E3 network; `e3_rep`; `seed`; `extras`; `go_env` for a memory test) with its runs (id, function, T, repetition, seed, C for the trial) |
 | `state.json` | networks done, their durations, canaries, the session's canary reference, failures |
 | `driver.log` | one line per network step, per run and per E2/E3 level |
 | `session-host.txt`, `preflight-*.txt` | macOS version, model, Colima and Docker versions, preflight problems |
