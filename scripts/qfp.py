@@ -12,8 +12,9 @@ are the launcher's job: scripts/run-mac.sh, which calls this script.
     qfp.py plan <kind> <session> [--seed N]   write a session plan: smoke | trial | main
     qfp.py run <session>                      execute or resume a session
     qfp.py status <session>                   progress and projected end
-    qfp.py trial-report <session>             C, memory, disk, time projection, E4 decision
-    qfp.py freeze --c N --e4 yes|no           freeze the thresholds after the trial
+    qfp.py trial-report <session>             C, E3 saturation, memory, disk and time projections
+    qfp.py freeze --c N --saturation X [--split NET ...]
+                                              freeze the thresholds after the trial
     qfp.py analyse <session>                  tables and figures (in the analysis image)
     qfp.py analysis-selftest                  the analysis on a synthetic session
     qfp.py publish <session>                  copy into results/<session>, privacy scan, SHA256SUMS
@@ -28,6 +29,7 @@ import datetime
 import http.client
 import io
 import json
+import math
 import os
 import random
 import re
@@ -58,16 +60,22 @@ RESULTS_VOL = "qfp-results"
 LABEL = "org.qchain.qfp=1"
 
 TOPOLOGIES = [(1, 1), (1, 2), (1, 4), (1, 8), (2, 2), (2, 4), (2, 8), (4, 4), (4, 8), (8, 8)]
+ARMS = ["ecdsa", "mldsa44"]
 T_LEVELS = [1, 10, 100, 1000, 10000]
 REPS = 5
-C_CANDIDATES = [60, 75, 90, 100]   # 17 Nov: were 200-480 (live 512 MB peers die there with ML-DSA-44); blocks of 50
-E4_FRACTIONS = [0.10, 0.25, 0.50, 0.75, 0.90, 1.00, 1.10]
+# C, the cap on transactions in flight: candidates tested by the trial (at least one block of 100, below the
+# gateway's concurrency limit of 500), and the two cases that decide it (docs/plan.md section 8)
+C_CANDIDATES = [100, 200, 300]
+C_CASES = [("heaviest", "o8p8-mldsa44"), ("fastest", "o2p2-ecdsa")]
+E3_FRACTIONS = [0.10, 0.25, 0.50, 0.75, 0.90, 1.00, 1.10]   # offered load, as fractions of the ECDSA saturation
+E3_SMALL_RATE = 25            # the trial's short check of the load client (transactions per second, 20 s)
+DISK_SPLIT_PCT = 80           # a projected network above this share of the Colima disk is proposed for a split
 
 DEFAULT_THRESHOLDS = {
     "frozen": False,
     "c": None,                    # transactions in flight, chosen by the trial
-    "e4": None,                   # whether E4 runs, decided by the trial's projection
-    "e4_saturation_tps": None,    # the trial's ECDSA saturation at (2,2)
+    "e3_saturation_tps": None,    # the trial's ECDSA write saturation at (2,2), the reference of E3's rates
+    "split": [],                  # E1 networks run as two networks (repetitions 1-3, then 4-5), set at freeze
     "other_cpu_pct_mean": 5.0,    # host CPU used by other processes, mean over the run
     "canary_drift_pct": 3.0,      # canary below the session reference
     "swap_growth_mb": 64.0,       # macOS swap growth during a run
@@ -75,7 +83,7 @@ DEFAULT_THRESHOLDS = {
     "settle_s": 5,
     "canary_every_s": 3600,
     "holders": 100, "pool": 1000, "warm": 200,
-    "e2_n": 200, "e4_duration_s": 60,
+    "e2_n": 200, "e3_duration_s": 60,
 }
 
 
@@ -199,22 +207,28 @@ class DockerAPI:
 
 
 class MemSampler(threading.Thread):
-    """Samples the containers' memory every 5 s during a run and keeps the peak."""
+    """Samples the containers' memory every 5 s during a run and keeps each container's peak and the
+    peak of the network's total (the sum over the containers within one sweep)."""
 
     def __init__(self, api, names):
         super().__init__(daemon=True)
         self.api, self.names, self.peak = api, names, {n: 0 for n in names}
+        self.total_peak = 0
         self.stop_ev = threading.Event()
 
     def run(self):
         while not self.stop_ev.is_set():
+            total = 0
             for n in self.names:
                 try:
                     m = self.api.stats(n)["mem"]
+                    total += m
                     if m > self.peak[n]:
                         self.peak[n] = m
                 except Exception:
                     pass
+            if total > self.total_peak:
+                self.total_peak = total
             self.stop_ev.wait(5)
 
     def stop(self):
@@ -337,7 +351,7 @@ def start_container(netid, c, env_extra=None):
     im = images()["tags"]
     args = ["run", "-d", "--name", cname(c["name"]), "--hostname", c["name"], "--network", DOCKER_NET,
             "--network-alias", c["name"], "--user", "1000:1000", "--read-only", "--tmpfs", "/tmp:mode=1777",
-            "--memory", c["mem"], "--restart", "no", "--stop-timeout", "10",
+            "--restart", "no", "--stop-timeout", "10",
             "--label", LABEL, "--label", "org.qchain.qfp.net=" + netid, "--label", "org.qchain.qfp.role=" + c["role"]]
     env = dict(c.get("env", {}))
     env.update(env_extra or {})
@@ -376,15 +390,23 @@ def net_containers(topo):
     return [cname(c["name"]) for c in topo["containers"]]
 
 
+def item_netid(it):
+    """The network's id in the session: the generator's id, plus the item's tag when one topology and arm
+    has several networks (an E1 network split in two, E3's networks)."""
+    n = it["net"]
+    base = qfp_gen.net_id(n["orgs"], n["peers"], n["identity"])
+    return base + ("-" + it["tag"] if it.get("tag") else "")
+
+
 def bring_up(session, item):
     """Generates, loads and starts one network; returns (netid, topology, setup timings)."""
     n = item["net"]
-    netid = qfp_gen.net_id(n["orgs"], n["peers"], n["identity"], n["blocks"])
+    netid = item_netid(item)
     ndir = os.path.join(session_dir(session), "nets", netid)
     gen = os.path.join(ndir, "gen")
     shutil.rmtree(gen, ignore_errors=True)
     os.makedirs(ndir, exist_ok=True)
-    qfp_gen.write(qfp_gen.generate(n["orgs"], n["peers"], n["identity"], n["blocks"]), gen)
+    qfp_gen.write(qfp_gen.generate(n["orgs"], n["peers"], n["identity"]), gen)
     topo = read_json(os.path.join(gen, "topology.json"))
     teardown(netid)
     timings = {}
@@ -493,6 +515,16 @@ def ledger_sizes(netid, topo):
     return out
 
 
+def colima_disk():
+    """(used bytes, size bytes) of the Colima VM's Docker disk, or (None, None)."""
+    r = sh(["colima", "ssh", "--profile", "qfp", "--", "df", "-P", "-k", "/var/lib/docker"], check=False, timeout=60)
+    try:
+        f = r.stdout.decode().splitlines()[1].split()
+        return int(f[2]) * 1024, int(f[1]) * 1024
+    except (IndexError, ValueError):
+        return None, None
+
+
 def colima_disk_pct():
     r = sh(["colima", "ssh", "--profile", "qfp", "--", "df", "-P", "/var/lib/docker"], check=False, timeout=60)
     try:
@@ -548,9 +580,13 @@ def run_flags(session, th, t_from_ns, t_to_ns, swap0, swap1):
 
 # ---------------------------------------------------------------- plans
 
-def item(orgs, peers, identity, blocks, runs, extras=()):
-    return {"net": {"orgs": orgs, "peers": peers, "identity": identity, "blocks": blocks},
-            "runs": runs, "extras": list(extras)}
+def item(orgs, peers, identity, runs, extras=(), tag=None, e3_rep=None):
+    it = {"net": {"orgs": orgs, "peers": peers, "identity": identity}, "runs": runs, "extras": list(extras)}
+    if tag:
+        it["tag"] = tag
+    if e3_rep:
+        it["e3_rep"] = e3_rep
+    return it
 
 
 def grid_runs(rng, reps=REPS, fns=("issue", "get"), tlevels=T_LEVELS):
@@ -564,39 +600,53 @@ def make_plan(kind, seed, th):
     items = []
     if kind == "smoke":
         for ident in ("mldsa44", "ecdsa"):
-            items.append(item(1, 1, ident, "study", [{"fn": f, "t": t, "rep": 1} for f in ("issue", "get") for t in (1, 10, 100)],
+            items.append(item(1, 1, ident, [{"fn": f, "t": t, "rep": 1} for f in ("issue", "get") for t in (1, 10, 100)],
                               ["e2_small"]))
     elif kind == "trial":
+        # E0 (docs/plan.md section 8). The smallest topology, both arms, small bursts.
+        small = [{"fn": f, "t": t, "rep": 1} for f in ("issue", "get") for t in (1, 10, 100)]
         for ident in ("mldsa44", "ecdsa"):
-            items.append(item(1, 1, ident, "study", [{"fn": f, "t": t, "rep": 1} for f in ("issue", "get") for t in (1, 10, 100)]))
-        for ident in ("mldsa44", "ecdsa"):   # the E4 saturation reference and E2/E4 smoke checks
-            runs = [{"fn": f, "t": 10000, "rep": 1, "c": 75} for f in ("issue", "get")]
-            items.append(item(2, 2, ident, "study", runs, ["e2_small", "e4_small"]))
-        # the heaviest topology decides C: the live 512 MB gateway peer must survive 10,000 writes
-        runs = [{"fn": "issue", "t": 10000, "rep": 1, "c": c} for c in C_CANDIDATES] + [{"fn": "get", "t": 10000, "rep": 1, "c": 75}]
-        items.append(item(8, 8, "mldsa44", "study", runs))
-        items.append(item(8, 8, "ecdsa", "study", [{"fn": "issue", "t": 10000, "rep": 1, "c": c} for c in (75, 100)] +
-                          [{"fn": "get", "t": 10000, "rep": 1, "c": 75}]))
-        items.append(item(1, 8, "mldsa44", "study", [{"fn": "issue", "t": 10000, "rep": 1, "c": 75}]))
-        items.append(item(2, 2, "mldsa44", "live", [{"fn": "issue", "t": 1000, "rep": 1, "c": 75}]))
+            items.append(item(1, 1, ident, [dict(r) for r in small]))
+        # The C candidates on the fastest case, (2,2) (whose ECDSA arm is also E3's saturation reference),
+        # and on the heaviest, (8,8), both arms each. Reads first, then writes with C rising, so that a
+        # network that runs out of memory at a high C has already measured the lower ones.
+        sweep = [{"fn": "get", "t": 10000, "rep": 1, "c": C_CANDIDATES[1]}] + \
+                [{"fn": "issue", "t": 10000, "rep": 1, "c": c} for c in C_CANDIDATES]
+        for ident in ("mldsa44", "ecdsa"):
+            items.append(item(2, 2, ident, [dict(r) for r in sweep], ["e2_small", "e3_small"]))
+        for ident in ("mldsa44", "ecdsa"):
+            items.append(item(8, 8, ident, [dict(r) for r in sweep]))
+        # eight peers with one endorsement, at the highest candidate (memory, orderer egress)
+        top = C_CANDIDATES[-1]
+        items.append(item(1, 8, "mldsa44", [{"fn": "get", "t": 10000, "rep": 1, "c": top},
+                                            {"fn": "issue", "t": 10000, "rep": 1, "c": top}]))
     elif kind == "main":
         if not th.get("frozen"):
             raise SystemExit("thresholds are not frozen: run the trial, then `qfp.py freeze`")
-        pairs = [(o, p, "study") for (o, p) in TOPOLOGIES] + [(2, 2, "live")]
-        rng.shuffle(pairs)
-        for (o, p, blocks) in pairs:
-            arms = ["mldsa44", "ecdsa"]
+        split = set(th.get("split") or [])
+        # E1: one network per topology and arm (E2 inside the (2,2) networks); E3: one fresh (2,2) network
+        # per arm and repetition. The units run in a seeded random order; the two arms of a unit back to
+        # back, in random order.
+        units = [("e1", o, p, None) for (o, p) in TOPOLOGIES] + [("e3", 2, 2, k) for k in range(1, REPS + 1)]
+        rng.shuffle(units)
+        for (exp, o, p, k) in units:
+            arms = list(ARMS)
             rng.shuffle(arms)
             for ident in arms:
-                extras = []
-                if (o, p, blocks) == (2, 2, "study"):
-                    extras.append("e2")
-                    if th.get("e4"):
-                        extras.append("e4")
-                items.append(item(o, p, ident, blocks, grid_runs(rng), extras))
+                if exp == "e3":
+                    items.append(item(o, p, ident, [], ["e3"], tag="e3r%d" % k, e3_rep=k))
+                    continue
+                runs = grid_runs(rng)
+                extras = ["e2"] if (o, p) == (2, 2) else []
+                if qfp_gen.net_id(o, p, ident) in split:
+                    items.append(item(o, p, ident, [r for r in runs if r["rep"] <= 3], extras, tag="part1"))
+                    items.append(item(o, p, ident, [r for r in runs if r["rep"] > 3], [], tag="part2"))
+                else:
+                    items.append(item(o, p, ident, runs, extras))
     else:
         raise SystemExit("plan kind must be smoke, trial or main")
     for i, it in enumerate(items):
+        it["seed"] = rng.randrange(1, 2**62)
         for j, r in enumerate(it["runs"]):
             r["id"] = "n%02d-r%03d" % (i + 1, j + 1)
             r["seed"] = rng.randrange(1, 2**62)
@@ -658,9 +708,11 @@ def save_diag(session, netid, tag, bad):
 
 
 def do_run(session, netid, topo, api, run, attempt, th, state):
+    wall0 = time.time()
     rid = run["id"] + ("" if attempt == 1 else "-a%d" % attempt)
     out = "/out/%s/%s/runs/%s" % (session, netid, rid)
-    c = run.get("c") or th.get("c") or max(C_CANDIDATES)
+    # the trial sets C per run; the main session uses the frozen C; the smoke test (T <= 100) any candidate
+    c = run.get("c") or th.get("c") or C_CANDIDATES[0]
     names = net_containers(topo)
     sampler = MemSampler(api, names)
     swap0 = swap_used_mb()
@@ -693,7 +745,8 @@ def do_run(session, netid, topo, api, run, attempt, th, state):
     flags = run_flags(session, th, t_from, t_to, swap0, swap1)
     rec = {"id": run["id"], "attempt": attempt, "run_dir": rid, "fn": run["fn"], "t": run["t"], "rep": run["rep"], "c": c,
            "seed": run["seed"], "start_ns": t_from, "end_ns": t_to, "result": res, "error": err, "flags": flags,
-           "swap_mb": [swap0, swap1], "containers": host, "states": states}
+           "swap_mb": [swap0, swap1], "containers": host, "mem_total_peak": sampler.total_peak, "states": states,
+           "wall_s": round(time.time() - wall0, 3)}
     write_json(os.path.join(session_dir(session), "nets", netid, "runs", rid + ".json"), rec)
     return rec
 
@@ -704,7 +757,7 @@ def run_network(session, idx, it, api, th, state):
     log(session, "network %s up in %.0f s" % (netid, timings["network_up_s"]))
     t = time.time()
     res, out = client(session, netid, ["setup", "-holders", str(th["holders"]), "-pool", str(th["pool"]),
-                                       "-warm", str(th["warm"]), "-c", "100", "-seed", str(it["runs"][0]["seed"] if it["runs"] else 1),
+                                       "-warm", str(th["warm"]), "-c", "100", "-seed", str(it["runs"][0]["seed"] if it["runs"] else it.get("seed", 1)),
                                        "-poolfile", "/out/%s/%s/pool.txt" % (session, netid)], timeout=3600)
     timings["setup_s"] = time.time() - t
     with open(os.path.join(ndir, "setup.log"), "w") as f:
@@ -744,39 +797,63 @@ def run_network(session, idx, it, api, th, state):
         pct = colima_disk_pct()
         if pct > 85:
             raise RuntimeError("Colima disk at %.0f %%: network %s stopped (disk guard)" % (pct, netid))
+    errors = {}
     for x in it["extras"]:
-        xdir = "/out/%s/%s/extras/%s" % (session, netid, x)
-        pool = "/out/%s/%s/pool.txt" % (session, netid)
-        if x in ("e2", "e2_small"):
-            n = th["e2_n"] if x == "e2" else 20
-            for rep in range(1, (REPS if x == "e2" else 1) + 1):
-                res, _ = client(session, netid, ["conn", "-n", str(n), "-poolfile", pool, "-seed", str(rep),
-                                                 "-out", "%s/rep%d" % (xdir, rep)])
-                log(session, "%s E2 rep %d: %s" % (netid, rep, json.dumps(res)[:200]))
-        elif x in ("e4", "e4_small"):
-            sat = th.get("e4_saturation_tps") or 50
-            fracs = E4_FRACTIONS if x == "e4" else [0.5]
-            dur = th["e4_duration_s"] if x == "e4" else 20
-            jobs = [(f, rep) for f in fracs for rep in range(1, (REPS if x == "e4" else 1) + 1)]
-            random.Random(len(netid)).shuffle(jobs)
-            for f, rep in jobs:
-                rate = round(sat * f, 2)
-                res, _ = client(session, netid, ["load", "-rate", str(rate), "-dur", "%ds" % dur, "-seed", str(rep),
-                                                 "-holders", str(th["holders"]), "-out", "%s/f%03d-rep%d" % (xdir, int(f * 100), rep)])
-                log(session, "%s E4 %.0f%% rep %d: %s" % (netid, f * 100, rep, json.dumps(res)[:200]))
-                time.sleep(th["settle_s"])
+        try:
+            run_extra(session, netid, it, x, th)
+        except Exception as e:  # recorded in network.json; the network's runs, ledger and timings are kept
+            errors[x] = str(e)[-1500:]
+            log(session, "%s %s FAILED: %s" % (netid, x, str(e)[:300]))
     t = time.time()
-    res, _ = client(session, netid, ["blocks", "-out", "/out/%s/%s/ledger" % (session, netid)], timeout=7200)
+    try:
+        res, _ = client(session, netid, ["blocks", "-out", "/out/%s/%s/ledger" % (session, netid)], timeout=7200)
+    except Exception as e:
+        res = {"error": str(e)[-1500:]}
+        errors["blocks"] = res["error"]
+        log(session, "%s ledger read-back FAILED: %s" % (netid, str(e)[:300]))
     timings["blocks_dump_s"] = time.time() - t
     sizes = ledger_sizes(netid, topo)
     copy_out(session, netid)
     write_json(os.path.join(ndir, "network.json"), {"index": idx, "net": it["net"], "netid": netid, "timings": timings,
                                                     "ledger_bytes": sizes, "blocks": res, "end_utc": now_utc(),
-                                                    "colima_disk_pct": colima_disk_pct(), "runs": len(records)})
+                                                    "colima_disk_pct": colima_disk_pct(), "runs": len(records),
+                                                    "errors": errors})
     teardown(netid)
     docker("run", "--rm", "--label", LABEL, "-v", RESULTS_VOL + ":/out", "--entrypoint", "rm", images()["tags"]["fabric"],
            "-rf", "/out/%s/%s" % (session, netid))
-    log(session, "network %s done (%d runs)" % (netid, len(records)))
+    log(session, "network %s done (%d runs%s)" % (netid, len(records), ", errors in " + ", ".join(errors) if errors else ""))
+
+
+def run_extra(session, netid, it, x, th):
+    """E2, E3 and their short trial checks, after a network's runs."""
+    xdir = "/out/%s/%s/extras/%s" % (session, netid, x)
+    pool = "/out/%s/%s/pool.txt" % (session, netid)
+    if x in ("e2", "e2_small"):
+        n = th["e2_n"] if x == "e2" else 20
+        for rep in range(1, (REPS if x == "e2" else 1) + 1):
+            res, _ = client(session, netid, ["conn", "-n", str(n), "-poolfile", pool, "-seed", str(rep),
+                                             "-out", "%s/rep%d" % (xdir, rep)])
+            log(session, "%s E2 rep %d: %s" % (netid, rep, json.dumps(res)[:200]))
+    elif x == "e3":
+        # one repetition of the offered-load sweep: the seven rates in a seeded random order
+        rng_x = random.Random(it["seed"])
+        jobs = list(E3_FRACTIONS)
+        rng_x.shuffle(jobs)
+        for f in jobs:
+            rate = round(th["e3_saturation_tps"] * f, 2)
+            res, _ = client(session, netid, ["load", "-rate", str(rate), "-dur", "%ds" % th["e3_duration_s"],
+                                             "-seed", str(rng_x.randrange(1, 2**31)), "-holders", str(th["holders"]),
+                                             "-out", "%s/f%03d-rep%d" % (xdir, round(f * 100), it["e3_rep"])])
+            log(session, "%s E3 %.0f%% rep %d: %s" % (netid, f * 100, it["e3_rep"], json.dumps(res)[:200]))
+            time.sleep(th["settle_s"])
+    elif x == "e3_small":
+        # the trial's check of the load client: one short level at a low fixed rate
+        res, _ = client(session, netid, ["load", "-rate", str(E3_SMALL_RATE), "-dur", "20s", "-seed", "1",
+                                         "-holders", str(th["holders"]), "-out", "%s/small" % xdir])
+        log(session, "%s E3 check: %s" % (netid, json.dumps(res)[:200]))
+        time.sleep(th["settle_s"])
+    else:
+        raise RuntimeError("unknown extra %s" % x)
 
 
 def run_cmd(args):
@@ -805,8 +882,7 @@ def run_cmd(args):
             write_json(os.path.join(sdir, "state.json"), state)
             if args.stop_on_error:
                 raise
-            n = it["net"]
-            teardown(qfp_gen.net_id(n["orgs"], n["peers"], n["identity"], n["blocks"]))
+            teardown(item_netid(it))
             continue
         state["done"].append(key)
         state.setdefault("durations", {})[key] = time.time() - t
@@ -829,6 +905,11 @@ def status_cmd(args):
         print("mean %.0f min per network; about %.1f h left" % (statistics.mean(durs) / 60, left / 3600))
     for f in state.get("failures", []):
         print("FAILED %s at %s: %s" % (f["item"], f["utc"], f["error"].splitlines()[0][:200]))
+    nets = os.path.join(sdir, "nets")
+    for netid in sorted(os.listdir(nets)) if os.path.isdir(nets) else []:
+        errs = (read_json(os.path.join(nets, netid, "network.json"), {}) or {}).get("errors") or {}
+        if errs:
+            print("ERRORS in %s (network kept): %s" % (netid, ", ".join(sorted(errs))))
 
 
 # ---------------------------------------------------------------- trial report and freeze
@@ -846,83 +927,208 @@ def load_runs(session):
     return out
 
 
+def survived(r):
+    """A run survived when every transaction succeeded and no container of the network was down after it."""
+    down = any(not v.get("running", True) or v.get("oom") or v.get("restarts") for v in r.get("states", {}).values())
+    return r["summary"].get("ok", 0) == r["t"] and not down
+
+
+def load_index(o, p):
+    """The size of a topology for the projections: log2(organisations) + log2(peers)."""
+    return math.log2(o) + math.log2(p)
+
+
+def interp(points, x, geometric=True):
+    """A value at x from measured points (x, value): interpolated between the two nearest points (geometrically
+    or linearly), the nearest point's value outside them, None without points. Points at the same x are averaged."""
+    by = {}
+    for a, b in points:
+        if b is not None and b > 0:
+            by.setdefault(a, []).append(b)
+    if not by:
+        return None
+    pts = sorted((a, statistics.mean(v)) for a, v in by.items())
+    if x <= pts[0][0]:
+        return pts[0][1]
+    if x >= pts[-1][0]:
+        return pts[-1][1]
+    for (x0, v0), (x1, v1) in zip(pts, pts[1:]):
+        if x0 <= x <= x1:
+            f = (x - x0) / (x1 - x0)
+            return v0 * (v1 / v0) ** f if geometric else v0 + (v1 - v0) * f
+    return pts[-1][1]
+
+
 def trial_report(args):
+    """The trial's findings and what they mean for the main session (docs/plan.md section 8): the C choice,
+    E3's saturation reference, memory, and the disk and time projections. Nothing is decided here: the
+    project lead approves the values, then `qfp.py freeze`."""
     runs = load_runs(args.session)
     if not runs:
         raise SystemExit("no runs in %s" % args.session)
-    rep = {"session": args.session}
-    # C: from the heaviest topology (8x8, ML-DSA-44): among the candidates that completed all 10,000 writes
-    # with no failure and no killed container, the smallest within 5 % of the best throughput and at least
-    # 1.5 blocks in flight (75 for blocks of 50), so that blocks fill and memory stays low
-    cand, killed = {}, []
-    for r in runs:
-        s = r["summary"]
-        if r["netid"] == "o8p8-mldsa44-study" and r["fn"] == "issue" and r["t"] == 10000:
-            ok = s.get("ok", 0) == 10000 and not any(not v.get("running", True) or v.get("oom") for v in r.get("states", {}).values())
-            if ok:
-                cand[r["c"]] = s["throughput_all_peers_tps"]
-            else:
-                killed.append(r["c"])
-    rep["c_throughput_8x8_mldsa44"] = cand
-    rep["c_failed_8x8_mldsa44"] = sorted(killed)
-    best = max(cand.values()) if cand else None
-    ok_c = [c for c, v in cand.items() if best and v >= 0.95 * best and c >= 75]
-    rep["c_choice"] = min(ok_c) if ok_c else None
-    sat = [r["summary"]["throughput_all_peers_tps"] for r in runs
-           if r["netid"] == "o2p2-ecdsa-study" and r["fn"] == "issue" and r["t"] == 10000 and r["summary"].get("ok")]
-    rep["states_not_running"] = sorted({(r["netid"], r["run"], n) for r in runs for n, v in r.get("states", {}).items()
-                                        if not v.get("running", True) or v.get("oom")})
-    rep["e4_saturation_tps"] = round(max(sat), 1) if sat else None
-    # memory peaks and ledger bytes per transaction
-    nets = os.path.join(session_dir(args.session), "nets")
+    th = thresholds()
+    sdir = session_dir(args.session)
+    setup_writes = 2 * th["holders"] + th["pool"] + th["warm"]
+    rep = {"session": args.session, "c_candidates": C_CANDIDATES}
+
+    def tput(r):
+        return r["summary"].get("throughput_all_peers_tps")
+
+    # 1. C: per case, the candidates that completed all 10,000 writes with no container down in at least one
+    # attempt, and among them those within 5 % of the case's best throughput; C is the smallest candidate
+    # within 5 % in both cases
+    rep["c_cases"], sets, best_of = {}, [], {}
+    for case, netid in C_CASES:
+        per_c = {}
+        for r in runs:
+            if r["netid"] == netid and r["fn"] == "issue" and r["t"] == 10000 and r["c"] in C_CANDIDATES:
+                d = per_c.setdefault(r["c"], {"attempts": 0, "failed_attempts": 0, "tps": []})
+                d["attempts"] += 1
+                if survived(r):
+                    d["tps"].append(tput(r))
+                else:
+                    d["failed_attempts"] += 1
+        tps = {c: statistics.median(d["tps"]) for c, d in per_c.items() if d["tps"]}
+        best = max(tps.values()) if tps else None
+        best_of[netid] = best
+        within = sorted(c for c, v in tps.items() if v >= 0.95 * best) if best else []
+        rep["c_cases"][case] = {
+            "network": netid, "within_5pct_of_best": within,
+            "candidates": {str(c): {"attempts": d["attempts"], "failed_attempts": d["failed_attempts"],
+                                    "write_tps": round(tps[c], 1) if c in tps else None}
+                           for c, d in sorted(per_c.items())}}
+        sets.append(set(within))
+    common = set.intersection(*sets) if len(sets) == len(C_CASES) else set()
+    rep["c_choice"] = min(common) if common else None
+    c_used = rep["c_choice"]
+
+    # 2. E3's reference: the best ECDSA write throughput at (2,2), and the ML-DSA-44 one for comparison
+    rep["e3_saturation_tps"] = round(best_of["o2p2-ecdsa"], 1) if best_of.get("o2p2-ecdsa") else None
+    mldsa_22 = [tput(r) for r in runs if r["netid"] == "o2p2-mldsa44" and r["fn"] == "issue" and r["t"] == 10000 and survived(r)]
+    cap = {"ecdsa": best_of.get("o2p2-ecdsa"), "mldsa44": max(mldsa_22) if mldsa_22 else None}
+    rep["write_tps_2x2_best"] = {a: round(v, 1) if v else None for a, v in cap.items()}
+    rep["containers_down"] = sorted({"%s %s %s" % (r["netid"], r["id"], n) for r in runs
+                                     for n, v in r.get("states", {}).items()
+                                     if not v.get("running", True) or v.get("oom") or v.get("restarts")})
+
+    # 3. per network: memory peaks, ledger bytes per write, timings
+    vm_mem = docker("info", "--format", "{{.MemTotal}}", check=False).stdout.decode().strip()
+    vm_mem = int(vm_mem) if vm_mem.isdigit() else 0
+    rep["vm_memory_mb"] = round(vm_mem / 2**20)
+    nets = os.path.join(sdir, "nets")
     rep["networks"] = {}
     for netid in sorted(os.listdir(nets)):
         nj = read_json(os.path.join(nets, netid, "network.json"), {})
+        mine = [r for r in runs if r["netid"] == netid]
         peaks = {}
-        for r in runs:
-            if r["netid"] == netid:
-                for c, v in r["containers"].items():
-                    peaks[c] = max(peaks.get(c, 0), v.get("mem_peak", 0))
-        n_tx = sum(r["summary"].get("ok", 0) for r in runs if r["netid"] == netid and r["fn"] == "issue")
+        for r in mine:
+            for c, v in r["containers"].items():
+                peaks[c] = max(peaks.get(c, 0), v.get("mem_peak", 0) or 0)
+        total = max([r.get("mem_total_peak", 0) or 0 for r in mine] or [0])
+        writes = sum(r["summary"].get("ok", 0) for r in mine if r["fn"] == "issue") + setup_writes
+        xdir = os.path.join(nets, netid, "out", "extras")
+        for root, _, files in os.walk(xdir):
+            if "summary.json" in files and os.path.basename(os.path.dirname(root)).startswith("e3"):
+                writes += read_json(os.path.join(root, "summary.json"), {}).get("ok", 0)
         led = nj.get("ledger_bytes", {})
-        peer_bytes = [v for k, v in led.items() if k.startswith("peer")]
+        peer_b = [v for k, v in led.items() if k.startswith("peer") and v > 0]
+        tm = nj.get("timings") or {}
+        m = re.match(r"o(\d+)p(\d+)-(ecdsa|mldsa44)$", netid)
         rep["networks"][netid] = {
-            "timings": nj.get("timings"), "mem_peak_total_mb": round(sum(peaks.values()) / 2**20),
-            "mem_peak_max_container_mb": round(max(peaks.values()) / 2**20) if peaks else None,
-            "ledger_bytes_per_peer": max(peer_bytes) if peer_bytes else None, "writes": n_tx,
-            "bytes_per_write_per_peer": round(max(peer_bytes) / n_tx) if peer_bytes and n_tx else None,
+            "net": {"orgs": int(m.group(1)), "peers": int(m.group(2)), "identity": m.group(3)} if m else None,
+            "done": bool(nj), "errors": nj.get("errors") or {}, "writes": writes,
+            "mem_gateway_peer_peak_mb": round(peaks.get("qfp_peer0.general.uae.com", 0) / 2**20),
+            "mem_largest_container": max(peaks, key=peaks.get) if peaks else None,
+            "mem_total_peak_mb": round(total / 2**20),
+            "mem_total_peak_pct_of_vm": round(total / vm_mem * 100, 1) if vm_mem else None,
+            "ledger_bytes_per_write_per_peer": round(statistics.mean(peer_b) / writes) if peer_b else None,
+            "network_up_s": tm.get("network_up_s"), "setup_s": tm.get("setup_s"), "blocks_dump_s": tm.get("blocks_dump_s"),
         }
-    # time projection of the main session: per network, setup plus 50 runs
-    per_net = []
+    worst = max((v["mem_total_peak_pct_of_vm"] or 0) for v in rep["networks"].values())
+    rep["memory_warning"] = worst > 85
+    rep["memory_note"] = ("a network used %.0f %% of the Colima VM's memory (above 85 %%): decide before the main run "
+                          "(stop the Fabric CAs during measurement, or a larger Colima VM)" % worst) if worst > 85 else \
+        "largest network total %.0f %% of the Colima VM's memory" % worst
+
+    # 4. projections for the main session, from the trial's networks (geometric interpolation over the
+    # topology size log2(O) + log2(P); bytes per write linear in the endorsements)
+    meas = {a: {"w": [], "r": [], "up": [], "dump": [], "bpw": []} for a in ARMS}
     for netid, v in rep["networks"].items():
-        if v["timings"]:
-            per_net.append(v["timings"].get("network_up_s", 0) + v["timings"].get("setup_s", 0) + v["timings"].get("blocks_dump_s", 0))
-    setup_s = statistics.mean(per_net) if per_net else 600
-    tps = {}
-    for r in runs:
-        if r["t"] == 10000 and r["summary"].get("ok"):
-            k = (r["netid"], r["fn"])
-            tps[k] = max(tps.get(k, 0), r["summary"]["throughput_all_peers_tps"])
-    w_rates = [v for (n, f), v in tps.items() if f == "issue"]
-    r_rates = [v for (n, f), v in tps.items() if f == "get"]
-    w_slow = min(w_rates) if w_rates else 30
-    w_mid = statistics.median(w_rates) if w_rates else 60
-    r_mid = statistics.median(r_rates) if r_rates else 200
-    tx = sum(T_LEVELS) * REPS
-    th = thresholds()
-    per_run_overhead = 12 + th["settle_s"]
+        n = v["net"]
+        if not n:
+            continue
+        a, x = n["identity"], load_index(n["orgs"], n["peers"])
+        if v["network_up_s"] is not None and v["setup_s"] is not None:
+            meas[a]["up"].append((x, v["network_up_s"] + v["setup_s"]))
+        if v["blocks_dump_s"] and v["writes"]:
+            meas[a]["dump"].append((x, v["blocks_dump_s"] / v["writes"]))
+        if v["ledger_bytes_per_write_per_peer"]:
+            meas[a]["bpw"].append((n["orgs"] // 2 + 1, v["ledger_bytes_per_write_per_peer"]))
+        for fn, key in (("issue", "w"), ("get", "r")):
+            sel = [r for r in runs if r["netid"] == netid and r["fn"] == fn and r["t"] == 10000 and survived(r)]
+            at_c = [tput(r) for r in sel if c_used and r["c"] == c_used]
+            vals = at_c or [tput(r) for r in sel]
+            if vals:
+                meas[a][key].append((x, statistics.median(vals)))
+    over = [r["wall_s"] - (r["summary"].get("execution_time_all_peers_s") or 0) for r in runs
+            if r.get("wall_s") and r["summary"].get("ok")]
+    per_run = (statistics.median(over) if over else 20) + th["settle_s"] + 1
+    e2_s = 0.0
+    for root, _, files in os.walk(nets):
+        if "summary.json" in files and os.path.basename(os.path.dirname(root)) == "e2_small":
+            res = read_json(os.path.join(root, "summary.json"), {}).get("result", {})
+            ms = sum((res.get(m) or {}).get("p50_ms", 0) for m in ("fresh_connection", "open_connection"))
+            e2_s = max(e2_s, REPS * th["e2_n"] * ms / 1000)
+    used, size = colima_disk()
+    rep["colima_disk_now_gb"] = {"used": round(used / 1e9, 1) if used else None, "size": round(size / 1e9, 1) if size else None}
+    w_e1 = sum(T_LEVELS) * REPS
+    plan_rows, total_s = [], 0.0
 
-    def net_time(w):
-        return setup_s + tx / w + tx / r_mid + 2 * len(T_LEVELS) * REPS * per_run_overhead + REPS * len(T_LEVELS) * 2
+    def disk_pct(b):
+        return round((used + b) / size * 100, 1) if used and size else None
 
-    expected = 22 * net_time(w_mid) * 1.15
-    worst = 22 * net_time(w_slow) * 1.15
-    rep["projection_h"] = {"expected": round(expected / 3600, 1), "worst": round(worst / 3600, 1),
-                           "assumptions": {"setup_s": round(setup_s), "write_tps_median": round(w_mid, 1),
-                                           "write_tps_slowest": round(w_slow, 1), "read_tps_median": round(r_mid, 1)}}
-    rep["e4_decision"] = "yes" if expected / 3600 < 15 else "no"
-    rep["t_cap_5000"] = expected / 3600 > 36
-    write_json(os.path.join(session_dir(args.session), "trial-report.json"), rep)
+    for (o, p) in TOPOLOGIES:
+        x = load_index(o, p)
+        for a in ARMS:
+            m = meas[a]
+            w, r_, up, dump = interp(m["w"], x), interp(m["r"], x), interp(m["up"], x), interp(m["dump"], x)
+            bpw = interp(m["bpw"], o // 2 + 1, geometric=False)
+            if not (w and r_):
+                plan_rows.append({"network": qfp_gen.net_id(o, p, a), "hours": None, "note": "no rate measured for this arm"})
+                continue
+            t = (up or 120) + w_e1 / w + w_e1 / r_ + 2 * len(T_LEVELS) * REPS * per_run + REPS * 3 * 2 \
+                + (dump or 0) * (w_e1 + setup_writes) + (e2_s if (o, p) == (2, 2) else 0)
+            disk = bpw * (w_e1 + setup_writes) * (p + 1) + 0.2e9 if bpw else None
+            disk1 = bpw * (0.6 * w_e1 + setup_writes) * (p + 1) + 0.2e9 if bpw else None
+            pct = disk_pct(disk) if disk else None
+            plan_rows.append({"network": qfp_gen.net_id(o, p, a), "hours": round(t / 3600, 2),
+                              "write_tps": round(w, 1), "read_tps": round(r_, 1),
+                              "disk_gb": round(disk / 1e9, 1) if disk else None, "disk_pct": pct,
+                              "split_proposed": bool(pct and pct > DISK_SPLIT_PCT),
+                              "disk_pct_if_split": disk_pct(disk1) if disk1 else None})
+            total_s += t
+    sat = rep["e3_saturation_tps"]
+    for a in ARMS:
+        x = load_index(2, 2)
+        m = meas[a]
+        up, dump, bpw = interp(m["up"], x), interp(m["dump"], x), interp(m["bpw"], 2, geometric=False)
+        writes = sum(min(f * sat, cap[a] or f * sat) * th["e3_duration_s"] for f in E3_FRACTIONS) if sat else 0
+        t = (up or 120) + len(E3_FRACTIONS) * (th["e3_duration_s"] + th["settle_s"] + 10) + (dump or 0) * (writes + setup_writes)
+        disk = bpw * (writes + setup_writes) * 3 + 0.2e9 if bpw else None
+        plan_rows.append({"network": qfp_gen.net_id(2, 2, a) + "-e3r<k> (x%d)" % REPS, "hours": round(REPS * t / 3600, 2),
+                          "writes_per_network": round(writes), "disk_gb": round(disk / 1e9, 1) if disk else None,
+                          "disk_pct": disk_pct(disk) if disk else None})
+        total_s += REPS * t
+    rep["projection"] = {
+        "hours_expected": round(total_s * 1.15 / 3600, 1),
+        "assumptions": "per network: bring-up and setup, 55,555 writes and 55,555 reads at the interpolated rates, "
+                       "%.0f s per run outside the burst, the ledger read-back; E3: 7 levels of %d s per network; "
+                       "plus 15 %% for repeated runs" % (per_run, th["e3_duration_s"]),
+        "networks": plan_rows,
+        "split_proposed": [r["network"] for r in plan_rows if r.get("split_proposed")],
+        "note": "the project lead decides any reduction of the grid; nothing is capped automatically",
+    }
+    write_json(os.path.join(sdir, "trial-report.json"), rep)
     print(json.dumps(rep, indent=1))
 
 
@@ -930,7 +1136,11 @@ def freeze(args):
     th = thresholds()
     if th.get("frozen") and not args.force:
         raise SystemExit("thresholds already frozen")
-    th.update({"frozen": True, "c": args.c, "e4": args.e4 == "yes", "e4_saturation_tps": args.saturation,
+    valid = {qfp_gen.net_id(o, p, a) for (o, p) in TOPOLOGIES for a in ARMS}
+    bad = [n for n in args.split if n not in valid]
+    if bad:
+        raise SystemExit("--split takes E1 network ids such as o8p8-mldsa44; unknown: %s" % ", ".join(bad))
+    th.update({"frozen": True, "c": args.c, "e3_saturation_tps": args.saturation, "split": sorted(set(args.split)),
                "frozen_utc": now_utc()})
     write_json(CONFIG, th)
     print(json.dumps(th, indent=1))
@@ -1097,8 +1307,8 @@ def main():
     t.add_argument("session")
     f = sub.add_parser("freeze")
     f.add_argument("--c", type=int, required=True, choices=C_CANDIDATES)
-    f.add_argument("--e4", required=True, choices=["yes", "no"])
-    f.add_argument("--saturation", type=float, default=None)
+    f.add_argument("--saturation", type=float, required=True, help="E3's reference: the trial's ECDSA write saturation at (2,2)")
+    f.add_argument("--split", nargs="*", default=[], help="E1 networks to run as two networks, e.g. o8p8-mldsa44")
     f.add_argument("--force", action="store_true")
     an = sub.add_parser("analyse")
     an.add_argument("session")

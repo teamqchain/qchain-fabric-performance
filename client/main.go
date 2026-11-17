@@ -6,9 +6,9 @@
 // at /out. Subcommands:
 //
 //	setup    holders, read pool, warm-up                   (untimed)
-//	run      one burst of T transactions (E1, E3)          -> <out>/tx.csv.gz, arrivals.csv.gz, summary.json
+//	run      one burst of T transactions (E0, E1)          -> <out>/tx.csv.gz, arrivals.csv.gz, summary.json
 //	conn     the connection-setup test (E2)                -> <out>/conn.csv.gz, summary.json
-//	load     the offered-load sweep, one rate (E4)         -> <out>/tx.csv.gz, summary.json
+//	load     the offered-load sweep, one rate (E3)         -> <out>/tx.csv.gz, summary.json
 //	blocks   every block's bytes, read from the gateway    -> <out>/blocks.csv.gz, txbytes.csv.gz
 //	heights  every peer's ledger height (JSON on stdout)
 //	canary   the KPI canary (JSON on stdout)
@@ -47,9 +47,9 @@ func main() {
 	seed := fs.Int64("seed", 1, "seed of the run's workload")
 	runID := fs.String("id", "", "run id")
 	n := fs.Int("n", 200, "E2: connections (and open-connection reads)")
-	rate := fs.Float64("rate", 10, "E4: offered transactions per second")
-	dur := fs.Duration("dur", 60*time.Second, "E4: duration")
-	maxIn := fs.Int("maxinflight", 480, "E4: maximum in flight")
+	rate := fs.Float64("rate", 10, "E3: offered transactions per second")
+	dur := fs.Duration("dur", 60*time.Second, "E3: duration")
+	maxIn := fs.Int("maxinflight", 480, "E3: maximum in flight (below the gateway's concurrency limit of 500)")
 	from := fs.Uint64("from", 0, "blocks: first block")
 	skipHolders := fs.Bool("skip-holders", false, "setup: holders already registered")
 	fs.Parse(args)

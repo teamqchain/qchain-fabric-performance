@@ -1,6 +1,6 @@
 package main
 
-// One run (E1, E3): a burst of T transactions of one function, all released
+// One run (E0, E1): a burst of T transactions of one function, all released
 // at t0 as in the reference paper ("requested simultaneously"), with at most C
 // in flight at once (the Gateway refuses more than 500 concurrent requests;
 // C is calibrated in the trial, E0, and then frozen). Every transaction is

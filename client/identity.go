@@ -43,7 +43,6 @@ type NetConfig struct {
 	Orgs              int        `json:"orgs"`
 	PeersTotal        int        `json:"peers_total"`
 	Identity          string     `json:"identity"`
-	Blocks            string     `json:"blocks"`
 	Endorsements      int        `json:"endorsements"`
 	Channel           string     `json:"channel"`
 	Chaincode         string     `json:"chaincode"`

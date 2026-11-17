@@ -1,6 +1,6 @@
 package main
 
-// E2 (connection setup), E4 (offered load), the peers' heights and the canary.
+// E2 (connection setup), E3 (offered load), the peers' heights and the canary.
 
 import (
 	"fmt"
@@ -67,7 +67,7 @@ func ConnTest(cfg *NetConfig, s *Signer, pool []string, n int, seed int64, out s
 	return res, writeJSON(out+"/summary.json", map[string]any{"identity": cfg.Identity, "network": cfg.Network, "n": n, "result": res})
 }
 
-// LoadTest is E4: writes sent open-loop at a fixed rate for a duration (a
+// LoadTest is E3: writes sent open-loop at a fixed rate for a duration (a
 // send every 1/rate s, whether or not earlier ones have finished), at most
 // maxInFlight at once (sends beyond it are counted as dropped, not queued).
 func LoadTest(cfg *NetConfig, s *Signer, rate float64, dur time.Duration, holders, maxInFlight int, seed int64, out string) (map[string]any, error) {
@@ -157,9 +157,13 @@ func LoadTest(cfg *NetConfig, s *Signer, rate float64, dur time.Duration, holder
 		"gw_commit_ns", "block", "code", "ok", "err_stage", "err_code"}, rows); err != nil {
 		return nil, err
 	}
+	achieved := 0.0 // no successful write: 0, not NaN (JSON has no NaN)
+	if ok > 0 && last > 0 {
+		achieved = float64(ok) / (float64(last) / 1e9)
+	}
 	res := map[string]any{"identity": cfg.Identity, "network": cfg.Network, "offered_tps": rate, "duration_s": dur.Seconds(),
 		"sent": n - int(dropped), "dropped": dropped, "ok": ok, "t0_unix_ns": t0.UnixNano(),
-		"achieved_tps": float64(ok) / (float64(last) / 1e9), "latency_gateway": dist(lat)}
+		"achieved_tps": achieved, "latency_gateway": dist(lat)}
 	return res, writeJSON(out+"/summary.json", res)
 }
 

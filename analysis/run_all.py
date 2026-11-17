@@ -6,13 +6,15 @@
 The session folder is results/raw/<session> (written by scripts/qfp.py run): for every network
 nets/<netid>/runs/<run>.json (the driver's record: attempt, flags, per-container CPU, network and
 memory) and nets/<netid>/out/ (the client's files: runs/<run>/tx.csv.gz, summary.json; extras/;
-ledger/txbytes.csv.gz, blocks.csv.gz), plus nets/<netid>/network.json.
+ledger/txbytes.csv.gz, blocks.csv.gz), plus nets/<netid>/network.json. E1's networks hold the runs
+(an E1 network split in two has two folders, `-part1` and `-part2`, whose runs form the same cells);
+E2's files are in the (2,2) networks' extras/e2/; E3's networks (`-e3r<k>`) hold only extras/e3/.
 
-Rules (docs/plan.md §6-§8):
+Rules (docs/plan.md sections 6 and 7):
 - the headline attempt of a run is its first attempt without a quality flag (other CPU, thermal,
   battery, Low Power Mode, swap, canary); a run whose attempts are all flagged keeps its last
   attempt, marked in runs.csv, and is reported;
-- a cell (identity, organisations, peers, blocks, function, T) is summarised by the median of its
+- a cell (identity, organisations, peers, function, T) is summarised by the median of its
   repetitions with a 95 % percentile bootstrap interval (10,000 resamples of the repetitions);
 - a comparison is ML-DSA-44 / ECDSA of the two cells' medians, with a bootstrap interval made by
   resampling each arm's repetitions independently; it counts as a difference when the interval
@@ -32,6 +34,7 @@ import figstyle as fs  # noqa: E402
 B = 10000
 RNG = np.random.default_rng(20261116)
 REPEATABLE = {"other_cpu", "thermal", "battery", "low_power", "swap", "canary"}
+MEM_ROLES = ["gateway peer", "other peers", "orderer", "chaincode", "ca"]
 
 
 # ------------------------------------------------------------------------------------------ loading
@@ -131,13 +134,13 @@ def load(session):
         nets[netid] = dict(nj, client=cj)
         gw = cj.get("gateway", {}).get("name", "peer0.general.uae.com")
         rdir = os.path.join(ndir, netid, "runs")
-        for fn in sorted(os.listdir(rdir)):
+        for fn in sorted(os.listdir(rdir)) if os.path.isdir(rdir) else []:   # E3's networks have no runs
             rec = read_json(os.path.join(rdir, fn))
             base = os.path.join(ndir, netid, "out", "runs", rec["run_dir"])
             txs = read_csvgz(os.path.join(base, "tx.csv.gz"))
             summ = read_json(os.path.join(base, "summary.json"), {})
             r = {"netid": netid, "identity": nj["net"]["identity"], "orgs": nj["net"]["orgs"], "peers": nj["net"]["peers"],
-                 "blocks": nj["net"]["blocks"], "endorsements": cj.get("endorsements"), "run": rec["id"],
+                 "endorsements": cj.get("endorsements"), "run": rec["id"],
                  "attempt": rec["attempt"], "fn": rec["fn"], "t": rec["t"], "rep": rec["rep"], "c": rec["c"],
                  "flags": ";".join(rec.get("flags", [])), "error": (rec.get("error") or "")[:200],
                  "client_cpu_s": summ.get("client_cpu_s", float("nan"))}
@@ -153,7 +156,17 @@ def load(session):
             for k, v in per_role.items():
                 r["cpu_s|" + k] = v["cpu_s"]
                 r["net_tx|" + k] = v["tx"]
-            r["mem_peak_mb"] = sum(v.get("mem_peak", 0) for v in rec.get("containers", {}).values()) / 2**20
+            # peak memory: per component the largest container's peak; the network's total peak (sum over the
+            # containers within one 5-s sweep of the driver)
+            peaks = {}
+            for c, v in rec.get("containers", {}).items():
+                if "mem_peak" in v:
+                    k = role_of(c, gw)
+                    peaks[k] = max(peaks.get(k, 0), v["mem_peak"])
+            for k, v in peaks.items():
+                r["mem_peak_mb|" + k] = v / 2**20
+            total = rec.get("mem_total_peak") or sum(v.get("mem_peak", 0) for v in rec.get("containers", {}).values())
+            r["mem_total_peak_mb"] = total / 2**20
             runs.append(r)
     # headline attempts
     by = {}
@@ -204,10 +217,10 @@ def cells(runs):
     head = [r for r in runs if r["headline"]]
     groups = {}
     for r in head:
-        groups.setdefault((r["identity"], r["orgs"], r["peers"], r["blocks"], r["fn"], r["t"]), []).append(r)
+        groups.setdefault((r["identity"], r["orgs"], r["peers"], r["fn"], r["t"]), []).append(r)
     out = []
     for k, rs in sorted(groups.items()):
-        row = {"identity": k[0], "orgs": k[1], "peers": k[2], "blocks": k[3], "fn": k[4], "t": k[5], "reps": len(rs),
+        row = {"identity": k[0], "orgs": k[1], "peers": k[2], "fn": k[3], "t": k[4], "reps": len(rs),
                "endorsements": rs[0]["endorsements"], "flagged_reps": sum(r["no_clean_attempt"] for r in rs)}
         for m in METRICS:
             med, lo, hi = boot_median([r.get(m, float("nan")) for r in rs])
@@ -221,7 +234,10 @@ def cells(runs):
             row["cpu_ms_per_tx|" + role] = float(np.median(v)) * 1e3 if v else float("nan")
         v = [r.get("net_tx|orderer", 0) / r["ok"] for r in rs if r.get("ok")]
         row["orderer_egress_bytes_per_tx"] = float(np.median(v)) if v else float("nan")
-        row["mem_peak_mb"] = float(np.median([r["mem_peak_mb"] for r in rs]))
+        row["mem_total_peak_mb"] = float(np.median([r["mem_total_peak_mb"] for r in rs]))
+        for role in MEM_ROLES:
+            v = [r["mem_peak_mb|" + role] for r in rs if "mem_peak_mb|" + role in r]
+            row["mem_peak_mb|" + role] = float(np.median(v)) if v else float("nan")
         row["ok_total"] = ok
         groups[k] = rs
         out.append(row)
@@ -236,7 +252,7 @@ def ratios(groups):
         kb = ("ecdsa",) + k[1:]
         if kb not in groups:
             continue
-        row = {"orgs": k[1], "peers": k[2], "blocks": k[3], "fn": k[4], "t": k[5]}
+        row = {"orgs": k[1], "peers": k[2], "fn": k[3], "t": k[4]}
         for m in ("exec_s", "tps", "lat_mean_ms", "lat_p50_ms", "lat_p95_ms", "lat_p99_ms"):
             r, lo, hi = boot_ratio([x.get(m, float("nan")) for x in rs], [x.get(m, float("nan")) for x in groups[kb]])
             row[m + "_ratio"], row[m + "_lo"], row[m + "_hi"] = r, lo, hi
@@ -246,7 +262,8 @@ def ratios(groups):
 
 
 def bytes_table(session, nets, runs):
-    """Mean bytes per write by part, per network (only the study's own issue transactions)."""
+    """Mean bytes per write by part, per E1 network (only the study's own issue transactions); the two halves
+    of a split network are averaged into one row."""
     out = []
     for netid, nj in sorted(nets.items()):
         txb = read_csvgz(os.path.join(session, "nets", netid, "out", "ledger", "txbytes.csv.gz"))
@@ -260,7 +277,7 @@ def bytes_table(session, nets, runs):
         if not rows:
             continue
         row = {"netid": netid, "identity": nj["net"]["identity"], "orgs": nj["net"]["orgs"], "peers": nj["net"]["peers"],
-               "blocks": nj["net"]["blocks"], "endorsements": nj["client"].get("endorsements"), "writes": len(rows)}
+               "endorsements": nj["client"].get("endorsements"), "writes": len(rows)}
         for f in ["envelope", "orderer_bytes"] + fs.PARTS + ["n_certs", "n_sigs"]:
             row[f] = float(np.mean([int(t[f]) for t in rows]))
         blk = read_csvgz(os.path.join(session, "nets", netid, "out", "ledger", "blocks.csv.gz"))
@@ -269,16 +286,30 @@ def bytes_table(session, nets, runs):
             row["tx_per_block_mean"] = float(np.mean([int(b["ntx"]) for b in blk if int(b["ntx"]) > 1] or [1]))
         led = nj.get("ledger_bytes", {})
         peers = [v for k, v in led.items() if k.startswith("peer") and v > 0]
+        # plus the untimed setup's 1,400 writes: 100 holders registered and bound, 1,000 pool credentials, 200 warm-up
         n_writes_total = sum(r.get("ok", 0) for r in runs if r["netid"] == netid and r["fn"] == "issue") + 1400
         row["ledger_bytes_per_peer"] = float(np.mean(peers)) if peers else float("nan")
         row["ledger_bytes_per_write_per_peer"] = row["ledger_bytes_per_peer"] / n_writes_total if peers else float("nan")
         row["ledger_gb_per_million_writes_per_peer"] = row["ledger_bytes_per_write_per_peer"] * 1e6 / 1e9 if peers else float("nan")
         out.append(row)
-    return out
+    merged = {}
+    for row in out:
+        merged.setdefault((row["identity"], row["orgs"], row["peers"]), []).append(row)
+    res = []
+    for _, rows in sorted(merged.items()):
+        m = dict(rows[0])
+        if len(rows) > 1:
+            m["netid"] = "+".join(r["netid"] for r in rows)
+            m["writes"] = sum(r["writes"] for r in rows)
+            for f, v in rows[0].items():
+                if isinstance(v, float):
+                    m[f] = float(np.nanmean([r[f] for r in rows]))
+        res.append(m)
+    return res
 
 
 def extras(session, nets):
-    e2, e4 = [], []
+    e2, e3 = [], []
     for netid, nj in sorted(nets.items()):
         xdir = os.path.join(session, "nets", netid, "out", "extras")
         if not os.path.isdir(xdir):
@@ -289,12 +320,12 @@ def extras(session, nets):
                 if x.startswith("e2"):
                     for mode, d in s.get("result", {}).items():
                         e2.append(dict({"identity": nj["net"]["identity"], "mode": mode, "rep": sub}, **d))
-                elif x.startswith("e4"):
-                    e4.append({"identity": nj["net"]["identity"], "case": sub, "offered_tps": s.get("offered_tps"),
+                elif x == "e3":
+                    e3.append({"identity": nj["net"]["identity"], "netid": netid, "case": sub, "offered_tps": s.get("offered_tps"),
                                "achieved_tps": s.get("achieved_tps"), "dropped": s.get("dropped"),
                                "lat_p50_ms": s.get("latency_gateway", {}).get("p50_ms"),
                                "lat_p95_ms": s.get("latency_gateway", {}).get("p95_ms")})
-    return e2, e4
+    return e2, e3
 
 
 # ------------------------------------------------------------------------------------------ figures
@@ -319,9 +350,9 @@ def fmt_tps(v):
     return "" if v != v else ("%.1f/s" % v if v < 100 else "%.0f/s" % v)
 
 
-def cell(cs, ident, o, p, blocks, fn, t):
+def cell(cs, ident, o, p, fn, t):
     for c in cs:
-        if (c["identity"], c["orgs"], c["peers"], c["blocks"], c["fn"], c["t"]) == (ident, o, p, blocks, fn, t):
+        if (c["identity"], c["orgs"], c["peers"], c["fn"], c["t"]) == (ident, o, p, fn, t):
             return c
     return None
 
@@ -332,7 +363,7 @@ def lines_vs_t(cs, outdir, o, p, metric, ylabel, name, title, fmt, log_y=True, u
         series = {}
         allv = []
         for ident in fs.ARMS:
-            pts = [(t, cell(cs, ident, o, p, "study", fn, t)) for t in (1, 10, 100, 1000, 10000)]
+            pts = [(t, cell(cs, ident, o, p, fn, t)) for t in (1, 10, 100, 1000, 10000)]
             pts = [(t, c) for t, c in pts if c and c[metric] == c[metric]]
             if not pts:
                 continue
@@ -439,7 +470,7 @@ def stacked(rows, labels, parts, partcol, partname, outdir, name, title, ylabel,
     fs.save(fig, name, outdir)
 
 
-def figures(cs, rat, byt, e2, e4, outdir):
+def figures(cs, rat, byt, e2, e3, outdir):
     # RQ1: one peer (F2-F4)
     lines_vs_t(cs, outdir, 1, 1, "exec_s", "execution time", "F2-execution-time-1x1",
                "Execution time against the burst size, one organisation, one peer", fmt_s, unit="s")
@@ -448,7 +479,7 @@ def figures(cs, rat, byt, e2, e4, outdir):
     lines_vs_t(cs, outdir, 1, 1, "tps", "throughput", "F4-throughput-1x1",
                "Throughput against the burst size, one organisation, one peer", fmt_tps, unit="tps")
     # RQ2: peers (F5, F6)
-    pk = lambda ident, p, fn, t: cell(cs, ident, 1, p, "study", fn, t)  # noqa: E731
+    pk = lambda ident, p, fn, t: cell(cs, ident, 1, p, fn, t)  # noqa: E731
     for t in (1000, 10000):
         bars_vs(cs, outdir, [1, 2, 4, 8], pk, "exec_s", "peers (one organisation)", "execution time",
                 "F5-execution-time-peers-T%d" % t, "Execution time against peers, %s writes" % "{:,}".format(t), fmt_s, t=t)
@@ -456,27 +487,27 @@ def figures(cs, rat, byt, e2, e4, outdir):
                 "F5-latency-peers-T%d" % t, "Mean latency against peers, %s writes" % "{:,}".format(t), fmt_ms, t=t)
         bars_vs(cs, outdir, [1, 2, 4, 8], pk, "tps", "peers (one organisation)", "throughput (transactions per second)",
                 "F5-throughput-peers-T%d" % t, "Throughput against peers, %s writes" % "{:,}".format(t), fmt_tps, t=t)
-    rk = lambda p, t, fn: next((r for r in rat if (r["orgs"], r["peers"], r["blocks"], r["fn"], r["t"]) == (1, p, "study", fn, t)), None)  # noqa: E731
+    rk = lambda p, t, fn: next((r for r in rat if (r["orgs"], r["peers"], r["fn"], r["t"]) == (1, p, fn, t)), None)  # noqa: E731
     heatmap(rat, outdir, [1, 2, 4, 8], [1, 10, 100, 1000, 10000], rk, "F6-ratio-peers-x-T",
             "Throughput of ML-DSA-44 relative to ECDSA, one organisation", "transactions in the burst", "peers")
     # RQ3: organisations (F7, F8)
     for p in (4, 8):
-        ok = lambda ident, o, fn, t, p=p: cell(cs, ident, o, p, "study", fn, t)  # noqa: E731
+        ok = lambda ident, o, fn, t, p=p: cell(cs, ident, o, p, fn, t)  # noqa: E731
         orgs = [o for o in (1, 2, 4, 8) if o <= p]
         bars_vs(cs, outdir, orgs, ok, "tps", "organisations (%d peers in total)" % p, "throughput (transactions per second)",
                 "F7-throughput-orgs-P%d" % p, "Throughput against organisations, %d peers, 10,000 writes" % p, fmt_tps)
         bars_vs(cs, outdir, orgs, ok, "lat_mean_ms", "organisations (%d peers in total)" % p, "mean latency",
                 "F7-latency-orgs-P%d" % p, "Mean latency against organisations, %d peers, 10,000 writes" % p, fmt_ms)
-    ok2 = lambda o, p, fn: next((r for r in rat if (r["orgs"], r["peers"], r["blocks"], r["fn"], r["t"]) == (o, p, "study", fn, 10000)), None)  # noqa: E731
+    ok2 = lambda o, p, fn: next((r for r in rat if (r["orgs"], r["peers"], r["fn"], r["t"]) == (o, p, fn, 10000)), None)  # noqa: E731
     heatmap(rat, outdir, [1, 2, 4, 8], [1, 2, 4, 8], ok2, "F8-ratio-orgs-x-peers",
             "Throughput of ML-DSA-44 relative to ECDSA, 10,000 transactions", "peers", "organisations")
-    # RQ4: bytes, ledger, CPU, orderer egress, stages (F9-F13)
-    sel = sorted([b for b in byt if b["peers"] == 8 and b["blocks"] == "study"], key=lambda b: (b["endorsements"], fs.ARMS.index(b["identity"])))
+    # RQ4: bytes, ledger, CPU, memory, orderer egress, stages (F9-F14)
+    sel = sorted([b for b in byt if b["peers"] == 8], key=lambda b: (b["endorsements"], fs.ARMS.index(b["identity"])))
     if sel:
         stacked(sel, ["%s\n%d endorsement%s" % (fs.ARMNAME[b["identity"]], b["endorsements"], "s" if b["endorsements"] > 1 else "") for b in sel],
                 fs.PARTS, fs.PARTCOL, fs.PARTNAME, outdir, "F9-bytes-per-write", "Bytes of one credential write, by part (8 peers)",
                 "bytes per transaction")
-    sel = [b for b in byt if b["blocks"] == "study" and b.get("ledger_gb_per_million_writes_per_peer") == b.get("ledger_gb_per_million_writes_per_peer")]
+    sel = [b for b in byt if b.get("ledger_gb_per_million_writes_per_peer") == b.get("ledger_gb_per_million_writes_per_peer")]
     if sel:
         sel.sort(key=lambda b: (b["orgs"], b["peers"], fs.ARMS.index(b["identity"])))
         fig, ax = fs.new_fig(7.0, 2.8)
@@ -495,7 +526,7 @@ def figures(cs, rat, byt, e2, e4, outdir):
     sel = []
     for o in (1, 2, 4, 8):
         for ident in fs.ARMS:
-            c = cell(cs, ident, o, 8, "study", "issue", 10000)
+            c = cell(cs, ident, o, 8, "issue", 10000)
             if c:
                 sel.append(c)
     if sel:
@@ -505,21 +536,28 @@ def figures(cs, rat, byt, e2, e4, outdir):
                 {"cpu_ms_per_tx|" + r: r for r in roles}, outdir, "F11-cpu-per-write",
                 "CPU time per credential write, by component (8 peers, 10,000 writes)", "CPU time per transaction (ms)",
                 fmt=lambda v: "%.1f ms" % v)
-    pk2 = lambda ident, p, fn, t: cell(cs, ident, 1, p, "study", fn, t)  # noqa: E731
+    om = lambda ident, o, fn, t: cell(cs, ident, o, 8, fn, t)  # noqa: E731
+    bars_vs(cs, outdir, [1, 2, 4, 8], om, "mem_total_peak_mb", "organisations (8 peers in total)", "peak memory of the network",
+            "F12-memory-total-orgs-P8", "Peak memory of the whole network against organisations, 8 peers, 10,000 writes",
+            lambda v: "%.0f MB" % v)
+    bars_vs(cs, outdir, [1, 2, 4, 8], om, "mem_peak_mb|gateway peer", "organisations (8 peers in total)", "peak memory of the gateway peer",
+            "F12-memory-gateway-orgs-P8", "Peak memory of the gateway peer against organisations, 8 peers, 10,000 writes",
+            lambda v: "%.0f MB" % v)
+    pk2 = lambda ident, p, fn, t: cell(cs, ident, 1, p, fn, t)  # noqa: E731
     bars_vs(cs, outdir, [1, 2, 4, 8], pk2, "orderer_egress_bytes_per_tx", "peers (one organisation)", "orderer egress per transaction (bytes)",
-            "F12-orderer-egress", "Bytes the orderer sends per write, against peers (10,000 writes)", lambda v: "%.0f KB" % (v / 1000))
+            "F13-orderer-egress", "Bytes the orderer sends per write, against peers (10,000 writes)", lambda v: "%.0f KB" % (v / 1000))
     sel = []
     for (o, p) in ((1, 1), (2, 2), (8, 8)):
         for ident in fs.ARMS:
-            c = cell(cs, ident, o, p, "study", "issue", 1000)
+            c = cell(cs, ident, o, p, "issue", 1000)
             if c:
                 sel.append(c)
     if sel:
         stacked(sel, ["%s\n%d×%d" % (fs.ARMNAME[c["identity"]], c["orgs"], c["peers"]) for c in sel],
                 ["stage_%s_ms" % s for s in fs.STAGES], {"stage_%s_ms" % s: fs.STAGECOL[s] for s in fs.STAGES},
-                {"stage_%s_ms" % s: s for s in fs.STAGES}, outdir, "F13-stages",
+                {"stage_%s_ms" % s: s for s in fs.STAGES}, outdir, "F14-stages",
                 "Median time of each stage of a write (1,000 writes)", "milliseconds", fmt=fmt_ms)
-    # E2, E3, E4 (F14-F16)
+    # E2 and E3 (F15, F16)
     if e2:
         fig, ax = fs.new_fig(5.0, 2.6)
         rows = []
@@ -536,39 +574,12 @@ def figures(cs, rat, byt, e2, e4, outdir):
         ax.set_xlabel("median time of one read")
         fs.headline(fig, "A read on an open connection and on a new one (TLS handshake)")
         fs.fit_labels(fig, ax, texts)
-        fs.save(fig, "F14-connection-setup", outdir)
-    ek = lambda ident, blocks, fn, t: cell(cs, ident, 2, 2, blocks, fn, t)  # noqa: E731
-    if any(c["blocks"] == "live" for c in cs):
-        for fn in ("issue", "get"):
-            fig, ax = fs.new_fig(6.4, 2.8)
-            w = 0.2
-            texts = []
-            k = 0
-            for ident in fs.ARMS:
-                for blocks in ("live", "study"):
-                    pos, vals = [], []
-                    for i, t in enumerate((100, 1000, 10000)):
-                        c = ek(ident, blocks, fn, t)
-                        if c and c["tps"] == c["tps"]:
-                            pos.append(i + (k - 1.5) * w)
-                            vals.append(c["tps"])
-                    col = fs.ARMCOL[ident] if blocks == "study" else fs.tint(fs.ARMCOL[ident])
-                    ax.bar(pos, vals, width=w, color=col, label="%s, %s blocks" % (fs.ARMNAME[ident], "10-transaction" if blocks == "live" else "100-transaction"))
-                    texts += fs.label_bars(ax, pos, vals, [fmt_tps(v) for v in vals], orient="v", fontsize=5)
-                    k += 1
-            ax.set_xticks(range(3))
-            ax.set_xticklabels(["100", "1,000", "10,000"])
-            ax.set_xlabel("transactions in the burst")
-            ax.set_ylabel("throughput (transactions per second)")
-            h, lab = ax.get_legend_handles_labels()
-            fs.headline(fig, "The live block settings against the study's, 2 organisations × 1 peer (%s)" % {"issue": "writes", "get": "reads"}[fn], h, lab, ncol=2)
-            fs.fit_labels(fig, ax, texts, orient="v")
-            fs.save(fig, "F15-live-blocks-%s" % fn, outdir)
-    if e4:
+        fs.save(fig, "F15-connection-setup", outdir)
+    if e3:
         fig, ax = fs.new_fig(5.2, 2.8)
         for ident in fs.ARMS:
             pts = {}
-            for r in e4:
+            for r in e3:
                 if r["identity"] == ident and r["lat_p50_ms"] is not None:
                     pts.setdefault(r["offered_tps"], []).append(r["lat_p50_ms"])
             xs = sorted(pts)
@@ -577,7 +588,7 @@ def figures(cs, rat, byt, e2, e4, outdir):
         fs.log_axis(ax, "y", [(10, "10 ms"), (100, "100 ms"), (1000, "1 s"), (10000, "10 s")], "median latency")
         ax.grid(True)
         h, lab = ax.get_legend_handles_labels()
-        fs.headline(fig, "Latency against offered load, 2 organisations × 1 peer", h, lab, ncol=2)
+        fs.headline(fig, "Latency against offered load, 2 organisations, 2 peers (E3)", h, lab, ncol=2)
         fs.save(fig, "F16-offered-load", outdir)
 
 
@@ -607,17 +618,17 @@ def main():
     write_csv(os.path.join(tables, "ratios.csv"), rat, sorted({k for r in rat for k in r}) if rat else None)
     byt = bytes_table(session, nets, runs)
     write_csv(os.path.join(tables, "bytes.csv"), byt, sorted({k for r in byt for k in r}) if byt else None)
-    e2, e4 = extras(session, nets)
+    e2, e3 = extras(session, nets)
     write_csv(os.path.join(tables, "e2.csv"), e2, sorted({k for r in e2 for k in r}) if e2 else None)
-    write_csv(os.path.join(tables, "e4.csv"), e4, sorted({k for r in e4 for k in r}) if e4 else None)
+    write_csv(os.path.join(tables, "e3.csv"), e3, sorted({k for r in e3 for k in r}) if e3 else None)
     setup = [dict({"netid": k}, **v.get("timings", {})) for k, v in sorted(nets.items())]
     write_csv(os.path.join(tables, "setup.csv"), setup, sorted({k for r in setup for k in r}))
-    markdown(cs, ["identity", "orgs", "peers", "blocks", "fn", "t", "reps", "exec_s", "tps", "lat_mean_ms", "lat_p95_ms", "failed"],
+    markdown(cs, ["identity", "orgs", "peers", "fn", "t", "reps", "exec_s", "tps", "lat_mean_ms", "lat_p95_ms", "mem_total_peak_mb", "failed"],
              os.path.join(tables, "cells.md"), "Cells (median of the repetitions)")
     if rat:
-        markdown(rat, ["orgs", "peers", "blocks", "fn", "t", "tps_ratio", "tps_lo", "tps_hi", "lat_mean_ms_ratio", "lat_p95_ms_ratio"],
+        markdown(rat, ["orgs", "peers", "fn", "t", "tps_ratio", "tps_lo", "tps_hi", "lat_mean_ms_ratio", "lat_p95_ms_ratio"],
                  os.path.join(tables, "ratios.md"), "ML-DSA-44 / ECDSA (95 % bootstrap interval)")
-    figures(cs, rat, byt, e2, e4, figs)
+    figures(cs, rat, byt, e2, e3, figs)
     print("runs %d (%d headline), cells %d, comparisons %d, networks %d" % (len(runs), sum(r["headline"] for r in runs), len(cs), len(rat), len(nets)))
     if fs.PROBLEMS:
         print("LAYOUT PROBLEMS:\n  " + "\n  ".join(fs.PROBLEMS))

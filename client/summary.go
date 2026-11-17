@@ -54,7 +54,6 @@ type RunSummary struct {
 	Identity          string         `json:"identity"`
 	ClientAlgorithm   string         `json:"client_algorithm"`
 	ClientCertBytes   int            `json:"client_cert_der_bytes"`
-	Blocks            string         `json:"blocks"`
 	Orgs              int            `json:"orgs"`
 	Peers             int            `json:"peers"`
 	Endorsements      int            `json:"endorsements"`
@@ -94,7 +93,7 @@ func processCPU() float64 {
 // Summarise computes the run's metrics from its transactions.
 func Summarise(p RunParams, cfg *NetConfig, s *Signer, recs []TxRec, t0 time.Time, gwDone int64) *RunSummary {
 	sum := &RunSummary{RunID: p.RunID, Network: cfg.Network, Identity: cfg.Identity, ClientAlgorithm: s.Algorithm,
-		ClientCertBytes: s.CertBytes, Blocks: cfg.Blocks, Orgs: cfg.Orgs, Peers: cfg.PeersTotal,
+		ClientCertBytes: s.CertBytes, Orgs: cfg.Orgs, Peers: cfg.PeersTotal,
 		Endorsements: cfg.Endorsements, Function: p.Function, T: p.T, C: p.C, Seed: p.Seed,
 		T0UnixNS: t0.UnixNano(), Failures: map[string]int{}, ClientDoneS: float64(gwDone) / 1e9}
 	var firstSend int64 = math.MaxInt64
