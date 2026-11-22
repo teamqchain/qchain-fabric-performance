@@ -1,6 +1,6 @@
 # QChain Fabric Performance: Consolidated Plan
 
-**Version 1.1, 17 November 2026.** Status: **plan approved by the project lead (17 Nov); code, images and documents updated; the trial (E0) is next.** The study: ECDSA against ML-DSA-44 identities on QChain's Fabric architecture, as transactions, peers and organisations grow. Code and results live in the private repository `teamqchain/qchain-fabric-performance`; the machine is the project lead's MacBook Air M1 (§3).
+**Version 1.2, 22 November 2026.** Status: **plan approved by the project lead; the test machine set up and qualified (22 Nov); the trial (E0) is next.** The study: ECDSA against ML-DSA-44 identities on QChain's Fabric architecture, as transactions, peers and organisations grow. Code and results live in the private repository `teamqchain/qchain-fabric-performance`; the test machine is a dedicated university virtual machine (§3).
 
 **This copy lives in the repository as `docs/plan.md`; it is the current plan. Where it disagrees with `docs/methodology.md` or `docs/data-dictionary.md`, those describe what the code does and win.** The reason for each choice is in `docs/decisions-log.md`; how the plan reached this version, and every earlier value, is in `docs/history.md`.
 
@@ -27,25 +27,40 @@ The comparison varies one thing: the identity type. QChain contributes its archi
 |---|---|
 | The Fabric fork: `qchain-fabric` `e472b4ea`, `qchain-fabric-ca` `e82caf43`, `qchain-fabric-lib-go` `bd30150`, one build for both arms | Block settings: 100 transactions, 16 MB preferred, 99 MB absolute, 2 s timer (literature) |
 | **The one variable:** ECDSA P-256 or ML-DSA-44 identities | Client load: bursts of T with at most C in flight, C frozen by the trial |
-| The chaincode `qchaincode` 2.0, byte for byte | Container resources: **no memory or CPU limits**; peak memory is measured |
+| The chaincode `qchaincode` 2.0, byte for byte | Container resources: **no memory limit and no CPU quota**; the study's CPUs reserved for it; peak memory is measured |
 | The endorsement policy: MAJORITY of the organisations | The topologies: organisations and peers |
-| One Raft orderer | The machine and the Colima VM |
+| One Raft orderer | The test machine and its CPU isolation |
 | The node configuration files `core.yaml` and `orderer.yaml`, unchanged: goleveldb, gateway concurrency limit 500, block gossip off, TLS on | Workload, repetitions, order, quality rules |
 | A Fabric CA per organisation, as live | |
 
 Every difference from QChain's live network is listed in [live-differences.md](live-differences.md).
 
-## 3. Network configuration
+## 3. Network configuration and test machine
 
 - **Channel** `mychannel`, capabilities V3_0 (channel), V2_0 (orderer), V2_5 (application); the live policies, with MAJORITY for endorsement and lifecycle. One Raft orderer.
 - **Blocks:** MaxMessageCount 100, PreferredMaxBytes 16 MB, AbsoluteMaxBytes 99 MB, BatchTimeout 2 s.
 - **Peers:** goleveldb, one state database per peer; gateway concurrency limit 500; block gossip off with `orgLeader` on (every peer pulls blocks from the orderer); TLS on.
 - **Organisations:** General (the issuing organisation; its `peer0` is the gateway, as for the backend), Government, then `org3` to `org8` (`orgN.uae.com`). P is the total number of peers, P/O per organisation. One chaincode server per organisation. A Fabric CA per organisation, as on the live network (its own TLS is ECDSA in both arms); `issuer1@general` is enrolled with `role=issuer:ecert`.
 - **Identities:** cryptogen makes every CA, node and admin with `ecdsa` (P-256) or `mldsa44`; the crypto provider is `SW` or `PQC` to match.
-- **Containers:** read-only root file system, user 1000, no restart policy, **no memory or CPU limits**. The only ceiling is the Colima VM.
-- **Machine:** MacBook Air M1 (4 performance + 4 efficiency cores), 8 GB, macOS 27.2.1. Colima `vz`, aarch64, 4 vCPUs, 5 GiB memory, 60 GiB disk. Cooling pad used for every run.
-- **Images,** built natively for arm64 inside Colima from Dockerfiles, base images pinned by digest: Fabric `e472b4ea` with `-tags pqc -mod=vendor` (peer with the chaincode-as-a-service builder, orderer, osnadmin, configtxgen, cryptogen, peer CLI) and Fabric CA `e82caf43` in one image (Go 1.27, Debian 13, liboqs 0.16.0 static); chaincode `qchaincode` 2.0 (Node 18.20.8, the live image's entry point, folder, user and dependency tree); client (Go 1.27, fabric-gateway v1.7.0, grpc v1.68.0, the backend's versions); analysis (Python).
+- **Containers:** read-only root file system, user 1000, no restart policy, **no memory limit and no CPU quota**. They run on the study's CPUs only (below); the machine's memory is the only memory ceiling.
+- **Images,** built natively on the test machine (x86-64) from Dockerfiles, base images pinned by digest: Fabric `e472b4ea` with `-tags pqc -mod=vendor` (peer with the chaincode-as-a-service builder, orderer, osnadmin, configtxgen, cryptogen, peer CLI) and Fabric CA `e82caf43` in one image (Go 1.27, Debian 13, liboqs 0.16.0 static); chaincode `qchaincode` 2.0 (Node 18.20.8, the live image's entry point, folder, user and dependency tree); client (Go 1.27, fabric-gateway v1.7.0, grpc v1.68.0, the backend's versions); analysis (Python).
 - **Verbatim rule:** the chaincode and all cryptogen and network files are copied byte for byte from `qchain-network`; the generated files differ from them only as listed in [live-differences.md](live-differences.md), and a self-check proves it.
+
+**The test machine:** a dedicated university virtual machine, separate from QChain's live host.
+
+| Item | Value |
+|---|---|
+| Hypervisor | VMware (full virtualisation; VMware Virtual Platform) |
+| CPU | Intel Xeon Silver 4210R at 2.40 GHz (Cascade Lake), 8 vCPUs; AVX2 and AVX-512, AES-NI, no SHA extensions |
+| Memory | 26.4 GiB, 2 GiB swap |
+| Disk | 251 GB virtual disk, about 81 GB free for the study; synced 4 KB writes 0.23 ms, sequential writes 1.9 GB/s |
+| Operating system | Ubuntu 22.04.5 LTS, Linux 6.8.0 |
+| Runtime | Docker 29.8 (cgroup v2), buildx 0.37; Python 3.10 for the driver |
+| Single-core reference (Go 1.27, standard library) | ML-DSA-44 sign 565 µs, verify 169 µs; ECDSA P-256 sign 46 µs, verify 97 µs |
+
+- **CPU isolation:** the study's containers run under their own systemd slice (`qfp.slice`) on vCPUs 0 to 6; every other process of the machine (system services, Docker's daemon, the desktop, the remote-access agent, another project's containers, the launcher, the driver and the host monitor) is limited to vCPU 7. The remote-access agent's login-screen process keeps one core busy at all times; it runs on vCPU 7 at the lowest priority.
+- **Qualification (22 Nov):** with every vCPU under full load the machine held a constant speed for 40 minutes (spread under 1 %; no steal reported); after the isolation, seven workers on the study's vCPUs each ran at the speed of a single worker alone (0.92 million SHA3-256 hashes per second), steady over 10 minutes, so the background load is confined to vCPU 7; the heaviest network, (8,8) with ML-DSA-44, completed 10,000 writes at C = 100 and 300 (44 to 47 writes/s, whole network at most 4.8 GB of memory) with no container lost.
+- **Access:** remote desktop only; the machine has no access to the team's GitHub, so the code arrives as git bundles (which keep the pinned commits) by file transfer, and nothing is pushed from it.
 
 ## 4. Experiments
 
@@ -83,6 +98,8 @@ Size of a credential write (`issueCredential`, 1,411 transactions per arm in a s
 
 **Per run:** a fresh client process with a persistent connection to `peer0.general` and a block-event stream from every peer. At t0 the client releases T requests with at most C open at once. Writes: each holder in turn, 10 credential fields, a 64-character hash, a fixed real ML-DSA-44 signature and public key, `issuedAt` = send time, identical content in both arms. Reads: random credentials from the pool. Every failed transaction is counted by cause; the driver records every container's state (running, killed for memory, exit code) after each run.
 
+**Sessions** run unattended: the launcher detaches them into a `tmux` session with sleep blocked, so the remote-desktop session is closed while they run.
+
 ## 7. Metrics (each transaction stored with its timestamps)
 
 | # | Metric | Definition |
@@ -117,9 +134,9 @@ Writes run with C rising, so that a network that runs out of memory at a high C 
 
 **E3's reference:** the best ECDSA write throughput at (2,2).
 
-**Memory:** the peak of every container and of each network's total, against the Colima VM's memory (4,905 MB, of which the VM itself uses about 0.6 GB; there is no swap, so a shortage ends in the kernel killing a container). Above 85 % in any network, the project lead decides before the main run.
+**Memory:** the peak of every container and of each network's total, against the machine's memory (26.4 GiB, of which about 3 GB is in use by the machine's own processes). Above 85 % in any network, the project lead decides before the main run.
 
-**Disk:** each network's ledger is projected from the trial's bytes per write. An E1 network projected above 80 % of the Colima disk is proposed for a split into two networks (repetitions 1 to 3, then 4 and 5); during runs a network stops if the disk passes 85 %.
+**Disk:** each network's ledger is projected from the trial's bytes per write. An E1 network projected above 80 % of Docker's disk is proposed for a split into two networks (repetitions 1 to 3, then 4 and 5); during runs a network stops if the disk passes 85 %.
 
 **Time:** the main session's duration is projected network by network. The project lead decides any reduction; nothing is capped automatically.
 
@@ -127,35 +144,35 @@ The trial report (`qfp.py trial-report`) lists all of this; the project lead app
 
 ## 9. Quality and statistics (KPI rules)
 
-Flags: other macOS CPU above 5 %, thermal pressure above nominal, battery or Low Power Mode, swap growth during the run, canary drift above 3 % (canary at each network's start and every 60 min). A flagged run is repeated up to 3 times and the first clean attempt is kept; thresholds are frozen after E0. Conditions: background services paused, Wi-Fi off during runs, apps closed (VS Code included), automatic macOS updates off, `caffeinate`, adapter connected, cooling pad. Statistics: median of 5 repetitions with a 95 % bootstrap interval (10,000 resamples); each comparison reports ML-DSA-44 / ECDSA with a bootstrap interval and counts as a real difference when it excludes 1. SHA256SUMS and a privacy scan before results are committed.
+Flags of a run: CPU time on the study's CPUs not used by the study above 5 % (mean over the run); steal above 2 %; the CPU isolation not in place at any sample; system activity (a package manager or automatic-update unit running); swap growth above 64 MB; canary drift above 3 % (canary at each network's start and every 60 min). A flagged run is repeated up to 3 times and the first clean attempt is kept; thresholds are frozen after E0. Conditions: CPU isolation in place, automatic package updates stopped, no other session, the session detached with sleep blocked, the remote-desktop session closed. Statistics: median of 5 repetitions with a 95 % bootstrap interval (10,000 resamples); each comparison reports ML-DSA-44 / ECDSA with a bootstrap interval and counts as a real difference when it excludes 1. SHA256SUMS and a privacy scan before results are committed.
 
 ## 10. Output
 
 E1: 200 cells x about 20 numbers, 100 ECDSA-against-ML-DSA-44 comparisons, about 2.2 million transaction records, one byte breakdown per network. E2: 2,000 connection timings per arm. E3: 2 curves of 7 points, 5 repetitions each.
 
-Figures: F1 transaction flow; F2-F4 execution time, latency, throughput against T at (1,1); F5 the same against P at T = 1,000 and 10,000; F6 ratio heatmap over P x T; F7 against O at P = 4 and P = 8; F8 ratio heatmap over O x P; F9 bytes per write by part against endorsements; F10 ledger growth; F11 CPU per write by component; F12 peak memory (network total and gateway peer) against O at 8 peers; F13 orderer egress against P; F14 stages of a write; F15 connection setup (E2); F16 latency against offered load (E3). ECDSA blue `#0072B2`, ML-DSA-44 vermillion `#D55E00`, values at bar ends, every log axis labelled "(log scale)". Tables: T1 setup, T2 what comes from QChain and what the study chooses, T3 topologies, T4 all cells (appendix), T5 ratios, T6 comparison with Nasir et al. 2018, the SmartCity repository, Hu and Lin, PQFabric.
+Figures: F1 transaction flow; F2-F4 execution time, latency, throughput against T at (1,1); F5 the same against P at T = 1,000 and 10,000; F6 ratio heatmap over P x T; F7 against O at P = 4 and P = 8; F8 ratio heatmap over O x P; F9 bytes per write by part against endorsements; F10 ledger growth; F11 CPU per write by component; F12 peak memory (network total and gateway peer) against O at 8 peers; F13 orderer egress against P; F14 stages of a write; F15 connection setup (E2); F16 latency against offered load (E3). ECDSA blue `#0072B2`, ML-DSA-44 vermillion `#D55E00`, values at bar ends, every log axis labelled "(log scale)". Tables: T1 setup (with the test machine's specification), T2 what comes from QChain and what the study chooses, T3 topologies, T4 all cells (appendix), T5 ratios, T6 comparison with Nasir et al. 2018, the SmartCity repository, Hu and Lin, PQFabric.
 
 ## 11. Paper outline
 
-1 Introduction; 2 Background; 3 Related work; 4 System under test (QChain's architecture and the study's settings); 5 Methodology; 6 Results (6.1 more transactions RQ1, 6.2 more peers RQ2, 6.3 more organisations RQ3, 6.4 other costs RQ4 with E2, 6.5 offered load E3); 7 Discussion (each RQ against the literature, implications for QChain, limitations); 8 Conclusion and future work (several machines, BFT ordering, ML-DSA-65/87).
+1 Introduction; 2 Background; 3 Related work; 4 System under test (QChain's architecture, the study's settings, the test machine); 5 Methodology; 6 Results (6.1 more transactions RQ1, 6.2 more peers RQ2, 6.3 more organisations RQ3, 6.4 other costs RQ4 with E2, 6.5 offered load E3); 7 Discussion (each RQ against the literature, implications for QChain, limitations); 8 Conclusion and future work (several machines, BFT ordering, ML-DSA-65/87).
 
 ## 12. Time
 
-- **Trial:** about 1.5 h.
-- **Main session:** projected by the trial, network by network. The networks with the most peers and endorsements take the longest, (8,8) with ML-DSA-44 above all: writes there are slowest, and each of the 5 repetitions sends 10,000 of them. The trial's projection is the reference.
-- **No deadline:** the main session may run in several sittings (it resumes by network). Between sittings the images stay unchanged and automatic macOS updates stay off; during a long pause the updates may be switched on and off again.
+- **Trial:** about an hour.
+- **Main session:** projected by the trial, network by network. The networks with the most peers and endorsements take the longest, (8,8) with ML-DSA-44 above all: a 10,000-write run there takes about 4 minutes on the test machine, and each of the 5 repetitions sends 10,000 writes. The trial's projection is the reference.
+- **No deadline:** the main session may run in several sittings (it resumes by network). Between sittings the images stay unchanged and automatic package updates stay stopped.
 
 ## 13. Threats to validity
 
-One machine (peers share the CPU, no real network delay; the reference paper had the same limit); a fanless laptop (random order, back-to-back pairs, thermal flags); arm64, not the live network's x86; one Raft orderer; the settings are the study's, not QChain's deployment (stated as the scope); open connections in the grid (E2 measures the handshake); QChain's node configuration (goleveldb, block gossip off) and Node 18 chaincode; synthetic but realistic credential content; no container limits, so the Colima VM's 5 GiB is the only memory ceiling.
+One machine (peers share the CPU, no real network delay; the reference paper had the same limit); a virtual machine on a shared VMware host (other virtual machines' load is not visible from inside except as steal, which this hypervisor may not report; the canary, the steady-speed qualification, random order and back-to-back pairs guard against it); an x86 CPU different from the live host's (the live host's virtual CPU has no AVX2); one Raft orderer; the settings are the study's, not QChain's deployment (stated as the scope); open connections in the grid (E2 measures the handshake); QChain's node configuration (goleveldb, block gossip off) and Node 18 chaincode; synthetic but realistic credential content; no container limits, so the machine's 26.4 GiB is the only memory ceiling.
 
 ## 14. Steps
 
 1. Repository and revert list (done 16 Nov).
-2. Code every component (done 16 Nov; updated for this plan 17 Nov).
-3. Installs and image builds (done 16 Nov; images rebuilt 17 Nov).
+2. Code every component (done 16 Nov; updated 17 and 22 Nov).
+3. Test machine set up and qualified; images built natively on it; smoke session and the (8,8) check passed (22 Nov).
 4. **E0, the trial;** report the values (C, E3's reference, memory, disk, time); the project lead approves; freeze.
 5. The main session (E1, E2, E3), in one or more sittings.
 6. Analysis, figures, tables; results documents.
-7. Test machine reverted (revert list).
+7. Machines reverted (revert list).
 8. Paper draft.

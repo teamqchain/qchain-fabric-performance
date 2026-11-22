@@ -6,13 +6,14 @@ Every file a session writes. Raw files live in `results/raw/<session>/` (not com
 
 | File | Content |
 |---|---|
-| `plan.json` | kind, seed, harness commit, image IDs, thresholds, every network (`net`: organisations, peers, identity; `tag` for a split half or an E3 network; `e3_rep`; `seed`; `extras`; `go_env` for a memory test) with its runs (id, function, T, repetition, seed, C for the trial) |
+| `plan.json` | kind, seed, harness commit, `platform`, the CPU isolation (`cgroup_parent`, `cpuset`), image IDs, thresholds, every network (`net`: organisations, peers, identity; `tag` for a split half or an E3 network; `e3_rep`; `seed`; `extras`) with its runs (id, function, T, repetition, seed, C for the trial) |
 | `state.json` | networks done, their durations, canaries, the session's canary reference, failures |
 | `driver.log` | one line per network step, per run and per E2/E3 level |
-| `session-host.txt`, `preflight-*.txt` | macOS version, model, Colima and Docker versions, preflight problems |
-| `host/host-all.csv` | host monitor: `utc_ns,other_pct,throttle,on_ac,alert,detail` every 5 s (KPI format) |
-| `host/paused.log`, `host/wifi.log` | services paused, Wi-Fi switched off |
-| `trial-report.json` | trial only: `c_cases` (per case and candidate: attempts, failed attempts, write throughput, the candidates within 5 %), `c_choice`, `e3_saturation_tps`, `write_tps_2x2_best`, `containers_down`, `vm_memory_mb`, `vm_baseline_mb` (the VM's own use at idle), per network (memory peaks, ledger bytes per write per peer and the orderer's ledger bytes, timings, errors), `memory_warning`, `colima_disk_now_gb`, `projection` (hours, per-network hours and disk, `split_proposed`) |
+| `session-host.txt` | per start or resume: time, kind, `--force`, operating system, kernel, hypervisor, CPU model, vCPUs, the study's and the reserved CPUs, memory, Docker version, whether sleep was blocked (no host or user names) |
+| `preflight-*.txt` | the preflight's problems and notes (the study CPUs' load and the steal before the session, memory available, free disk) |
+| `host/host-all.csv` | host monitor, every 5 s: `utc_ns`, `other_pct` (CPU time on the study's CPUs not used by the study, %), `steal_pct` (the machine's steal, %), `cpuset_ok` (1 while the isolation is in place), `alert` (1 while a package manager or an update unit runs), `detail` (the study CPUs' busy %, the study's share, the machine's busy %, the 1-minute load, available memory, what the last check found) |
+| `console.log`, `launcher.sh` | the detached session's terminal output and its start script (not published) |
+| `trial-report.json` | trial only: `c_cases` (per case and candidate: attempts, failed attempts, write throughput, the candidates within 5 %), `c_choice`, `e3_saturation_tps`, `write_tps_2x2_best`, `containers_down`, `machine_memory_mb`, `machine_baseline_mb` (the machine's own use at idle), per network (memory peaks with `mem_total_peak_pct_of_machine`, ledger bytes per write per peer and the orderer's ledger bytes, timings, errors), `memory_warning`, `disk_now_gb` (Docker's disk), `projection` (hours, per-network hours and disk, `split_proposed`) |
 
 ## Per network: `nets/<netid>/`
 
@@ -20,8 +21,8 @@ Every file a session writes. Raw files live in `results/raw/<session>/` (not com
 
 | File | Content |
 |---|---|
-| `network.json` | the network, step timings (M12), `ledger_bytes` per data volume (M9), the ledger read-back's result, Colima disk use, `errors` (a failed E2, E3 or read-back) |
-| `runs/<run>.json` | the driver's record of one attempt: id, attempt, function, T, repetition, C, seed, start/end (Unix ns), `wall_s`, the client's short result, error, flags, macOS swap before/after, per container `cpu_s`, `rx`, `tx`, `mem_peak`, the network's `mem_total_peak`, every container's `states` (running, oom, exit, restarts, error) |
+| `network.json` | the network, step timings (M12), `ledger_bytes` per data volume (M9), the ledger read-back's result, `disk_pct` (Docker's disk), `errors` (a failed E2, E3 or read-back) |
+| `runs/<run>.json` | the driver's record of one attempt: id, attempt, function, T, repetition, C, seed, start/end (Unix ns), `wall_s`, the client's short result, error, flags, swap used before and after (MB), per container `cpu_s`, `rx`, `tx`, `mem_peak`, the network's `mem_total_peak`, every container's `states` (running, oom, exit, restarts, error) |
 | `diag-<run>-a<k>.txt` | only when a container was down after a run: its state and last log lines |
 | `gen/` | the generated network files (no keys: those stay in the Docker volume) |
 | `tools-*.log`, `setup.log` | output of the bring-up scripts and of the setup |

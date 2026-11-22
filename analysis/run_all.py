@@ -11,8 +11,8 @@ ledger/txbytes.csv.gz, blocks.csv.gz), plus nets/<netid>/network.json. E1's netw
 E2's files are in the (2,2) networks' extras/e2/; E3's networks (`-e3r<k>`) hold only extras/e3/.
 
 Rules (docs/plan.md sections 6 and 7):
-- the headline attempt of a run is its first attempt without a quality flag (other CPU, thermal,
-  battery, Low Power Mode, swap, canary); a run whose attempts are all flagged keeps its last
+- the headline attempt of a run is its first attempt without a quality flag (other CPU on the
+  study's CPUs, steal, CPU isolation, system activity, swap, canary); a run whose attempts are all flagged keeps its last
   attempt, marked in runs.csv, and is reported;
 - a cell (identity, organisations, peers, function, T) is summarised by the median of its
   repetitions with a 95 % percentile bootstrap interval (10,000 resamples of the repetitions);
@@ -33,7 +33,7 @@ import figstyle as fs  # noqa: E402
 
 B = 10000
 RNG = np.random.default_rng(20261116)
-REPEATABLE = {"other_cpu", "thermal", "battery", "low_power", "swap", "canary"}
+REPEATABLE = {"other_cpu", "steal", "cpuset", "system_activity", "swap", "canary"}
 MEM_ROLES = ["gateway peer", "other peers", "orderer", "chaincode", "ca"]
 
 

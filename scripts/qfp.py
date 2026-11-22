@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""qfp.py: the driver of qchain-fabric-performance (runs on the Mac, Python 3.9 standard library).
+"""qfp.py: the driver of qchain-fabric-performance (runs on the test machine: Linux, Python 3.10 standard library).
 
-It talks to Docker in the Colima VM, builds the images, brings every network up and down,
+It talks to Docker on the same machine, builds the images, brings every network up and down,
 runs every run in a fresh client container, reads each container's CPU, network and memory
 from the Docker API, applies the quality rules (flags and repeats), and keeps a resumable
-state. The Mac-side conditions (preflight, paused services, Wi-Fi, caffeinate, host monitor)
-are the launcher's job: scripts/run-mac.sh, which calls this script.
+state. The machine-side conditions (CPU isolation, preflight, detaching from the terminal,
+sleep inhibition, host monitor) are the launcher's job: scripts/run-linux.sh, which calls this
+script.
 
     qfp.py build [--lock live|none]           the four images (needs the internet)
     qfp.py selfcheck                          generator and verbatim checks, Docker reachable
-    qfp.py plan <kind> <session> [--seed N]   write a session plan: smoke | trial | memtest | main
+    qfp.py plan <kind> <session> [--seed N]   write a session plan: smoke | trial | main
     qfp.py run <session>                      execute or resume a session
     qfp.py status <session>                   progress and projected end
     qfp.py trial-report <session>             C, E3 saturation, memory, disk and time projections
@@ -55,6 +56,9 @@ CLONES = {  # name: (folder, pinned commit)
     "fabric-ca": ("qchain-fabric-ca", "e82caf43f01642728ef189710a6739f5f77dfd54"),
     "fabric-lib-go": ("qchain-fabric-lib-go", "bd30150"),
 }
+# CPU isolation (docs/methodology.md section 8): the study's containers run under this systemd slice, which must
+# allow exactly the CPUs named in QFP_CPUSET (checked before a session starts); the launcher sets both
+CGROUP_PARENT = os.environ.get("QFP_CGROUP_PARENT")
 DOCKER_NET = "qfp-net"
 RESULTS_VOL = "qfp-results"
 LABEL = "org.qchain.qfp=1"
@@ -69,17 +73,17 @@ C_CANDIDATES = [100, 200, 300]
 C_CASES = [("heaviest", "o8p8-mldsa44"), ("fastest", "o2p2-ecdsa")]
 E3_FRACTIONS = [0.10, 0.25, 0.50, 0.75, 0.90, 1.00, 1.10]   # offered load, as fractions of the ECDSA saturation
 E3_SMALL_RATE = 25            # the trial's short check of the load client (transactions per second, 20 s)
-GO_ROLES = ("peer", "orderer", "ca")   # the containers that run Go programs (the chaincode server is Node.js)
-DISK_SPLIT_PCT = 80           # a projected network above this share of the Colima disk is proposed for a split
+DISK_SPLIT_PCT = 80           # a projected network above this share of Docker's disk is proposed for a split
 
 DEFAULT_THRESHOLDS = {
     "frozen": False,
     "c": None,                    # transactions in flight, chosen by the trial
     "e3_saturation_tps": None,    # the trial's ECDSA write saturation at (2,2), the reference of E3's rates
     "split": [],                  # E1 networks run as two networks (repetitions 1-3, then 4-5), set at freeze
-    "other_cpu_pct_mean": 5.0,    # host CPU used by other processes, mean over the run
+    "other_cpu_pct_mean": 5.0,    # CPU time on the study's CPUs not used by the study, mean over the run
+    "steal_pct_mean": 2.0,        # CPU time the hypervisor took (steal), mean over the run
     "canary_drift_pct": 3.0,      # canary below the session reference
-    "swap_growth_mb": 64.0,       # macOS swap growth during a run
+    "swap_growth_mb": 64.0,       # swap growth during a run
     "max_attempts": 3,
     "settle_s": 5,
     "canary_every_s": 3600,
@@ -103,8 +107,13 @@ def log(session, msg):
 
 
 def sh(cmd, inp=None, check=True, timeout=None, capture=True):
-    r = subprocess.run(cmd, input=inp, stdout=subprocess.PIPE if capture else None,
-                       stderr=subprocess.PIPE if capture else None, timeout=timeout)
+    try:
+        r = subprocess.run(cmd, input=inp, stdout=subprocess.PIPE if capture else None,
+                           stderr=subprocess.PIPE if capture else None, timeout=timeout)
+    except FileNotFoundError:   # a program that this machine does not have
+        if check:
+            raise
+        r = subprocess.CompletedProcess(cmd, 127, b"" if capture else None, b"" if capture else None)
     if check and r.returncode != 0:
         err = (r.stderr or b"").decode(errors="replace")[-2000:]
         raise RuntimeError("command failed (%d): %s\n%s" % (r.returncode, " ".join(cmd[:6]), err))
@@ -113,6 +122,29 @@ def sh(cmd, inp=None, check=True, timeout=None, capture=True):
 
 def docker(*args, **kw):
     return sh(["docker"] + list(args), **kw)
+
+
+def cg_args():
+    return ["--cgroup-parent", CGROUP_PARENT] if CGROUP_PARENT else []
+
+
+def check_cpuset():
+    """With QFP_CGROUP_PARENT set, the slice must exist and allow exactly the CPUs in QFP_CPUSET; otherwise the
+    containers would silently use every CPU, including the one that holds the machine's background load."""
+    if not CGROUP_PARENT:
+        return
+    want = os.environ.get("QFP_CPUSET")
+    if not want:
+        raise SystemExit("QFP_CGROUP_PARENT is set: also set QFP_CPUSET to the CPUs the slice must allow, for example 0-6")
+    path = "/sys/fs/cgroup/%s/cpuset.cpus.effective" % CGROUP_PARENT
+    try:
+        have = open(path).read().strip()
+    except OSError:
+        raise SystemExit("slice %s not found (%s); create it first: sudo systemctl set-property --runtime %s AllowedCPUs=%s"
+                         % (CGROUP_PARENT, path, CGROUP_PARENT, want))
+    if have != want:
+        raise SystemExit("slice %s allows CPUs %s, not %s: sudo systemctl set-property --runtime %s AllowedCPUs=%s"
+                         % (CGROUP_PARENT, have, want, CGROUP_PARENT, want))
 
 
 def read_json(path, default=None):
@@ -337,7 +369,7 @@ def vol_cat(netid, path):
 
 def tools(session, netid, script, timeout=900):
     t = time.time()
-    r = docker("run", "--rm", "--network", DOCKER_NET, "--user", "1000:1000", "--label", LABEL,
+    r = docker("run", "--rm", *cg_args(), "--network", DOCKER_NET, "--user", "1000:1000", "--label", LABEL,
                "-v", vol(netid) + ":/qfp", "-w", "/qfp/net", "--entrypoint", "bash", images()["tags"]["fabric"],
                "/qfp/net/scripts/" + script, check=False, timeout=timeout)
     out = (r.stdout + r.stderr).decode(errors="replace")
@@ -350,7 +382,7 @@ def tools(session, netid, script, timeout=900):
 
 def start_container(netid, c, env_extra=None):
     im = images()["tags"]
-    args = ["run", "-d", "--name", cname(c["name"]), "--hostname", c["name"], "--network", DOCKER_NET,
+    args = ["run", "-d"] + cg_args() + ["--name", cname(c["name"]), "--hostname", c["name"], "--network", DOCKER_NET,
             "--network-alias", c["name"], "--user", "1000:1000", "--read-only", "--tmpfs", "/tmp:mode=1777",
             "--restart", "no", "--stop-timeout", "10",
             "--label", LABEL, "--label", "org.qchain.qfp.net=" + netid, "--label", "org.qchain.qfp.role=" + c["role"]]
@@ -415,10 +447,9 @@ def bring_up(session, item):
     load_volume(netid, gen)
     timings["crypto_s"] = tools(session, netid, "01-crypto.sh")
     t = time.time()
-    go_env = item.get("go_env") or {}
     for c in topo["containers"]:
         if c["stage"] == "ca":
-            start_container(netid, c, go_env)
+            start_container(netid, c)
     for c in topo["containers"]:
         if c["stage"] == "ca":
             wait_ready(c["name"], c["ready"])
@@ -427,7 +458,7 @@ def bring_up(session, item):
     t = time.time()
     for c in topo["containers"]:
         if c["stage"] == "node":
-            start_container(netid, c, go_env)
+            start_container(netid, c)
     for c in topo["containers"]:
         if c["stage"] == "node":
             wait_ready(c["name"], c["ready"])
@@ -471,7 +502,7 @@ def down(args):
 
 
 def client(session, netid, args, timeout=3600, mount_out=True):
-    cmd = ["run", "--rm", "--network", DOCKER_NET, "--user", "1000:1000", "--read-only", "--tmpfs", "/tmp:mode=1777",
+    cmd = ["run", "--rm"] + cg_args() + ["--network", DOCKER_NET, "--user", "1000:1000", "--read-only", "--tmpfs", "/tmp:mode=1777",
            "--label", LABEL, "--label", "org.qchain.qfp.net=" + netid,
            "--mount", "type=volume,src=%s,dst=/qfp,readonly" % vol(netid)]
     if mount_out:
@@ -517,21 +548,33 @@ def ledger_sizes(netid, topo):
     return out
 
 
-def vm_meminfo():
-    """(MemTotal, MemAvailable) in bytes of the Colima VM, from its /proc/meminfo; (None, None) if unreadable.
-    With no network running, MemTotal - MemAvailable is the VM's own use (kernel, Docker)."""
-    r = sh(["colima", "ssh", "--profile", "qfp", "--", "cat", "/proc/meminfo"], check=False, timeout=60)
+def machine_meminfo():
+    """(MemTotal, MemAvailable) in bytes from /proc/meminfo, or (None, None). With no network running,
+    MemTotal - MemAvailable is the machine's own use (kernel, Docker, desktop, other programs)."""
     vals = {}
-    for line in r.stdout.decode(errors="replace").splitlines():
-        m = re.match(r"(MemTotal|MemAvailable):\s+(\d+) kB", line)
-        if m:
-            vals[m.group(1)] = int(m.group(2)) * 1024
+    try:
+        for line in open("/proc/meminfo"):
+            m = re.match(r"(MemTotal|MemAvailable):\s+(\d+) kB", line)
+            if m:
+                vals[m.group(1)] = int(m.group(2)) * 1024
+    except OSError:
+        return None, None
     return vals.get("MemTotal"), vals.get("MemAvailable")
 
 
-def colima_disk():
-    """(used bytes, size bytes) of the Colima VM's Docker disk, or (None, None)."""
-    r = sh(["colima", "ssh", "--profile", "qfp", "--", "df", "-P", "-k", "/var/lib/docker"], check=False, timeout=60)
+def docker_df(*opts):
+    """`df` of the disk that holds Docker's data (the root disk if /var/lib/docker cannot be read)."""
+    r = None
+    for path in ("/var/lib/docker", "/"):
+        r = sh(["df", "-P"] + list(opts) + [path], check=False, timeout=60)
+        if r.returncode == 0:
+            return r
+    return r
+
+
+def docker_disk():
+    """(used bytes, size bytes) of the disk that holds Docker's data, or (None, None)."""
+    r = docker_df("-k")
     try:
         f = r.stdout.decode().splitlines()[1].split()
         return int(f[2]) * 1024, int(f[1]) * 1024
@@ -539,8 +582,8 @@ def colima_disk():
         return None, None
 
 
-def colima_disk_pct():
-    r = sh(["colima", "ssh", "--profile", "qfp", "--", "df", "-P", "/var/lib/docker"], check=False, timeout=60)
+def docker_disk_pct():
+    r = docker_df()
     try:
         return float(r.stdout.decode().splitlines()[1].split()[4].rstrip("%"))
     except (IndexError, ValueError):
@@ -550,6 +593,8 @@ def colima_disk_pct():
 # ---------------------------------------------------------------- host quality
 
 def host_rows(session, t_from_ns, t_to_ns):
+    """The host monitor's samples during a run (monitor/monitor-linux.sh: utc_ns, other_pct, steal_pct,
+    cpuset_ok, alert, detail), or None without a monitor file."""
     path = os.path.join(session_dir(session), "host", "host-all.csv")
     rows = []
     try:
@@ -561,19 +606,22 @@ def host_rows(session, t_from_ns, t_to_ns):
                     continue
                 ts = int(p[0])
                 if t_from_ns <= ts <= t_to_ns + 6 * 10**9:
-                    rows.append({"other": float(p[1]), "throttle": int(p[2]), "on_ac": int(p[3]), "alert": int(p[4])})
+                    rows.append({"other": float(p[1]), "steal": float(p[2]), "cpuset_ok": int(p[3]), "alert": int(p[4])})
     except FileNotFoundError:
         return None
     return rows
 
 
 def swap_used_mb():
-    r = sh(["sysctl", "-n", "vm.swapusage"], check=False)
-    m = re.search(r"used = ([\d.]+)M", r.stdout.decode())
-    return float(m.group(1)) if m else -1.0
+    try:
+        m = dict((k, int(v.split()[0])) for k, v in (l.split(":", 1) for l in open("/proc/meminfo") if l.startswith(("SwapTotal", "SwapFree"))))
+        return (m["SwapTotal"] - m["SwapFree"]) / 1024.0
+    except (OSError, KeyError, ValueError):
+        return -1.0
 
 
 def run_flags(session, th, t_from_ns, t_to_ns, swap0, swap1):
+    """Quality flags of a run (docs/methodology.md section 8)."""
     flags = []
     rows = host_rows(session, t_from_ns, t_to_ns)
     if rows is None:
@@ -581,12 +629,12 @@ def run_flags(session, th, t_from_ns, t_to_ns, swap0, swap1):
     elif rows:
         if statistics.mean(r["other"] for r in rows) > th["other_cpu_pct_mean"]:
             flags.append("other_cpu")
-        if any(r["throttle"] == 1 for r in rows):
-            flags.append("thermal")
-        if any(r["on_ac"] == 0 for r in rows):
-            flags.append("battery")
+        if statistics.mean(r["steal"] for r in rows) > th["steal_pct_mean"]:
+            flags.append("steal")
+        if any(r["cpuset_ok"] == 0 for r in rows):
+            flags.append("cpuset")
         if any(r["alert"] == 1 for r in rows):
-            flags.append("low_power")
+            flags.append("system_activity")
     if swap0 >= 0 and swap1 >= 0 and swap1 - swap0 > th["swap_growth_mb"]:
         flags.append("swap")
     return flags
@@ -594,10 +642,8 @@ def run_flags(session, th, t_from_ns, t_to_ns, swap0, swap1):
 
 # ---------------------------------------------------------------- plans
 
-def item(orgs, peers, identity, runs, extras=(), tag=None, e3_rep=None, go_env=None):
+def item(orgs, peers, identity, runs, extras=(), tag=None, e3_rep=None):
     it = {"net": {"orgs": orgs, "peers": peers, "identity": identity}, "runs": runs, "extras": list(extras)}
-    if go_env:
-        it["go_env"] = go_env   # environment of the Go containers (peers, orderer, CAs), for the memory test
     if tag:
         it["tag"] = tag
     if e3_rep:
@@ -611,7 +657,7 @@ def grid_runs(rng, reps=REPS, fns=("issue", "get"), tlevels=T_LEVELS):
     return runs
 
 
-def make_plan(kind, seed, th, gomemlimit=None):
+def make_plan(kind, seed, th):
     rng = random.Random(seed)
     items = []
     if kind == "smoke":
@@ -636,13 +682,6 @@ def make_plan(kind, seed, th, gomemlimit=None):
         top = C_CANDIDATES[-1]
         items.append(item(1, 8, "mldsa44", [{"fn": "get", "t": 10000, "rep": 1, "c": top},
                                             {"fn": "issue", "t": 10000, "rep": 1, "c": top}]))
-    elif kind == "memtest":
-        # the (8,8) ML-DSA-44 network with a Go memory target (GOMEMLIMIT) on its Go containers: 10,000 writes at
-        # C = 100 and then 300. A test of whether such a target keeps the network inside the VM; not reported.
-        if not gomemlimit:
-            raise SystemExit("memtest needs --gomemlimit, for example 300MiB")
-        items.append(item(8, 8, "mldsa44", [{"fn": "issue", "t": 10000, "rep": 1, "c": c} for c in (100, 300)],
-                          go_env={"GOMEMLIMIT": gomemlimit}))
     elif kind == "main":
         if not th.get("frozen"):
             raise SystemExit("thresholds are not frozen: run the trial, then `qfp.py freeze`")
@@ -667,13 +706,14 @@ def make_plan(kind, seed, th, gomemlimit=None):
                 else:
                     items.append(item(o, p, ident, runs, extras))
     else:
-        raise SystemExit("plan kind must be smoke, trial, memtest or main")
+        raise SystemExit("plan kind must be smoke, trial or main")
     for i, it in enumerate(items):
         it["seed"] = rng.randrange(1, 2**62)
         for j, r in enumerate(it["runs"]):
             r["id"] = "n%02d-r%03d" % (i + 1, j + 1)
             r["seed"] = rng.randrange(1, 2**62)
     return {"kind": kind, "seed": seed, "created_utc": now_utc(), "harness": harness_commit(),
+            "platform": sys.platform, "cgroup_parent": CGROUP_PARENT, "cpuset": os.environ.get("QFP_CPUSET"),
             "images": read_json(IMAGES, {}), "thresholds": th, "items": items}
 
 
@@ -681,7 +721,7 @@ def plan_cmd(args):
     sdir = session_dir(args.session)
     if os.path.exists(os.path.join(sdir, "plan.json")):
         raise SystemExit("session %s already has a plan" % args.session)
-    p = make_plan(args.kind, args.seed, thresholds(), args.gomemlimit)
+    p = make_plan(args.kind, args.seed, thresholds())
     write_json(os.path.join(sdir, "plan.json"), p)
     n_runs = sum(len(i["runs"]) for i in p["items"])
     print("session %s: %d networks, %d runs (%s)" % (args.session, len(p["items"]), n_runs, args.kind))
@@ -817,9 +857,9 @@ def run_network(session, idx, it, api, th, state):
                         queue.append((orig, w["attempt"] + 1))
             window = []
         time.sleep(th["settle_s"])
-        pct = colima_disk_pct()
+        pct = docker_disk_pct()
         if pct > 85:
-            raise RuntimeError("Colima disk at %.0f %%: network %s stopped (disk guard)" % (pct, netid))
+            raise RuntimeError("Docker's disk at %.0f %%: network %s stopped (disk guard)" % (pct, netid))
     errors = {}
     for x in it["extras"]:
         try:
@@ -839,7 +879,7 @@ def run_network(session, idx, it, api, th, state):
     copy_out(session, netid)
     write_json(os.path.join(ndir, "network.json"), {"index": idx, "net": it["net"], "netid": netid, "timings": timings,
                                                     "ledger_bytes": sizes, "blocks": res, "end_utc": now_utc(),
-                                                    "colima_disk_pct": colima_disk_pct(), "runs": len(records),
+                                                    "disk_pct": docker_disk_pct(), "runs": len(records),
                                                     "errors": errors})
     teardown(netid)
     docker("run", "--rm", "--label", LABEL, "-v", RESULTS_VOL + ":/out", "--entrypoint", "rm", images()["tags"]["fabric"],
@@ -888,6 +928,7 @@ def run_cmd(args):
     if plan["images"].get("ids") != images().get("ids"):
         raise SystemExit("the images changed since the plan was written; make a new session")
     th = plan["thresholds"]
+    check_cpuset()
     state = read_json(os.path.join(sdir, "state.json"), {"done": [], "started_utc": now_utc()})
     api = DockerAPI()
     ensure_base()
@@ -1035,14 +1076,15 @@ def trial_report(args):
                                      if not v.get("running", True) or v.get("oom") or v.get("restarts")})
 
     # 3. per network: memory peaks, ledger bytes per write, timings
-    vm_mem, vm_avail = vm_meminfo()
-    if not vm_mem:
+    mem_total, mem_avail = machine_meminfo()
+    if not mem_total:
         info = docker("info", "--format", "{{.MemTotal}}", check=False).stdout.decode().strip()
-        vm_mem = int(info) if info.isdigit() else 0
-    # the VM's own use at idle (the report is made with no network running): kernel, Docker, page cache excluded
-    baseline = (vm_mem - vm_avail) if vm_mem and vm_avail else 0
-    rep["vm_memory_mb"] = round(vm_mem / 2**20)
-    rep["vm_baseline_mb"] = round(baseline / 2**20)
+        mem_total = int(info) if info.isdigit() else 0
+    # the machine's own use at idle (the report is made with no network running): kernel, Docker, desktop, other
+    # programs; the reclaimable page cache excluded
+    baseline = (mem_total - mem_avail) if mem_total and mem_avail else 0
+    rep["machine_memory_mb"] = round(mem_total / 2**20)
+    rep["machine_baseline_mb"] = round(baseline / 2**20)
     nets = os.path.join(sdir, "nets")
     rep["networks"] = {}
     for netid in sorted(os.listdir(nets)):
@@ -1069,16 +1111,16 @@ def trial_report(args):
             "mem_gateway_peer_peak_mb": round(peaks.get("qfp_peer0.general.uae.com", 0) / 2**20),
             "mem_largest_container": max(peaks, key=peaks.get) if peaks else None,
             "mem_total_peak_mb": round(total / 2**20),
-            "mem_total_peak_pct_of_vm": round((total + baseline) / vm_mem * 100, 1) if vm_mem else None,   # containers + the VM's own use
+            "mem_total_peak_pct_of_machine": round((total + baseline) / mem_total * 100, 1) if mem_total else None,   # containers + the machine's own use
             "ledger_bytes_per_write_per_peer": round(statistics.mean(peer_b) / writes) if peer_b else None,
             "ledger_bytes_orderer": orderer_b[0] if orderer_b else None,   # information only: it holds the Raft log too
             "network_up_s": tm.get("network_up_s"), "setup_s": tm.get("setup_s"), "blocks_dump_s": tm.get("blocks_dump_s"),
         }
-    worst = max((v["mem_total_peak_pct_of_vm"] or 0) for v in rep["networks"].values())
+    worst = max((v["mem_total_peak_pct_of_machine"] or 0) for v in rep["networks"].values())
     rep["memory_warning"] = worst > 85
-    rep["memory_note"] = ("a network used %.0f %% of the Colima VM's memory with the VM's own use (above 85 %%): "
+    rep["memory_note"] = ("a network used %.0f %% of the machine's memory with the machine's own use (above 85 %%): "
                           "the project lead decides before the main run" % worst) if worst > 85 else \
-        "largest network total %.0f %% of the Colima VM's memory, the VM's own use included" % worst
+        "largest network total %.0f %% of the machine's memory, the machine's own use included" % worst
 
     # 4. projections for the main session, from the trial's networks (geometric interpolation over the
     # topology size log2(O) + log2(P); bytes per write linear in the endorsements)
@@ -1109,8 +1151,8 @@ def trial_report(args):
             res = read_json(os.path.join(root, "summary.json"), {}).get("result", {})
             ms = sum((res.get(m) or {}).get("p50_ms", 0) for m in ("fresh_connection", "open_connection"))
             e2_s = max(e2_s, REPS * th["e2_n"] * ms / 1000)
-    used, size = colima_disk()
-    rep["colima_disk_now_gb"] = {"used": round(used / 1e9, 1) if used else None, "size": round(size / 1e9, 1) if size else None}
+    used, size = docker_disk()
+    rep["disk_now_gb"] = {"used": round(used / 1e9, 1) if used else None, "size": round(size / 1e9, 1) if size else None}
     w_e1 = sum(T_LEVELS) * REPS
     plan_rows, total_s = [], 0.0
 
@@ -1183,7 +1225,7 @@ def analysis_image():
 
 def analyse(args):
     """Runs analysis/run_all.py in the analysis image on one session; the session's files go in and the
-    tables and figures come out as tar streams (the Colima VM has no host mounts)."""
+    tables and figures come out as tar streams, so no host folder is mounted."""
     sdir = session_dir(args.session)
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
@@ -1221,24 +1263,33 @@ def analysis_selftest(args):
 
 
 def privacy_patterns():
-    """The Mac's identifying strings (host and user names, home path, addresses, serial): held in memory only."""
+    """The machine's identifying strings (host and user names, the user's full name, home path, the addresses of
+    its own network interfaces, machine id): held in memory only."""
     pats = set()
-    for cmd in (["hostname"], ["hostname", "-s"], ["scutil", "--get", "ComputerName"], ["scutil", "--get", "LocalHostName"],
-                ["id", "-un"], ["id", "-F"]):
-        r = sh(cmd, check=False)
-        pats.add(r.stdout.decode().strip())
+    for cmd in (["hostname"], ["hostname", "-s"], ["hostname", "-f"], ["id", "-un"]):
+        pats.add(sh(cmd, check=False).stdout.decode().strip())
+    gecos = sh(["getent", "passwd", sh(["id", "-un"], check=False).stdout.decode().strip()], check=False).stdout.decode()
+    if gecos.count(":") >= 4:
+        pats.update(x.strip() for x in gecos.split(":")[4].split(",") if x.strip())
     pats.add(os.path.expanduser("~"))
-    ifc = sh(["ifconfig", "-a"], check=False).stdout.decode()
-    pats.update(m for m in re.findall(r"inet (\d+\.\d+\.\d+\.\d+)", ifc) if not m.startswith("127."))
-    pats.update(re.findall(r"ether ([0-9a-f:]{17})", ifc))
-    io_ = sh(["ioreg", "-rd1", "-c", "IOPlatformExpertDevice"], check=False).stdout.decode()
-    pats.update(re.findall(r'"IOPlatform(?:SerialNumber|UUID)" = "([^"]+)"', io_))
+    for line in sh(["ip", "-o", "addr"], check=False).stdout.decode().splitlines():
+        f = line.split()
+        if len(f) > 3 and not f[1].startswith(("lo", "docker", "br-", "veth")):   # not Docker's own bridges
+            pats.update(m for m in re.findall(r"inet (\d+\.\d+\.\d+\.\d+)", line) if not m.startswith("127."))
+    for line in sh(["ip", "-o", "link"], check=False).stdout.decode().splitlines():
+        f = line.split()
+        if len(f) > 1 and not f[1].startswith(("lo", "docker", "br-", "veth")):
+            pats.update(re.findall(r"link/ether ([0-9a-f:]{17})", line))
+    try:
+        pats.add(open("/etc/machine-id").read().strip())
+    except OSError:
+        pass
     return sorted(p for p in pats if len(p) >= 4)
 
 
 def publish(args):
     """Copies a session's results into results/<session>/ (committed): the analysis, the per-network records
-    and the client's files, without the generated configuration; scans every file for the Mac's identifying
+    and the client's files, without the generated configuration; scans every file for the machine's identifying
     text and writes SHA256SUMS last."""
     import gzip
     import hashlib
@@ -1326,10 +1377,9 @@ def main():
     b.add_argument("--lock", default="auto", choices=["auto", "live", "none"])
     sub.add_parser("selfcheck")
     p = sub.add_parser("plan")
-    p.add_argument("kind", choices=["smoke", "trial", "memtest", "main"])
+    p.add_argument("kind", choices=["smoke", "trial", "main"])
     p.add_argument("session")
     p.add_argument("--seed", type=int, default=20261116)
-    p.add_argument("--gomemlimit", default=None, help="memtest: GOMEMLIMIT of the Go containers, e.g. 300MiB")
     r = sub.add_parser("run")
     r.add_argument("session")
     r.add_argument("--stop-on-error", action="store_true")

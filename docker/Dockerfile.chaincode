@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 #
-# qfp/chaincode: QChain's chaincode `qchaincode` 2.0 as a service, for arm64.
+# qfp/chaincode: QChain's chaincode `qchaincode` 2.0 as a service, built on the test machine (x86-64).
 # The build context is network/live/chaincode (the verbatim copy of qchain-network/chaincode) plus
 # docker/chaincode-lock/ (what was read from the live image: see its README.txt).
 #
 # Live image (x86_64): node:18.20.8 (Debian 12), WORKDIR /usr/src/app, user node (uid 1000), the
-# ENTRYPOINT below, dependencies installed with npm. Here: the same Node.js release for arm64 (the slim
-# variant of the same Debian 12 image), the same folder, user, entry point and dependency tree.
+# ENTRYPOINT below, dependencies installed with npm. Here: the same Node.js release (the slim variant
+# of the same Debian 12 image), the same folder, user, entry point and dependency tree.
 # LOCK=live (default): pins from lock/pins.txt and a check that `npm ls --all` equals the live tree;
 # LOCK=none: the newest versions package.json allows (smoke tests only).
 ARG NODE_IMAGE=node:18.20.8-bookworm-slim@sha256:f9ab18e354e6855ae56ef2b290dd225c1e51a564f87584b9bd21dd651838830e

@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/Identities-ECDSA%20P--256%20vs%20ML--DSA--44-0A66C2" alt="Identities" />
   <img src="https://img.shields.io/badge/Go-1.27-00ADD8" alt="Go" />
   <img src="https://img.shields.io/badge/liboqs-0.16.0-6E40C9" alt="liboqs" />
-  <img src="https://img.shields.io/badge/Machine-MacBook%20Air%20M1%20%C2%B7%20Colima-2F3134" alt="Machine" />
+  <img src="https://img.shields.io/badge/Machine-Ubuntu%2022.04%20VM%20%C2%B7%20Xeon%20Silver%204210R-2F3134" alt="Machine" />
   <img src="https://img.shields.io/badge/Status-trial%20next-F2A900" alt="Status" />
   <img src="https://img.shields.io/badge/License-Proprietary-red" alt="License" />
 </p>
@@ -25,12 +25,12 @@
 
 | | |
 |---|---|
-| **Plan** | version 1.1, approved by the project lead on 17 November 2026 ([docs/plan.md](docs/plan.md); earlier versions in [docs/history.md](docs/history.md)) |
+| **Plan** | version 1.2, 22 November 2026, approved by the project lead ([docs/plan.md](docs/plan.md); earlier versions in [docs/history.md](docs/history.md)) |
 | **Literature review** | done: 45 papers, kept outside this repository |
-| **Code** | written 16 November, updated for plan 1.1 on 17 November 2026; client unit tests run in the image build, generator self-check and analysis self-test pass |
-| **Images** | built natively for arm64 in Colima (17 November 2026); the chaincode image's dependency tree equals the live image's |
-| **Measurements** | two smoke sessions passed (16 November); the trial (E0) is next |
-| **Test machine** | one MacBook Air M1; every change to it is recorded in [docs/revert-list.md](docs/revert-list.md) before it is made |
+| **Code** | written 16 to 22 November 2026; client unit tests run in the image build, generator self-check and analysis self-test pass |
+| **Test machine** | a dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB), set up and qualified on 22 November 2026; every change to it is recorded in [docs/revert-list.md](docs/revert-list.md) before it is made |
+| **Images** | built natively on the test machine (x86-64); the chaincode image's dependency tree equals the live image's |
+| **Measurements** | a smoke session and a check of the largest network, (8,8) with ML-DSA-44, passed (22 November); the trial (E0) is next |
 | **Next** | the trial (E0), the frozen values (C, E3's reference rate), then the main session, in sittings if needed |
 
 > ⚠️ **Private until publication.** This repository becomes public when the paper is published. Credentials never enter
@@ -62,8 +62,9 @@ This repository answers it by repeating the design of Nasir, Qasse, Abu Talib an
                                                  (2,2) (2,4) (2,8)
                                                  (4,4) (4,8)  (8,8)
 
- Colima VM (arm64, 4 vCPU, 5 GiB)
+ test machine: Ubuntu 22.04 VM, x86-64, 8 vCPUs, 26.4 GiB
  ┌────────────────────────────────────────────────────────────────────────────────┐
+ │  qfp.slice, vCPUs 0 to 6: the study's containers, both arms                    │
  │  Go client ──gRPC/TLS──> peer0.general ──> endorsing peers (MAJORITY of orgs)  │
  │     │                          │                                               │
  │     └── block events <─────────┴── orderer (Raft, 1 node) ── blocks ──> peers  │
@@ -76,6 +77,8 @@ This repository answers it by repeating the design of Nasir, Qasse, Abu Talib an
         │
         ▼
   analysis/  ──▶  tables T1–T6 · figures F1–F16
+
+ vCPU 7: the rest of the machine (system services, Docker's daemon, desktop, launcher, driver, host monitor)
 ```
 
 | Experiment | What it is |
@@ -105,17 +108,20 @@ The full list (M1 to M12) is in [docs/plan.md](docs/plan.md) §7.
 
 ---
 
-## Machines
+## Test machine
 
-| | Mac (the only machine) |
+| | The only machine of the study |
 |---|---|
-| Processor | Apple M1, 4 performance + 4 efficiency cores |
-| Memory | 8 GB |
-| Runtime | Docker in Colima (Apple Virtualization), arm64, 4 vCPUs, 5 GiB, 60 GiB disk |
-| OS | macOS 27.2.1 (automatic updates off during the study) |
-| Cooling | cooling pad, used for every run |
+| Platform | a VMware virtual machine (VMware Virtual Platform), dedicated to the study and separate from QChain's live host |
+| Processor | Intel Xeon Silver 4210R at 2.40 GHz (Cascade Lake), 8 vCPUs; AVX2, AVX-512 and AES-NI, no SHA extensions |
+| Memory | 26.4 GiB, 2 GiB swap |
+| Disk | 251 GB, about 81 GB free for the study; synced 4 KB writes 0.23 ms, sequential writes 1.9 GB/s |
+| OS | Ubuntu 22.04.5 LTS, Linux 6.8.0 (automatic package updates stopped during the study) |
+| Runtime | Docker 29.8 (cgroup v2), buildx 0.37, Python 3.10 |
+| CPU isolation | the study's containers on vCPUs 0 to 6 (systemd slice `qfp.slice`); every other process on vCPU 7 |
+| One core, Go 1.27 | ML-DSA-44 sign 565 µs, verify 169 µs; ECDSA P-256 sign 46 µs, verify 97 µs |
 
-> The VM and the Windows laptop of the KPI study are not used here. In the paper the live network's host is described only as *a tested environment*.
+> QChain's live host is not used. In the paper it is described only as *a tested environment*.
 
 ---
 
@@ -123,12 +129,12 @@ The full list (M1 to M12) is in [docs/plan.md](docs/plan.md) §7.
 
 | Layer | Technology |
 |---|---|
-| Fabric | the team's post-quantum fork (`qchain-fabric` `e472b4ea`, `qchain-fabric-ca` `e82caf43`, `qchain-fabric-lib-go` `bd30150`), built natively for arm64 with `-tags pqc` |
+| Fabric | the team's post-quantum fork (`qchain-fabric` `e472b4ea`, `qchain-fabric-ca` `e82caf43`, `qchain-fabric-lib-go` `bd30150`), built natively for x86-64 with `-tags pqc` |
 | Post-quantum | ML-DSA-44 through Go 1.27 `crypto/mldsa`; ML-KEM-768 through liboqs 0.16.0 |
 | Chaincode | `qchaincode` 2.0, Node.js 18, as a service, copied verbatim from `qchain-network` |
 | Client | Go 1.27, fabric-gateway v1.7.0, grpc v1.68.0 (the backend's versions) |
-| Images | Docker in Colima; base images pinned by digest |
-| Launchers | Bash |
+| Images | Docker (cgroup v2) on the test machine; base images pinned by digest |
+| Launcher | Bash, with systemd slices, `tmux` and `systemd-inhibit` |
 | Analysis | Python 3 with numpy, scipy and matplotlib |
 
 ---
@@ -139,16 +145,16 @@ The full list (M1 to M12) is in [docs/plan.md](docs/plan.md) §7.
 qchain-fabric-performance/
 ├── README.md                this file
 ├── LICENSE
-├── docker/                  Dockerfiles: fabric (peer, orderer, CA, tools; arm64, -tags pqc), chaincode, client, analysis
+├── docker/                  Dockerfiles: fabric (peer, orderer, CA, tools; x86-64, -tags pqc), chaincode, client, analysis
 │   └── chaincode-lock/      the live chaincode image's lock file (recorded in step 3)
 ├── network/
 │   ├── live/                qchain-network's files, byte for byte (SHA256SUMS)
 │   └── gen/qfp_gen.py       one network from the live files: O organisations, P peers, ECDSA or ML-DSA-44
 ├── client/                  qfp-client (Go): setup, bursts, per-peer block events, E2, E3, block decoder, canary, tests
 ├── scripts/
-│   ├── run-mac.sh           the Mac launcher: Colima, build, start/resume a session with the KPI's conditions
+│   ├── run-linux.sh         the launcher: CPU isolation, build, start/resume a session (preflight, tmux, sleep blocked)
 │   └── qfp.py               the driver: images, networks, runs, Docker statistics, quality, trial report, analysis, publish
-├── monitor/monitor-mac.sh   the host monitor (the KPI's)
+├── monitor/monitor-linux.sh the host monitor: other CPU on the study's CPUs, steal, isolation, package updates
 ├── analysis/                run_all.py (tables, figures F2–F16), figstyle.py, selftest.py
 ├── config/                  thresholds.json, frozen after the trial (written by `qfp.py freeze`)
 ├── results/                 published sessions (raw/ is local and ignored)
@@ -159,39 +165,41 @@ qchain-fabric-performance/
 
 ## Running the study
 
-Everything runs from this folder in Terminal, on the Mac, with VS Code, Teams, Chrome, Edge and OneDrive closed, on the charger, with automatic macOS updates off. For a trial or main session the launcher checks this and refuses to start otherwise; it also pauses macOS background services and switches Wi-Fi off for the session, and undoes both when it ends. Keep the window open until it prints `session <name> finished`.
+Everything runs on the test machine, from this folder, in a terminal of the remote-desktop session. The code arrives as git bundles of this repository and of the source repositories (checked against `SHA256SUMS`), so the machine needs no access to GitHub, and nothing is pushed from it. A trial or main session refuses to start unless the machine is ready: CPU isolation in place, automatic package updates stopped, no package manager running, no other session, 20 GB free on Docker's disk, 8 GB of memory available, the study's CPUs quiet. It then runs detached in `tmux` with sleep blocked, so the remote-desktop session can be closed, and it ends with `session <name> finished` in its console log.
 
 ```bash
-# 1. Once: the Colima VM (profile qfp) and the images (the build needs the internet)
-scripts/run-mac.sh colima-up
-scripts/run-mac.sh build
+# 1. Before each sitting: CPU isolation and automatic updates stopped (sudo; undone by `release` or a reboot)
+scripts/run-linux.sh isolate
+scripts/run-linux.sh status
 
-# 2. The trial (E0), about 1.5 hours; then read its report and freeze the values
-scripts/run-mac.sh start trial trial-2
-python3 -I scripts/qfp.py trial-report trial-2        # C, E3's reference rate, memory, disk, time
+# 2. Once: the images (the build needs the internet and may use every CPU while it runs)
+scripts/run-linux.sh build
+
+# 3. The trial (E0), about an hour; then read its report and freeze the values
+scripts/run-linux.sh start trial trial-1
+python3 -I scripts/qfp.py trial-report trial-1        # C, E3's reference rate, memory, disk, time
 python3 -I scripts/qfp.py freeze --c <C> --saturation <rate> [--split o8p8-mldsa44 ...]
 
-# 3. The main session (E1, E2, E3), in one or more sittings
-scripts/run-mac.sh start main main-1
-scripts/run-mac.sh status main-1
-scripts/run-mac.sh resume main-1                      # after an interruption: finished networks are kept
+# 4. The main session (E1, E2, E3), in one or more sittings
+scripts/run-linux.sh start main main-1
+scripts/run-linux.sh status main-1
+scripts/run-linux.sh resume main-1                    # after an interruption: finished networks are kept
 
-# 4. After the runs
+# 5. After the runs
 python3 -I scripts/qfp.py analyse main-1              # tables and figures, inside the analysis image
 python3 -I scripts/qfp.py publish main-1              # privacy scan, SHA256SUMS, results/main-1/
+scripts/run-linux.sh release                          # CPU settings and automatic updates back as they were
 ```
 
-A memory test (not part of the study's results): `scripts/run-mac.sh start memtest <session> --gomemlimit 300MiB` runs the (8,8) ML-DSA-44 network with that Go memory target on its peers, orderer and Fabric CAs, 10,000 writes at C = 100 and then 300, under the same quiet-Mac conditions as a trial.
-
-Checks that need no session: `python3 -I scripts/qfp.py selfcheck` (generator against the live files, verbatim copies, the three Fabric clones, Docker) and `python3 -I scripts/qfp.py analysis-selftest` (the analysis on a synthetic session). `python3 -I scripts/qfp.py down` removes every study container and network volume left by an interrupted session. Raw results stay in the git-ignored `results/raw/<session>/`.
+`tmux attach -t qfp-<session>` shows a running session (leave it with Ctrl-B, then D). Checks that need no session: `python3 -I scripts/qfp.py selfcheck` (generator against the live files, verbatim copies, the three Fabric clones, Docker) and `python3 -I scripts/qfp.py analysis-selftest` (the analysis on a synthetic session). `python3 -I scripts/qfp.py down` removes every study container and network volume left by an interrupted session. Raw results stay in the git-ignored `results/raw/<session>/`.
 
 ---
 
 ## Recent updates
 
-- **17 November 2026: plan 1.1 approved.** QChain contributes its architecture; every network setting is the study's own and identical in both arms (blocks of 100 transactions, no container memory limits). Experiments E0 to E3. Code, images and documents updated and checked (generator self-check, client unit tests, analysis self-test, a real session through `analyse` and `publish`).
-- **16 November 2026: images built, smoke sessions passed.** Fabric fork and chaincode built for arm64; the chaincode's dependency tree matches the live image; (1,1) networks of both arms ran writes and reads without a failure.
-- **16 November 2026: code written.** Network generator (self-checked against the live files), client, driver, launcher, Dockerfiles, analysis, documentation.
+- **22 November 2026: the test machine.** A dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB) set up and qualified: a constant speed under sustained load, the study's containers isolated on seven of its vCPUs, the images built natively; a smoke session and the largest network, (8,8) with ML-DSA-44, passed. Plan 1.2.
+- **17 November 2026: plan 1.1 approved.** QChain contributes its architecture; every network setting is the study's own and identical in both arms (blocks of 100 transactions, no container memory limits). Experiments E0 to E3.
+- **16 November 2026: code written.** Network generator (self-checked against the live files), client, driver, launcher, Dockerfiles, analysis, documentation; the chaincode image's dependency tree matches the live image's.
 - **16 November 2026: planning done.** Literature review (45 papers), plan approved, repository created.
 
 The whole story, with the reasons for each turn and every earlier version of the plan, is in [docs/history.md](docs/history.md).
@@ -204,11 +212,12 @@ The whole story, with the reasons for each turn and every earlier version of the
 - [x] Research plan approved
 - [x] Repository and revert list
 - [x] Harness and network generator
-- [x] Installs and arm64 images
+- [x] Test machine set up and qualified
+- [x] Images built natively (x86-64)
 - [ ] Trial (E0)
 - [ ] Main run (E1, E2, E3)
 - [ ] Analysis, figures and tables
-- [ ] Test machine reverted
+- [ ] Revert list closed
 - [ ] Paper draft
 - [ ] Public release with the paper
 
@@ -226,7 +235,7 @@ The whole story, with the reasons for each turn and every earlier version of the
 | [docs/decisions-log.md](docs/decisions-log.md) | the decisions in force and their reasons |
 | [docs/history.md](docs/history.md) | how the plan changed: earlier versions, superseded values, failed sessions |
 | [docs/live-differences.md](docs/live-differences.md) | what comes from QChain unchanged, and where the study's networks differ from its live network |
-| [docs/revert-list.md](docs/revert-list.md) | the Mac's baseline and every change made to it |
+| [docs/revert-list.md](docs/revert-list.md) | the baseline of each machine used, every change made to it, the final checks |
 
 ---
 
@@ -234,9 +243,10 @@ The whole story, with the reasons for each turn and every earlier version of the
 
 - **Privacy.** Run folders hold only allow-listed facts. Before a folder enters `results/`, every file is scanned for the machine's host name, user name, home path, IP and MAC addresses and serial numbers.
 - **Verbatim copies.** The chaincode and the network files are copied byte for byte from `qchain-network`, except the differences listed in [docs/live-differences.md](docs/live-differences.md). A check script compares them.
-- **Revert list.** Every change to the test machine is written in [docs/revert-list.md](docs/revert-list.md) before it is made, and reverted at the end.
+- **Revert list.** Every change to a machine is written in [docs/revert-list.md](docs/revert-list.md) before it is made, and reverted at the end.
+- **Shared machine.** Another project's containers run on the test machine. The study touches only its own Docker objects (names starting with `qfp`, label `org.qchain.qfp=1`): never `docker system prune`, never `docker compose down`.
 - **Frozen thresholds.** The quality thresholds are not changed after the trial (E0).
-- **Script names.** A script tied to the Mac ends with `-mac` (`run-mac.sh`, `monitor-mac.sh`); the driver `qfp.py` works on any machine with Docker.
+- **Script names.** A script tied to the operating system ends with `-linux` (`run-linux.sh`, `monitor-linux.sh`); the driver `qfp.py` uses only Python's standard library and Docker.
 - **Commits.** No co-author lines.
 
 ---

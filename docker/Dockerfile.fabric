@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 #
-# qfp/fabric: every Fabric binary of the study in one arm64 image, built natively from the
-# team's post-quantum forks (no emulation, no published image):
+# qfp/fabric: every Fabric binary of the study in one image, built natively on the test machine
+# (x86-64) from the team's post-quantum forks (no emulation, no published image):
 #
 #   peer, orderer, osnadmin, configtxgen, cryptogen     qchain-fabric     (-tags pqc)
 #   fabric-ca-server, fabric-ca-client                  qchain-fabric-ca  (-tags pkcs11,pqc)
@@ -10,7 +10,7 @@
 # The same image runs the peers, the orderer, the CAs and the tool containers, with ECDSA or
 # ML-DSA-44 identities: only the key material and one configuration line differ.
 #
-# The build context is made by scripts/build-images.sh: `git archive` of the three clones at the
+# The build context is made by `scripts/qfp.py build`: `git archive` of the three clones at the
 # pinned commits (src/fabric, src/fabric-ca, src/fabric-lib-go). The clones are never modified.
 #
 # Differences from the live x86_64 images (docs/live-differences.md): Debian 13 base with a shell

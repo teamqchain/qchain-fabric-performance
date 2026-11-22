@@ -4,7 +4,7 @@ This file describes what the code does when it measures. It is written from the 
 
 ## 1. The two arms
 
-Both arms run the **same binaries**: Fabric `e472b4ea` and Fabric CA `e82caf43` built with the build tag `pqc` (fabric-lib-go `bd30150` vendored), natively for arm64 (`docker/Dockerfile.fabric`). Only the identities differ:
+Both arms run the **same binaries**: Fabric `e472b4ea` and Fabric CA `e82caf43` built with the build tag `pqc` (fabric-lib-go `bd30150` vendored), natively on the test machine, x86-64 (`docker/Dockerfile.fabric`). Only the identities differ:
 
 | | ECDSA arm | ML-DSA-44 arm |
 |---|---|---|
@@ -22,7 +22,7 @@ Everything else is identical: the channel (V3_0 / V2_0 / V2_5, MAJORITY endorsem
 - **Organisations:** O = 1 (General), 2 (Government, General: the live pair), 4 or 8 (plus `org3` ... `org8`, `orgN.uae.com`). P peers in total, P/O per organisation, `peer0` ... `peer7`. Ports follow the live port map for Government and General.
 - **Endorsements per write** (MAJORITY of O organisations): 1, 2, 3, 5.
 - **Blocks:** 100 transactions / 16 MB preferred / 99 MB absolute / 2 s (the study's setting, in every network).
-- **Containers** (1 + P + 2·O): one Raft orderer, P peers, one chaincode server and one Fabric CA per organisation, each with the live environment, user and read-only root file system, **without memory or CPU limits** and without a restart policy.
+- **Containers** (1 + P + 2·O): one Raft orderer, P peers, one chaincode server and one Fabric CA per organisation, each with the live environment, user and read-only root file system, **without a memory limit or CPU quota** and without a restart policy. Under the launcher's CPU isolation (section 8) every container of the study, the network's, the tools' and the client's, starts with `--cgroup-parent qfp.slice`, so it runs on the study's CPUs only.
 - **Network id:** `o<O>p<P>-<identity>`, for example `o2p2-mldsa44`; the driver adds `-part1` / `-part2` to the two halves of a split E1 network and `-e3r<k>` to E3's networks.
 - **Self-check** (`qfp_gen.py --selfcheck`, also run by `scripts/qfp.py selfcheck`): for the live topology (2 × 2, ML-DSA-44) the generated `crypto-config.yaml` and CA configurations equal the live files (comments aside), the generated `configtx.yaml` equals the live file except `MaxMessageCount` and `PreferredMaxBytes`, `core.yaml` and `orderer.yaml` are byte-identical, and the orderer's and both peers' environments equal the live compose file's. All 20 networks (10 topologies × 2 arms) generate, with no container memory limit.
 
@@ -77,18 +77,20 @@ A failure of E2, E3 or the ledger read-back is written to the network's `network
 
 - **C:** for each case, (8,8) ML-DSA-44 ("heaviest") and (2,2) ECDSA ("fastest"), a candidate (100, 200, 300) survives when at least one attempt completed all 10,000 writes with no container down; among the survivors, those within 5 % of the case's best write throughput qualify; C is the smallest candidate that qualifies in both cases.
 - **E3's reference:** the best surviving ECDSA write throughput at (2,2).
-- **Memory:** per network, the gateway peer's peak, the largest container and the total peak, as a share of the Colima VM's memory with the VM's own use added (about 0.6 GB for the kernel and Docker: `MemTotal - MemAvailable` of the VM's `/proc/meminfo`, read when the report is made and no network is running); a warning above 85 %. The VM has no swap, so a shortage ends in the kernel killing a container, which the driver records.
-- **Projections** for every network of the main session: write and read throughput, bring-up and setup time, ledger read-back time per write and ledger bytes per write per peer, each from the trial's networks (throughput and times interpolated geometrically over log2(O) + log2(P); bytes linearly over the endorsements); hours and disk per network, with 15 % added for repeated runs. The disk of a network is the bytes per write per peer × (peers + 1, the orderer counting as one more peer) × the network's writes + 0.2 GB for the orderer's Raft log, added to what the Colima disk already holds. An E1 network above 80 % of the Colima disk is listed as a proposed split, with the projection for the larger of its two halves (repetitions 1 to 3: 60 % of the grid's writes, plus the setup).
+- **Memory:** per network, the gateway peer's peak, the largest container and the total peak, as a share of the machine's memory with the machine's own use added (`MemTotal - MemAvailable` of `/proc/meminfo`, read when the report is made and no network is running: the kernel, Docker, the desktop and other programs, about 3 GB on the test machine); a warning above 85 %. A shortage would end in the kernel killing a container, which the driver records.
+- **Projections** for every network of the main session: write and read throughput, bring-up and setup time, ledger read-back time per write and ledger bytes per write per peer, each from the trial's networks (throughput and times interpolated geometrically over log2(O) + log2(P); bytes linearly over the endorsements); hours and disk per network, with 15 % added for repeated runs. The disk of a network is the bytes per write per peer × (peers + 1, the orderer counting as one more peer) × the network's writes + 0.2 GB for the orderer's Raft log, added to what Docker's disk already holds. An E1 network above 80 % of that disk is listed as a proposed split, with the projection for the larger of its two halves (repetitions 1 to 3: 60 % of the grid's writes, plus the setup).
 
 `qfp.py freeze --c N --saturation X [--split NET ...]` writes `config/thresholds.json` (with the quality thresholds) after the project lead's approval; a main session cannot be planned before it.
 
-## 8. Order, quality and repeats
+## 8. Machine conditions, order, quality and repeats
 
+- **CPU isolation** (`scripts/run-linux.sh isolate`, runtime only): the systemd slice `qfp.slice` is allowed vCPUs 0 to N-2 (0 to 6 on the test machine) and `system.slice` and `user.slice` vCPU N-1 (7), so every process that is not the study (system services, Docker's daemon, the desktop, the remote-access agent, other projects' containers, the launcher, the driver, the host monitor) runs on the reserved CPU. The remote-access agent's login-screen process is set to the lowest priority there. Automatic package updates (`apt-daily.timer`, `apt-daily-upgrade.timer`, `unattended-upgrades`) are stopped. `release` undoes all of it. The image build temporarily allows Docker's daemon every CPU, because the build runs inside it.
+- **Session start** (`scripts/run-linux.sh start` or `resume`): a preflight checks Docker (cgroup v2), the isolation, the stopped updates, that no package manager and no other session runs, 20 GB free on Docker's disk, 8 GB of memory available and the study's CPUs quiet over 6 s (at most 5 % busy); trial and main sessions refuse to start on a problem unless `--force` is given (recorded), smoke sessions record it. The session then restarts itself in a `tmux` session under `systemd-inhibit` (sleep and idle blocked), so the remote-desktop session can be closed; the driver also refuses to run if `qfp.slice` does not allow exactly the study's CPUs.
 - **Order:** the 10 E1 topologies and the 5 E3 repetitions in a seeded random order; the two arms of each back to back in random order; the 50 runs of an E1 network shuffled; a split network's two halves back to back.
-- **Host monitor** (`monitor/monitor-mac.sh`, the KPI's): every 5 s, other CPU, thermal pressure, power source, Low Power Mode.
-- **Flags of a run:** mean other CPU above 5 %; thermal pressure above nominal; battery; Low Power Mode; macOS swap growth above 64 MB; canary drift (below). A flagged run is repeated at the end of its network, up to 3 attempts; the headline attempt is the first clean one.
+- **Host monitor** (`monitor/monitor-linux.sh`, adapted from the KPI's), every 5 s on the reserved CPU: the CPU time on the study's CPUs that the study did not use (their busy time minus the CPU time of `qfp.slice`), the machine's steal, whether the isolation is still in place, and whether a package manager or an update unit runs.
+- **Flags of a run:** mean other CPU on the study's CPUs above 5 %; mean steal above 2 %; the isolation not in place at any sample (`cpuset`); system activity at any sample; swap growth above 64 MB; canary drift (below). A flagged run is repeated at the end of its network, up to 3 attempts; the headline attempt is the first clean one.
 - **Canary:** the KPI's SHA3-256 canary at each network's start and every 60 min; the session reference is the median of its first three. A canary more than 3 % below the reference flags the runs since the previous canary.
-- **Guard:** a network stops if the Colima disk passes 85 %.
+- **Guard:** a network stops if Docker's disk passes 85 %.
 
 ## 9. Statistics
 

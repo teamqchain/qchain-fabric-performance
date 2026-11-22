@@ -20,7 +20,7 @@ CA configurations are the live files and configtx.yaml is the live file except
 the two block settings the study chooses (comments aside); core.yaml and
 orderer.yaml are byte-identical: `qfp_gen.py --selfcheck` verifies this.
 
-Standard library only; runs with the Python 3.9 of macOS.
+Standard library only; runs with Python 3.9 or later (the test machine has 3.10).
 """
 
 import argparse

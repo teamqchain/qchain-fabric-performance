@@ -18,13 +18,13 @@ The rule (decisions log, 17 Nov): **QChain contributes its architecture; every o
 
 | Item | Live network | This study | Why | Effect on the ECDSA against ML-DSA-44 comparison |
 |---|---|---|---|---|
-| Hardware | x86 VM without AVX2 | MacBook Air M1, arm64, Colima | the project lead's decision | none (same machine for both arms); absolute numbers differ |
-| Binaries | host-built x86 binaries, no recipe | the same commits and build tag, built natively for arm64 | x86 cannot run natively; emulation would distort timings | none (the same Go code) |
+| Hardware | x86 virtual machine without AVX2 | a dedicated x86-64 virtual machine (VMware; Intel Xeon Silver 4210R, 8 vCPUs with AVX2 and AVX-512; 26.4 GiB), study on vCPUs 0 to 6 | the project lead's decision; one machine for the whole study | none (the same machine for both arms); absolute numbers differ |
+| Binaries | host-built x86 binaries, no recipe | the same commits and build tag, built natively on the test machine (x86-64) from Dockerfiles | the live binaries have no recipe; a recorded build is reproducible | none (the same Go code) |
 | Topology | 2 organisations x 1 peer | 10 topologies from 1 x 1 to 8 x 8, including 2 x 2 | the experiment | intended |
 | Blocks | 10 transactions / 512 KB preferred / 99 MB / 2 s | 100 transactions / 16 MB preferred / 99 MB / 2 s | the study's setting, from the literature (decisions log) | none: the same in both arms; ML-DSA-44 blocks are not cut by size earlier than ECDSA blocks |
-| Container memory | orderer 384 MB, peers 512 MB, chaincode 192 MB, CA 256 MB | no limits; peak memory measured | the study's setting: memory need is a result (RQ4) | intended |
+| Container resources | memory limits: orderer 384 MB, peers 512 MB, chaincode 192 MB, CA 256 MB | no memory limit and no CPU quota; peak memory measured; the study's containers confined to the study's CPUs | the study's setting: memory need is a result (RQ4) | intended |
 | Chaincode server | one, shared by the peers | one per organisation | one Node.js server would be the bottleneck at 8 organisations | none at the arms' level |
-| Chaincode base image | `node:18.20.8` (Debian 12, x86_64) | `node:18.20.8-bookworm-slim` (Debian 12, arm64), same folder, user, entry point and dependency tree | arm64; the slim variant carries the same Node.js build | none |
+| Chaincode base image | `node:18.20.8` (Debian 12, x86_64) | `node:18.20.8-bookworm-slim` (Debian 12, x86_64), same folder, user, entry point and dependency tree | the slim variant carries the same Node.js build and fewer packages | none |
 | Client | the backend: a new connection and Gateway per call | the backend's library versions and signer; one connection kept open per run | thousands of TLS handshakes would swamp the bursts | E2 measures the handshake separately |
 | Configuration mount | `core.yaml` / `orderer.yaml` mounted as single files | the generated config folder mounted at the same `FABRIC_CFG_PATH` | Docker volume sub-paths must be folders | none (the nodes read the same file at the same path) |
 | Restart policy | `unless-stopped` | none | a silent restart would hide a crash inside a run | none (a crash is recorded) |

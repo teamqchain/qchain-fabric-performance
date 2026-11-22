@@ -56,7 +56,7 @@ def make(root):
                     for t in (10, 100):
                         for rep in reps:
                             rid = "%s-%s-%d-%d" % (base, fn, t, rep)
-                            flags = ["thermal"] if rep == 2 else []
+                            flags = ["other_cpu"] if rep == 2 else []
                             for att in ((1, 2) if rep == 2 else (1,)):
                                 run_dir = rid + ("" if att == 1 else "-a%d" % att)
                                 wjson(os.path.join(nd, "runs", run_dir + ".json"), {
