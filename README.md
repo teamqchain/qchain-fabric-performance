@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Go-1.27-00ADD8" alt="Go" />
   <img src="https://img.shields.io/badge/liboqs-0.16.0-6E40C9" alt="liboqs" />
   <img src="https://img.shields.io/badge/Machine-Ubuntu%2022.04%20VM%20%C2%B7%20Xeon%20Silver%204210R-2F3134" alt="Machine" />
-  <img src="https://img.shields.io/badge/Status-trial%20next-F2A900" alt="Status" />
+  <img src="https://img.shields.io/badge/Status-main%20run-F2A900" alt="Status" />
   <img src="https://img.shields.io/badge/License-Proprietary-red" alt="License" />
 </p>
 
@@ -30,8 +30,8 @@
 | **Code** | written 16 to 22 November 2026; client unit tests run in the image build, generator self-check and analysis self-test pass |
 | **Test machine** | a dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB), set up and qualified on 22 November 2026; every change to it is recorded in [docs/revert-list.md](docs/revert-list.md) before it is made |
 | **Images** | built natively on the test machine (x86-64); the chaincode image's dependency tree equals the live image's |
-| **Measurements** | a smoke session and a check of the largest network, (8,8) with ML-DSA-44, passed (22 November); the trial (E0) is next |
-| **Next** | the trial (E0), the frozen values (C, E3's reference rate), then the main session, in sittings if needed |
+| **Measurements** | the trial (E0) passed on 22 November (7 networks, 30 runs, no failure) and its values were frozen on 23 November: C = 300, E3's reference rate 346.2 writes/s, no split; the main session (E1, E2, E3) started on 23 November |
+| **Next** | the main session to its end (30 networks, about 8.3 hours), then the analysis, the transfer of the published results to the development laptop, and the figures and tables |
 
 > ⚠️ **Private until publication.** This repository becomes public when the paper is published. Credentials never enter
 > any file, and every run folder will pass an automatic privacy scan before it is committed.
@@ -188,6 +188,8 @@ scripts/run-linux.sh resume main-1                    # after an interruption: f
 # 5. After the runs
 python3 -I scripts/qfp.py analyse main-1              # tables and figures, inside the analysis image
 python3 -I scripts/qfp.py publish main-1              # privacy scan, SHA256SUMS, results/main-1/
+tar -czf ../main-1-results.tar.gz -C results main-1   # one archive of the published folder, outside the repository
+(cd .. && sha256sum main-1-results.tar.gz > main-1-results.tar.gz.sha256)
 scripts/run-linux.sh release                          # CPU settings and automatic updates back as they were
 ```
 
@@ -197,6 +199,7 @@ scripts/run-linux.sh release                          # CPU settings and automat
 
 ## Recent updates
 
+- **23 November 2026: trial passed, values frozen, main session started.** The trial ran 7 networks and 30 runs in 42 minutes without a failure; the project lead froze C = 300, E3's reference rate 346.2 writes/s and no split of the (8,8) ML-DSA-44 network (its projected ledger, 80.8 % of Docker's disk, stays under the disk guard of 85 %). The main session started the same night.
 - **22 November 2026: the test machine.** A dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB) set up and qualified: a constant speed under sustained load, the study's containers isolated on seven of its vCPUs, the images built natively; a smoke session and the largest network, (8,8) with ML-DSA-44, passed. Plan 1.2.
 - **17 November 2026: plan 1.1 approved.** QChain contributes its architecture; every network setting is the study's own and identical in both arms (blocks of 100 transactions, no container memory limits). Experiments E0 to E3.
 - **16 November 2026: code written.** Network generator (self-checked against the live files), client, driver, launcher, Dockerfiles, analysis, documentation; the chaincode image's dependency tree matches the live image's.
@@ -214,7 +217,7 @@ The whole story, with the reasons for each turn and every earlier version of the
 - [x] Harness and network generator
 - [x] Test machine set up and qualified
 - [x] Images built natively (x86-64)
-- [ ] Trial (E0)
+- [x] Trial (E0) and frozen values
 - [ ] Main run (E1, E2, E3)
 - [ ] Analysis, figures and tables
 - [ ] Revert list closed

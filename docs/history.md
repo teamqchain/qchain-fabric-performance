@@ -17,6 +17,8 @@ How the study went, from the first plan to the current one, in the order things 
  Nov 17 13:45      second trial on the laptop: throttled by heat, (8,8) ML-DSA-44 out of memory
  Nov 22 (day)      a dedicated university virtual machine checked and qualified; first sessions passed
  Nov 22 (evening)  plan v1.2: the study moves to it                                                     docs/plan.md v1.2
+ Nov 22 22:29      trial on the new machine: 7 networks, 30 runs, finished 23:11 without a failure
+ Nov 23 01:15      C = 300, E3 reference 346.2 writes/s, no split: values frozen
 ```
 
 ---
@@ -118,6 +120,18 @@ Until 22 November the study's machine was the project lead's MacBook Air (Apple 
 | Images | arm64 | x86-64 |
 | Session conditions | apps closed, adapter, cooling pad, automatic macOS updates off; background services paused and Wi-Fi off by the launcher | CPU isolation, automatic package updates stopped, no package manager, the study's CPUs quiet; detached in `tmux` with sleep blocked |
 | Flags that repeat a run | other CPU, thermal, battery, Low Power Mode, swap, canary | other CPU on the study's CPUs, steal, CPU isolation, system activity, swap, canary |
+
+
+---
+
+## 7. The trial on the test machine and the freeze (22 to 23 November)
+
+- **22 November, 22:29 to 23:11: trial-1.** The trial of plan v1.2 ran to its end in 42 minutes (7 networks, 30 runs, no failed run, no container lost). Before it, a smoke session had found a fault in the launcher's preflight: the machine's `awk` printed large tick counts in scientific notation, which broke the reading of the study's CPU load. It was fixed (`printf "%.0f"`), the images were rebuilt at the new commit, and a second smoke session passed.
+- **What the trial showed.** The heaviest network, (8,8) with ML-DSA-44, peaked at 4,865 MB, 31 % of the machine's memory with the machine's own use included, so no memory warning. At (2,2) the best write throughput was 346.2 writes/s with ECDSA and 236.4 writes/s with ML-DSA-44. The projected time of the main session is 8.3 hours.
+- **23 November, 01:15: the freeze, decided by the project lead.**
+  - **C = 300.** It is the only candidate within 5 % of the best throughput in both cases: in the fastest case, (2,2) ECDSA, C = 300 gave 346.2 writes/s against 309.2 at 200 and 197.9 at 100. In the heaviest case, (8,8) ML-DSA-44, 200 and 300 were within 5 % of the best (45.8 and 46.6 writes/s). C is a setting of this harness and this machine, not a value from the literature; the same C is used for both arms.
+  - **E3's reference rate: 346.2 writes/s**, the best ECDSA write throughput at (2,2).
+  - **No split.** The report proposed running (8,8) ML-DSA-44 as two networks, because its projected ledger (42 GB) would bring Docker's disk to 80.8 %, above the 80 % line for a proposal. The project lead chose the cleaner comparison and kept the disk guard at 85 %: the ledger's bytes per write is measured, so the projection would have to be about 27 % too low to reach the guard. Every network runs whole.
 
 ---
 

@@ -173,6 +173,6 @@ One machine (peers share the CPU, no real network delay; the reference paper had
 3. Test machine set up and qualified; images built natively on it; smoke session and the (8,8) check passed (22 Nov).
 4. **E0, the trial;** report the values (C, E3's reference, memory, disk, time); the project lead approves; freeze.
 5. The main session (E1, E2, E3), in one or more sittings.
-6. Analysis, figures, tables; results documents.
+6. Analysis on the test machine (`qfp.py analyse`), then `qfp.py publish` (privacy scan, `SHA256SUMS`). **Transfer of the results:** the machine has no access to the team's GitHub, so the published folder `results/<session>/` is packed on the test machine into one archive with its sha256 (`tar -czf ../<session>-results.tar.gz -C results <session>`, kept in `~/qfp/`, outside the repository), moved to the development laptop by the remote desktop's file transfer into `~/Desktop/qfp-vm-transfer/`, checked there against its sha256 and unpacked into the repository's `results/`; `SHA256SUMS` inside the folder is checked again. Figures, tables and results documents are made on the laptop from the published folder, which is committed with the project lead's approval.
 7. Machines reverted (revert list).
 8. Paper draft.
