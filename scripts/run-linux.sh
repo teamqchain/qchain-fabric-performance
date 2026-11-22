@@ -93,12 +93,13 @@ problems=()
 notes=()
 problem() { problems+=("$1"); }
 
+# (printf, not print: mawk prints large tick counts in scientific notation)
 # study_load SECONDS: "busy_pct steal_pct": the study's CPUs' busy share and the machine's steal over that time.
 study_load() {
   local a b
-  a="$(awk -v want=" $(seq -s ' ' -f 'cpu%g' 0 $((NCPU - 2))) " '$1 == "cpu" {print $9} index(want, " " $1 " ") {b += $2 + $3 + $4 + $7 + $8; t += $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9} END {print b, t}' /proc/stat | tr '\n' ' ')"
+  a="$(awk -v want=" $(seq -s ' ' -f 'cpu%g' 0 $((NCPU - 2))) " '$1 == "cpu" {printf "%.0f\n", $9} index(want, " " $1 " ") {b += $2 + $3 + $4 + $7 + $8; t += $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9} END {printf "%.0f %.0f\n", b, t}' /proc/stat | tr '\n' ' ')"
   sleep "$1"
-  b="$(awk -v want=" $(seq -s ' ' -f 'cpu%g' 0 $((NCPU - 2))) " '$1 == "cpu" {print $9} index(want, " " $1 " ") {b += $2 + $3 + $4 + $7 + $8; t += $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9} END {print b, t}' /proc/stat | tr '\n' ' ')"
+  b="$(awk -v want=" $(seq -s ' ' -f 'cpu%g' 0 $((NCPU - 2))) " '$1 == "cpu" {printf "%.0f\n", $9} index(want, " " $1 " ") {b += $2 + $3 + $4 + $7 + $8; t += $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9} END {printf "%.0f %.0f\n", b, t}' /proc/stat | tr '\n' ' ')"
   # shellcheck disable=SC2086  # splitting the two readings into numbers is intended
   set -- $a $b
   # $1 steal0, $2 busy0, $3 total0, $4 steal1, $5 busy1, $6 total1
