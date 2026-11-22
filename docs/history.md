@@ -8,15 +8,15 @@ How the study went, from the first plan to the current one, in the order things 
 
 ```
  Nov 15            study opened; context and repositories checked
- Nov 16            reference paper, literature review (45 papers), plan v1.0 approved       docs/plan.md v1.0 (replaced)
+ Nov 16            reference paper, literature review (45 papers), plan v1.0 approved                   docs/plan.md v1.0 (replaced)
  Nov 16 (day)      repository, harness code, Colima, arm64 images
  Nov 16 19:39      smoke sessions 1 and 2 passed
  Nov 17 01:29      first trial: stopped after 9 minutes, the live memory limit killed a peer
  Nov 17 01:45-03:13  memory tests on (2,2) and (8,8); interim plan (blocks of 50), never run
  Nov 17 (daytime)  one rule for every setting: plan v1.1 approved, code, images and documents updated   docs/plan.md v1.1 (replaced)
  Nov 17 13:45      second trial on the laptop: throttled by heat, (8,8) ML-DSA-44 out of memory
- Nov 21-22         a dedicated university virtual machine checked and qualified
- Nov 22            first sessions there passed; plan v1.2: the study moves to it                    docs/plan.md v1.2
+ Nov 22 (day)      a dedicated university virtual machine checked and qualified; first sessions passed
+ Nov 22 (evening)  plan v1.2: the study moves to it                                                     docs/plan.md v1.2
 ```
 
 ---
@@ -102,12 +102,12 @@ Until 22 November the study's machine was the project lead's MacBook Air (Apple 
   - **Memory.** With no container limits, the kernel killed the gateway peer of the (8,8) ML-DSA-44 network at the lowest C, 100, after 6,200 of 10,000 writes (23.1 writes/s until then): the containers held 4,020 MB and the Colima VM's own processes 593 MB, 94 % of its 4,905 MB. (8,8) ECDSA came through at 88.5 %, (1,8) ML-DSA-44 reached 79 % and (2,2) 38 to 45 %.
   - **What it meant.** No C could be chosen: the heaviest case never finished, and in the fastest case heat confounded the candidates. The projected 10 hours for the main session ignored heat and repeats. The rest of the pipeline worked (E2 and E3, the split proposal, the reports). The ledger grew by 27 to 33 KB per write and peer with ECDSA and 47 to 82 KB with ML-DSA-44.
 - **17 November, 17:00: an invalid memory test.** A test of a Go memory target (`GOMEMLIMIT`) on the (8,8) ML-DSA-44 network was started without the launcher and with other programs open; the Colima VM froze (its clock 593 s behind, macOS holding 2.2 GB of swap). A session kind for a proper test was written but never run: the machine changed first, and that session kind was removed.
-- **21 to 22 November: a second machine.** The project lead obtained a dedicated university virtual machine, separate from QChain's live host (its specification is in [plan.md](plan.md) §3). It is reached by remote desktop only, so every check was a command relayed by the project lead:
+- **22 November: a second machine.** The project lead obtained a dedicated university virtual machine, separate from QChain's live host (its specification is in [plan.md](plan.md) §3). It is reached by remote desktop only, so every check was a command relayed by the project lead:
   - **Speed.** One vCPU is 1.7 to 1.9 times slower than one M1 core in the same Go benchmarks (ML-DSA-44 sign 565 against 291 µs, verify 169 against 93 µs; ECDSA P-256 sign 46 against 25 µs, verify 97 against 58 µs).
   - **Steadiness.** With every vCPU under load the machine held 6.28 million SHA3-256 hashes per second for 40 minutes, with a spread under 1 % and no steal reported.
   - **Background load.** The remote-access agent's login-screen process kept one vCPU busy at all times (about 15 % of the machine when idle), which cut each of eight workers to 0.785 million hashes per second. With every process outside the study confined to vCPU 7 (systemd slices) and the study on vCPUs 0 to 6, seven workers each ran at the speed of one worker alone (0.92 million), steady over 10 minutes.
-  - **Room.** 26.4 GiB of memory (about 3 GB in use by the machine itself) and about 81 GB of free disk.
-- **22 November: first sessions on the new machine.** With the fewest possible changes to the driver (Linux readings of memory, disk and swap; the CPU slice), the code went over as git bundles and the four images were built natively for x86-64 in minutes. A smoke session passed (12 runs, no failure; networks up in 20 to 23 s; a TLS handshake 11 to 13 ms). The heaviest network, (8,8) with ML-DSA-44, completed 10,000 writes at C = 100 (44.0 writes/s, median latency 2.3 s, network peak 4,343 MB) and at C = 300 (46.9 writes/s, median 6.4 s, peak 4,774 MB) with no container lost; its gateway peer peaked at 528 and 717 MB. On that network the laptop had managed about 23 writes/s before losing its gateway peer, so the new machine is about twice as fast there: more cores and no throttling outweigh the slower core.
+  - **Room.** 26.4 GiB of memory (about 3.5 GB in use by the machine itself) and about 81 GB of free disk.
+- **22 November: first sessions on the new machine.** With the fewest possible changes to the driver (Linux readings of memory, disk and swap; the CPU slice), the code went over as git bundles and the four images were built natively for x86-64. A smoke session passed (12 runs, no failure; networks up in 20 to 23 s; a read on a new connection 11 to 13 ms). The heaviest network, (8,8) with ML-DSA-44, completed 10,000 writes at C = 100 (44.0 writes/s, median latency 2.3 s, network peak 4,343 MB) and at C = 300 (46.9 writes/s, median 6.4 s, peak 4,774 MB) with no container lost; its gateway peer peaked at 528 and 717 MB. On that network the laptop had managed about 23 writes/s before losing its gateway peer, so the new machine is about twice as fast there: more cores and no throttling outweigh the slower core.
 - **22 November: plan v1.2.** The project lead moved the study to the new machine for good. The launcher and the host monitor were rewritten for Linux (CPU isolation, preflight, `tmux`, sleep inhibition), the driver keeps only Linux readings, the images are rebuilt natively, and the trial starts again from the beginning on this machine. The questions, the grid, the network settings, the C rule and the quality rules of plan v1.1 are unchanged. The laptop remains the development machine; both machines are reverted at the end ([revert-list.md](revert-list.md)).
 
 | | Plan v1.1 | Plan v1.2 |

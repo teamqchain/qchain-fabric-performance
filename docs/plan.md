@@ -134,7 +134,7 @@ Writes run with C rising, so that a network that runs out of memory at a high C 
 
 **E3's reference:** the best ECDSA write throughput at (2,2).
 
-**Memory:** the peak of every container and of each network's total, against the machine's memory (26.4 GiB, of which about 3 GB is in use by the machine's own processes). Above 85 % in any network, the project lead decides before the main run.
+**Memory:** the peak of every container and of each network's total, against the machine's memory (26.4 GiB, of which about 3.5 GB is in use by the machine's own processes). Above 85 % in any network, the project lead decides before the main run.
 
 **Disk:** each network's ledger is projected from the trial's bytes per write. An E1 network projected above 80 % of Docker's disk is proposed for a split into two networks (repetitions 1 to 3, then 4 and 5); during runs a network stops if the disk passes 85 %.
 

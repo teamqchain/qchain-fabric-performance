@@ -241,7 +241,7 @@ The whole story, with the reasons for each turn and every earlier version of the
 
 ## Conventions and rules
 
-- **Privacy.** Run folders hold only allow-listed facts. Before a folder enters `results/`, every file is scanned for the machine's host name, user name, home path, IP and MAC addresses and serial numbers.
+- **Privacy.** Run folders hold only allow-listed facts. Before a folder enters `results/`, every file is scanned for the machine's host name, user name, home path, IP and MAC addresses and machine id.
 - **Verbatim copies.** The chaincode and the network files are copied byte for byte from `qchain-network`, except the differences listed in [docs/live-differences.md](docs/live-differences.md). A check script compares them.
 - **Revert list.** Every change to a machine is written in [docs/revert-list.md](docs/revert-list.md) before it is made, and reverted at the end.
 - **Shared machine.** Another project's containers run on the test machine. The study touches only its own Docker objects (names starting with `qfp`, label `org.qchain.qfp=1`): never `docker system prune`, never `docker compose down`.
@@ -291,4 +291,4 @@ See [LICENSE](LICENSE).
 
 ## Disclaimer
 
-This is an academic research project. The measurements will describe one machine under controlled conditions and the team's Fabric fork of 30 October 2026; they are not a certification of any algorithm or product. The live network's host is a tested environment only. Both networks of the study are built for it and differ from QChain's live network in the ways listed in [docs/live-differences.md](docs/live-differences.md).
+This is an academic research project. The measurements will describe one machine under controlled conditions and the team's Fabric fork of 30 October 2026; they are not a certification of any algorithm or product. The live network's host is a tested environment only. Both networks of the study are built for the test machine and differ from QChain's live network in the ways listed in [docs/live-differences.md](docs/live-differences.md).
