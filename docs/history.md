@@ -19,6 +19,8 @@ How the study went, from the first plan to the current one, in the order things 
  Nov 22 (evening)  plan v1.2: the study moves to it                                                     docs/plan.md v1.2
  Nov 22 22:29      trial on the new machine: 7 networks, 30 runs, finished 23:11 without a failure
  Nov 23 01:15      C = 300, E3 reference 346.2 writes/s, no split: values frozen
+ Nov 23 01:19      main session started: 30 networks, 1,000 runs
+ Nov 23 02:13      disk guard (85 %) stopped (8,8) ML-DSA-44 after its 50 runs; raised to 90 %
 ```
 
 ---
@@ -121,10 +123,9 @@ Until 22 November the study's machine was the project lead's MacBook Air (Apple 
 | Session conditions | apps closed, adapter, cooling pad, automatic macOS updates off; background services paused and Wi-Fi off by the launcher | CPU isolation, automatic package updates stopped, no package manager, the study's CPUs quiet; detached in `tmux` with sleep blocked |
 | Flags that repeat a run | other CPU, thermal, battery, Low Power Mode, swap, canary | other CPU on the study's CPUs, steal, CPU isolation, system activity, swap, canary |
 
-
 ---
 
-## 7. The trial on the test machine and the freeze (22 to 23 November)
+## 7. The trial, the freeze and the main session (22 to 23 November)
 
 - **22 November, 22:29 to 23:11: trial-1.** The trial of plan v1.2 ran to its end in 42 minutes (7 networks, 30 runs, no failed run, no container lost). Before it, a smoke session had found a fault in the launcher's preflight: the machine's `awk` printed large tick counts in scientific notation, which broke the reading of the study's CPU load. It was fixed (`printf "%.0f"`), the images were rebuilt at the new commit, and a second smoke session passed.
 - **What the trial showed.** The heaviest network, (8,8) with ML-DSA-44, peaked at 4,865 MB, 31 % of the machine's memory with the machine's own use included, so no memory warning. At (2,2) the best write throughput was 346.2 writes/s with ECDSA and 236.4 writes/s with ML-DSA-44. The projected time of the main session is 8.3 hours.
@@ -132,6 +133,10 @@ Until 22 November the study's machine was the project lead's MacBook Air (Apple 
   - **C = 300.** It is the only candidate within 5 % of the best throughput in both cases: in the fastest case, (2,2) ECDSA, C = 300 gave 346.2 writes/s against 309.2 at 200 and 197.9 at 100. In the heaviest case, (8,8) ML-DSA-44, 200 and 300 were within 5 % of the best (45.8 and 46.6 writes/s). C is a setting of this harness and this machine, not a value from the literature; the same C is used for both arms.
   - **E3's reference rate: 346.2 writes/s**, the best ECDSA write throughput at (2,2).
   - **No split.** The report proposed running (8,8) ML-DSA-44 as two networks, because its projected ledger (42 GB) would bring Docker's disk to 80.8 %, above the 80 % line for a proposal. The project lead chose the cleaner comparison and kept the disk guard at 85 %: the ledger's bytes per write is measured, so the projection would have to be about 27 % too low to reach the guard. Every network runs whole.
+- **23 November, 01:19: the main session.** It started after a clean preflight: 30 networks, 1,000 runs.
+- **02:13: the disk guard stopped (8,8) ML-DSA-44.** The session's second network finished its 50 runs; at the disk check after the last run Docker's disk stood at 86 %, above the guard of 85 %, so the driver stopped the network before its ledger read-back, removed its containers and volumes, and went on with the other networks. No other network reached the guard.
+  - **Why.** The trial report's projection of the network's size was close: 42 GB projected, between about 41 and 45 GB written by the disk readings. Its percentage was the wrong scale: the report divided by the disk's full size, while the guard reads `df`'s use, which leaves out the space the file system reserves for the system (about 5 % of this disk) and rounds up. On the guard's scale the projection was about 85 %, at the guard, not 80.8 %.
+  - **What the project lead decided.** The guard was raised to 90 % (`DISK_GUARD_PCT` in `scripts/qfp.py`) and the network stays whole: it runs again, alone, after the other networks, with the same plan, seeds and images (`resume main-1`), under the commit that carries the new value. The guard only decides when a network stops, and it stopped no other network, so the other 29 networks are the same under either value. Before the rerun the first attempt's files are moved out of the session, so they are not published; the driver's log and the session's state keep the record of the failure.
 
 ---
 

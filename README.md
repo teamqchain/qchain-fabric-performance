@@ -199,7 +199,7 @@ scripts/run-linux.sh release                          # CPU settings and automat
 
 ## Recent updates
 
-- **23 November 2026: trial passed, values frozen, main session started.** The trial ran 7 networks and 30 runs in 42 minutes without a failure; the project lead froze C = 300, E3's reference rate 346.2 writes/s and no split of the (8,8) ML-DSA-44 network (its projected ledger, 80.8 % of Docker's disk, stays under the disk guard of 85 %). The main session started the same night.
+- **23 November 2026: trial passed, values frozen, main session started.** The trial ran 7 networks and 30 runs in 42 minutes without a failure; the project lead froze C = 300, E3's reference rate 346.2 writes/s and no split of the (8,8) ML-DSA-44 network. The main session started the same night.
 - **22 November 2026: the test machine.** A dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB) set up and qualified: a constant speed under sustained load, the study's containers isolated on seven of its vCPUs, the images built natively; a smoke session and the largest network, (8,8) with ML-DSA-44, passed. Plan 1.2.
 - **17 November 2026: plan 1.1 approved.** QChain contributes its architecture; every network setting is the study's own and identical in both arms (blocks of 100 transactions, no container memory limits). Experiments E0 to E3.
 - **16 November 2026: code written.** Network generator (self-checked against the live files), client, driver, launcher, Dockerfiles, analysis, documentation; the chaincode image's dependency tree matches the live image's.

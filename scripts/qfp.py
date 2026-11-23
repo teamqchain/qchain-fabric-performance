@@ -74,6 +74,7 @@ C_CASES = [("heaviest", "o8p8-mldsa44"), ("fastest", "o2p2-ecdsa")]
 E3_FRACTIONS = [0.10, 0.25, 0.50, 0.75, 0.90, 1.00, 1.10]   # offered load, as fractions of the ECDSA saturation
 E3_SMALL_RATE = 25            # the trial's short check of the load client (transactions per second, 20 s)
 DISK_SPLIT_PCT = 80           # a projected network above this share of Docker's disk is proposed for a split
+DISK_GUARD_PCT = 90           # a network stops when Docker's disk (df's use) passes this share
 
 DEFAULT_THRESHOLDS = {
     "frozen": False,
@@ -858,7 +859,7 @@ def run_network(session, idx, it, api, th, state):
             window = []
         time.sleep(th["settle_s"])
         pct = docker_disk_pct()
-        if pct > 85:
+        if pct > DISK_GUARD_PCT:
             raise RuntimeError("Docker's disk at %.0f %%: network %s stopped (disk guard)" % (pct, netid))
     errors = {}
     for x in it["extras"]:

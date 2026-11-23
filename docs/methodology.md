@@ -90,7 +90,7 @@ A failure of E2, E3 or the ledger read-back is written to the network's `network
 - **Host monitor** (`monitor/monitor-linux.sh`, adapted from the KPI's), every 5 s on the reserved CPU: the CPU time on the study's CPUs that the study did not use (their busy time minus the CPU time of `qfp.slice`), the machine's steal, whether the isolation is still in place, and whether a package manager or an update unit runs.
 - **Flags of a run:** mean other CPU on the study's CPUs above 5 %; mean steal above 2 %; the isolation not in place at any sample (`cpuset`); system activity at any sample; swap growth above 64 MB; canary drift (below). A flagged run is repeated at the end of its network, up to 3 attempts; the headline attempt is the first clean one.
 - **Canary:** the KPI's SHA3-256 canary at each network's start and every 60 min; the session reference is the median of its first three. A canary more than 3 % below the reference flags the runs since the previous canary.
-- **Guard:** a network stops if Docker's disk passes 85 %.
+- **Guard:** a network stops if Docker's disk passes 90 % (`df`'s use).
 
 ## 9. Statistics
 
