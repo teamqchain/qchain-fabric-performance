@@ -80,7 +80,10 @@ release() {
   [ -z "$(docker ps -q --filter label=org.qchain.qfp=1 2>/dev/null)" ] || die "study containers are running; stop the session first (python3 -I scripts/qfp.py down)"
   sudo -v || die "release needs sudo"
   agent_nice 0
-  sudo systemctl set-property --runtime system.slice "AllowedCPUs=" && sudo systemctl set-property --runtime user.slice "AllowedCPUs="
+  # every CPU first: an empty AllowedCPUs= (or a revert alone) stops systemd managing the CPU list but leaves the
+  # kernel's value, so the slices would stay on the reserved CPU
+  sudo systemctl set-property --runtime system.slice "AllowedCPUs=0-$((NCPU - 1))" &&
+    sudo systemctl set-property --runtime user.slice "AllowedCPUs=0-$((NCPU - 1))"
   sudo systemctl revert system.slice user.slice "$SLICE" >/dev/null 2>&1
   sudo systemctl stop "$SLICE" 2>/dev/null
   sudo systemctl start "${UPDATE_UNITS[@]}"
