@@ -1,0 +1,19 @@
+{
+  "achieved_tps": 252.00006348550988,
+  "dropped": 0,
+  "duration_s": 60,
+  "identity": "ecdsa",
+  "latency_gateway": {
+    "n": 15578,
+    "mean_ms": 415.186,
+    "p50_ms": 408.217,
+    "p95_ms": 587.102,
+    "p99_ms": 623.543,
+    "max_ms": 2119.778
+  },
+  "network": "o2p2-ecdsa",
+  "offered_tps": 259.65,
+  "ok": 15578,
+  "sent": 15578,
+  "t0_unix_ns": 1795386682758695552
+}

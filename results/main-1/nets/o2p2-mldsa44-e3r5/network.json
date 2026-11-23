@@ -1,0 +1,34 @@
+{
+ "blocks": {
+  "blocks": 799
+ },
+ "disk_pct": 75.0,
+ "end_utc": "2026-11-23T03:26:05Z",
+ "errors": {},
+ "index": 27,
+ "ledger_bytes": {
+  "orderer0.orderer.example.com": 3945202554,
+  "peer0.general.uae.com": 4443204442,
+  "peer0.government.uae.com": 4443320619
+ },
+ "net": {
+  "identity": "mldsa44",
+  "orgs": 2,
+  "peers": 2
+ },
+ "netid": "o2p2-mldsa44-e3r5",
+ "runs": 0,
+ "timings": {
+  "blocks_dump_s": 48.84624934196472,
+  "ca_start_s": 2.76532244682312,
+  "chaincode_start_s": 5.161787748336792,
+  "channel_s": 4.336178302764893,
+  "commit_s": 7.4494030475616455,
+  "crypto_s": 0.980445146560669,
+  "enroll_s": 1.913705825805664,
+  "install_s": 1.242896556854248,
+  "network_up_s": 26.674662590026855,
+  "node_start_s": 2.131312847137451,
+  "setup_s": 32.63770389556885
+ }
+}

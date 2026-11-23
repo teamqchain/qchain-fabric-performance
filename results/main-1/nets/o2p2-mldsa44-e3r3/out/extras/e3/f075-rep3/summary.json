@@ -1,0 +1,19 @@
+{
+  "achieved_tps": 229.21876357283398,
+  "dropped": 1248,
+  "duration_s": 60,
+  "identity": "mldsa44",
+  "latency_gateway": {
+    "n": 14330,
+    "mean_ms": 1745.837,
+    "p50_ms": 1773.182,
+    "p95_ms": 2209.81,
+    "p99_ms": 2380.537,
+    "max_ms": 2942.489
+  },
+  "network": "o2p2-mldsa44",
+  "offered_tps": 259.65,
+  "ok": 14330,
+  "sent": 14330,
+  "t0_unix_ns": 1795396088180852186
+}
