@@ -22,6 +22,7 @@
 | what comes from QChain, and how the study's networks differ from QChain's live network | [live-differences.md](live-differences.md) |
 | what exactly the code measures, and how quality is controlled | [methodology.md](methodology.md) |
 | what every file and column of a session contains | [data-dictionary.md](data-dictionary.md) |
+| what the study found | [results.md](results.md) |
 | where every copied file and pinned version comes from | [provenance.md](provenance.md) |
 
 ---
@@ -35,10 +36,9 @@
 | [data-dictionary.md](data-dictionary.md) | reference | every file and column of a session |
 | [provenance.md](provenance.md) | reference | copied files and pinned versions |
 | [live-differences.md](live-differences.md) | reference | what is taken from QChain unchanged, and every difference from the live network, why, and its effect on the comparison |
+| [results.md](results.md) | results | the main session's findings for every research question, with the numbers, tables and figures behind them |
 | [decisions-log.md](decisions-log.md) | log | dated decisions in force with their reasons |
 | [history.md](history.md) | narrative | the study from the first plan to the current one, with every earlier value and the sessions that failed; the only document about earlier plans |
-
-Results documents are added after the runs.
 
 ---
 

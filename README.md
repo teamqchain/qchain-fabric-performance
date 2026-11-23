@@ -32,7 +32,7 @@
 | **Images** | built natively on the test machine (x86-64); the chaincode image's dependency tree equals the live image's |
 | **Measurements** | the trial (E0) passed on 22 November (7 networks, 30 runs, no failure) and its values were frozen on 23 November: C = 300, E3's reference rate 346.2 writes/s, no split; the main session (E1, E2, E3) completed on 23 November: 30 networks, 1,000 runs, every run clean on its first attempt |
 | **Results** | analysed (200 cells, 100 ECDSA against ML-DSA-44 comparisons, 73 figures), published after the privacy scan and moved to the development laptop, where the analysis reproduces the tables byte for byte |
-| **Next** | the results documents, then the revert of both machines and the paper draft |
+| **Next** | the paper draft |
 
 > ⚠️ **Private until publication.** This repository becomes public when the paper is published. Credentials never enter
 > any file, and every run folder will pass an automatic privacy scan before it is committed.
@@ -222,7 +222,7 @@ The whole story, with the reasons for each turn and every earlier version of the
 - [x] Trial (E0) and frozen values
 - [x] Main run (E1, E2, E3)
 - [x] Analysis, figures and tables
-- [ ] Results documents
+- [x] Results documents
 - [x] Revert list closed
 - [ ] Paper draft
 - [ ] Public release with the paper
@@ -239,6 +239,7 @@ The whole story, with the reasons for each turn and every earlier version of the
 | [docs/data-dictionary.md](docs/data-dictionary.md) | every file and column a session writes |
 | [docs/provenance.md](docs/provenance.md) | every copied file and pinned version |
 | [docs/decisions-log.md](docs/decisions-log.md) | the decisions in force and their reasons |
+| [docs/results.md](docs/results.md) | the findings: every research question answered from the main session |
 | [docs/history.md](docs/history.md) | how the plan changed: earlier versions, superseded values, failed sessions |
 | [docs/live-differences.md](docs/live-differences.md) | what comes from QChain unchanged, and where the study's networks differ from its live network |
 
