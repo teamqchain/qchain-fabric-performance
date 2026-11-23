@@ -1,0 +1,123 @@
+{
+ "attempt": 1,
+ "c": 300,
+ "containers": {
+  "qfp_ca.general.uae.com": {
+   "cpu_s": 0.0,
+   "mem_peak": 10567680,
+   "rx": 126,
+   "tx": 0
+  },
+  "qfp_chaincode-general": {
+   "cpu_s": 1.711685,
+   "mem_peak": 119533568,
+   "rx": 10379718,
+   "tx": 9253900
+  },
+  "qfp_orderer0.orderer.example.com": {
+   "cpu_s": 0.001018,
+   "mem_peak": 221978624,
+   "rx": 126,
+   "tx": 0
+  },
+  "qfp_peer0.general.uae.com": {
+   "cpu_s": 1.440081,
+   "mem_peak": 309239808,
+   "rx": 10663672,
+   "tx": 19397579
+  },
+  "qfp_peer1.general.uae.com": {
+   "cpu_s": 0.039667,
+   "mem_peak": 293220352,
+   "rx": 12531,
+   "tx": 10200
+  },
+  "qfp_peer2.general.uae.com": {
+   "cpu_s": 0.028487,
+   "mem_peak": 282750976,
+   "rx": 8072,
+   "tx": 9548
+  },
+  "qfp_peer3.general.uae.com": {
+   "cpu_s": 0.034009,
+   "mem_peak": 301821952,
+   "rx": 8018,
+   "tx": 9770
+  }
+ },
+ "end_ns": 1795388999688678939,
+ "error": null,
+ "flags": [],
+ "fn": "get",
+ "id": "n08-r023",
+ "mem_total_peak": 1539112960,
+ "rep": 2,
+ "result": {
+  "all_peers_delivered": true,
+  "exec_s": 1.074081106,
+  "failed": 0,
+  "lat_p50_ms": 304.583,
+  "ok": 1000,
+  "tps": 931.0283873478731
+ },
+ "run_dir": "n08-r023",
+ "seed": 390613475103892819,
+ "start_ns": 1795388997309644359,
+ "states": {
+  "qfp_ca.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_chaincode-general": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_orderer0.orderer.example.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer0.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer1.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer2.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer3.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  }
+ },
+ "swap_mb": [
+  2.5,
+  2.5
+ ],
+ "t": 1000,
+ "wall_s": 2.777
+}

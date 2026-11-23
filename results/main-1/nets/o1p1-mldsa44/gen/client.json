@@ -1,0 +1,28 @@
+{
+ "network": "o1p1-mldsa44",
+ "orgs": 1,
+ "peers_total": 1,
+ "identity": "mldsa44",
+ "endorsements": 1,
+ "channel": "mychannel",
+ "chaincode": "qchaincode",
+ "mspid": "GeneralMSP",
+ "mspdir": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/users/issuer1@general.uae.com/msp",
+ "gateway": {
+  "name": "peer0.general.uae.com",
+  "endpoint": "peer0.general.uae.com:29051",
+  "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer0.general.uae.com/tls/ca.crt"
+ },
+ "peers": [
+  {
+   "name": "peer0.general.uae.com",
+   "endpoint": "peer0.general.uae.com:29051",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer0.general.uae.com/tls/ca.crt"
+  }
+ ],
+ "max_message_count": 100,
+ "preferred_max_bytes": 16777216,
+ "batch_timeout_s": 2
+}

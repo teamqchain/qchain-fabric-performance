@@ -1,0 +1,97 @@
+{
+ "attempt": 1,
+ "c": 300,
+ "containers": {
+  "qfp_ca.general.uae.com": {
+   "cpu_s": 0.0,
+   "mem_peak": 11931648,
+   "rx": 210,
+   "tx": 0
+  },
+  "qfp_chaincode-general": {
+   "cpu_s": 2.320198,
+   "mem_peak": 158699520,
+   "rx": 31015006,
+   "tx": 9806565
+  },
+  "qfp_orderer0.orderer.example.com": {
+   "cpu_s": 2.028576,
+   "mem_peak": 221949952,
+   "rx": 40399466,
+   "tx": 80564835
+  },
+  "qfp_peer0.general.uae.com": {
+   "cpu_s": 6.588385,
+   "mem_peak": 347353088,
+   "rx": 115903107,
+   "tx": 109456023
+  },
+  "qfp_peer1.general.uae.com": {
+   "cpu_s": 2.287747,
+   "mem_peak": 291061760,
+   "rx": 40252175,
+   "tx": 210608
+  }
+ },
+ "end_ns": 1795391874339121795,
+ "error": null,
+ "flags": [],
+ "fn": "issue",
+ "id": "n12-r006",
+ "mem_total_peak": 1030995968,
+ "rep": 3,
+ "result": {
+  "all_peers_delivered": true,
+  "exec_s": 3.773859177,
+  "failed": 0,
+  "lat_p50_ms": 947.625,
+  "ok": 1000,
+  "tps": 264.980740694978
+ },
+ "run_dir": "n12-r006",
+ "seed": 101180296507538394,
+ "start_ns": 1795391869377748115,
+ "states": {
+  "qfp_ca.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_chaincode-general": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_orderer0.orderer.example.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer0.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer1.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  }
+ },
+ "swap_mb": [
+  2.5,
+  2.5
+ ],
+ "t": 1000,
+ "wall_s": 5.271
+}

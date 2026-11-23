@@ -1,0 +1,77 @@
+{
+ "network": "o1p8-mldsa44",
+ "orgs": 1,
+ "peers_total": 8,
+ "identity": "mldsa44",
+ "endorsements": 1,
+ "channel": "mychannel",
+ "chaincode": "qchaincode",
+ "mspid": "GeneralMSP",
+ "mspdir": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/users/issuer1@general.uae.com/msp",
+ "gateway": {
+  "name": "peer0.general.uae.com",
+  "endpoint": "peer0.general.uae.com:29051",
+  "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer0.general.uae.com/tls/ca.crt"
+ },
+ "peers": [
+  {
+   "name": "peer0.general.uae.com",
+   "endpoint": "peer0.general.uae.com:29051",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer0.general.uae.com/tls/ca.crt"
+  },
+  {
+   "name": "peer1.general.uae.com",
+   "endpoint": "peer1.general.uae.com:29061",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer1.general.uae.com/tls/ca.crt"
+  },
+  {
+   "name": "peer2.general.uae.com",
+   "endpoint": "peer2.general.uae.com:29071",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer2.general.uae.com/tls/ca.crt"
+  },
+  {
+   "name": "peer3.general.uae.com",
+   "endpoint": "peer3.general.uae.com:29081",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer3.general.uae.com/tls/ca.crt"
+  },
+  {
+   "name": "peer4.general.uae.com",
+   "endpoint": "peer4.general.uae.com:29091",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer4.general.uae.com/tls/ca.crt"
+  },
+  {
+   "name": "peer5.general.uae.com",
+   "endpoint": "peer5.general.uae.com:29101",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer5.general.uae.com/tls/ca.crt"
+  },
+  {
+   "name": "peer6.general.uae.com",
+   "endpoint": "peer6.general.uae.com:29111",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer6.general.uae.com/tls/ca.crt"
+  },
+  {
+   "name": "peer7.general.uae.com",
+   "endpoint": "peer7.general.uae.com:29121",
+   "org": "general",
+   "msp": "GeneralMSP",
+   "tlsca": "/qfp/net/crypto-material/peerOrganizations/general.uae.com/peers/peer7.general.uae.com/tls/ca.crt"
+  }
+ ],
+ "max_message_count": 100,
+ "preferred_max_bytes": 16777216,
+ "batch_timeout_s": 2
+}
