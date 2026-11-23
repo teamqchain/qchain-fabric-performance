@@ -28,7 +28,7 @@
 | **Plan** | version 1.2, 22 November 2026, approved by the project lead ([docs/plan.md](docs/plan.md); earlier versions in [docs/history.md](docs/history.md)) |
 | **Literature review** | done: 45 papers, kept outside this repository |
 | **Code** | written 16 to 22 November 2026; client unit tests run in the image build, generator self-check and analysis self-test pass |
-| **Test machine** | a dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB), set up and qualified on 22 November 2026; every change to it is recorded in [docs/revert-list.md](docs/revert-list.md) before it is made |
+| **Test machine** | a dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB), set up and qualified on 22 November 2026; every change made to it was reverted on 23 November 2026 |
 | **Images** | built natively on the test machine (x86-64); the chaincode image's dependency tree equals the live image's |
 | **Measurements** | the trial (E0) passed on 22 November (7 networks, 30 runs, no failure) and its values were frozen on 23 November: C = 300, E3's reference rate 346.2 writes/s, no split; the main session (E1, E2, E3) completed on 23 November: 30 networks, 1,000 runs, every run clean on its first attempt |
 | **Results** | analysed (200 cells, 100 ECDSA against ML-DSA-44 comparisons, 73 figures), published after the privacy scan and moved to the development laptop, where the analysis reproduces the tables byte for byte |
@@ -223,7 +223,7 @@ The whole story, with the reasons for each turn and every earlier version of the
 - [x] Main run (E1, E2, E3)
 - [x] Analysis, figures and tables
 - [ ] Results documents
-- [ ] Revert list closed
+- [x] Revert list closed
 - [ ] Paper draft
 - [ ] Public release with the paper
 
@@ -241,7 +241,6 @@ The whole story, with the reasons for each turn and every earlier version of the
 | [docs/decisions-log.md](docs/decisions-log.md) | the decisions in force and their reasons |
 | [docs/history.md](docs/history.md) | how the plan changed: earlier versions, superseded values, failed sessions |
 | [docs/live-differences.md](docs/live-differences.md) | what comes from QChain unchanged, and where the study's networks differ from its live network |
-| [docs/revert-list.md](docs/revert-list.md) | the baseline of each machine used, every change made to it, the final checks |
 
 ---
 
@@ -249,7 +248,7 @@ The whole story, with the reasons for each turn and every earlier version of the
 
 - **Privacy.** Run folders hold only allow-listed facts. Before a folder enters `results/`, every file is scanned for the machine's host name, user name, home path, IP and MAC addresses and machine id.
 - **Verbatim copies.** The chaincode and the network files are copied byte for byte from `qchain-network`, except the differences listed in [docs/live-differences.md](docs/live-differences.md). A check script compares them.
-- **Revert list.** Every change to a machine is written in [docs/revert-list.md](docs/revert-list.md) before it is made, and reverted at the end.
+- **Revert list.** Every change to a machine was written in a revert list before it was made; both machines were reverted and checked against their baselines on 23 November 2026, and the list was then removed from the repository.
 - **Shared machine.** Another project's containers run on the test machine. The study touches only its own Docker objects (names starting with `qfp`, label `org.qchain.qfp=1`): never `docker system prune`, never `docker compose down`.
 - **Frozen thresholds.** The quality thresholds are not changed after the trial (E0).
 - **Script names.** A script tied to the operating system ends with `-linux` (`run-linux.sh`, `monitor-linux.sh`); the driver `qfp.py` uses only Python's standard library and Docker.

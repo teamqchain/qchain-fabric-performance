@@ -23,7 +23,6 @@
 | what exactly the code measures, and how quality is controlled | [methodology.md](methodology.md) |
 | what every file and column of a session contains | [data-dictionary.md](data-dictionary.md) |
 | where every copied file and pinned version comes from | [provenance.md](provenance.md) |
-| what was changed on a machine, and how it is put back | [revert-list.md](revert-list.md) |
 
 ---
 
@@ -38,7 +37,6 @@
 | [live-differences.md](live-differences.md) | reference | what is taken from QChain unchanged, and every difference from the live network, why, and its effect on the comparison |
 | [decisions-log.md](decisions-log.md) | log | dated decisions in force with their reasons |
 | [history.md](history.md) | narrative | the study from the first plan to the current one, with every earlier value and the sessions that failed; the only document about earlier plans |
-| [revert-list.md](revert-list.md) | log | the baseline of each machine used, every planned and made change, the final checks |
 
 Results documents are added after the runs.
 
