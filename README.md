@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Go-1.27-00ADD8" alt="Go" />
   <img src="https://img.shields.io/badge/liboqs-0.16.0-6E40C9" alt="liboqs" />
   <img src="https://img.shields.io/badge/Machine-Ubuntu%2022.04%20VM%20%C2%B7%20Xeon%20Silver%204210R-2F3134" alt="Machine" />
-  <img src="https://img.shields.io/badge/Status-main%20run-F2A900" alt="Status" />
+  <img src="https://img.shields.io/badge/Status-results%20in-F2A900" alt="Status" />
   <img src="https://img.shields.io/badge/License-Proprietary-red" alt="License" />
 </p>
 
@@ -30,8 +30,9 @@
 | **Code** | written 16 to 22 November 2026; client unit tests run in the image build, generator self-check and analysis self-test pass |
 | **Test machine** | a dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB), set up and qualified on 22 November 2026; every change to it is recorded in [docs/revert-list.md](docs/revert-list.md) before it is made |
 | **Images** | built natively on the test machine (x86-64); the chaincode image's dependency tree equals the live image's |
-| **Measurements** | the trial (E0) passed on 22 November (7 networks, 30 runs, no failure) and its values were frozen on 23 November: C = 300, E3's reference rate 346.2 writes/s, no split; the main session (E1, E2, E3) started on 23 November |
-| **Next** | the main session to its end (30 networks, about 8.3 hours), then the analysis, the transfer of the published results to the development laptop, and the figures and tables |
+| **Measurements** | the trial (E0) passed on 22 November (7 networks, 30 runs, no failure) and its values were frozen on 23 November: C = 300, E3's reference rate 346.2 writes/s, no split; the main session (E1, E2, E3) completed on 23 November: 30 networks, 1,000 runs, every run clean on its first attempt |
+| **Results** | analysed (200 cells, 100 ECDSA against ML-DSA-44 comparisons, 73 figures), published after the privacy scan and moved to the development laptop, where the analysis reproduces the tables byte for byte |
+| **Next** | the results documents, then the revert of both machines and the paper draft |
 
 > ⚠️ **Private until publication.** This repository becomes public when the paper is published. Credentials never enter
 > any file, and every run folder will pass an automatic privacy scan before it is committed.
@@ -199,6 +200,7 @@ scripts/run-linux.sh release                          # CPU settings and automat
 
 ## Recent updates
 
+- **23 November 2026: main session complete.** 30 networks and 1,000 runs, every run clean on its first attempt; the analysis gives 200 cells and 100 ECDSA against ML-DSA-44 comparisons. The results were published after the privacy scan and moved to the development laptop, where the analysis reproduces the tables byte for byte and the figures were finished.
 - **23 November 2026: trial passed, values frozen, main session started.** The trial ran 7 networks and 30 runs in 42 minutes without a failure; the project lead froze C = 300, E3's reference rate 346.2 writes/s and no split of the (8,8) ML-DSA-44 network. The main session started the same night.
 - **22 November 2026: the test machine.** A dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB) set up and qualified: a constant speed under sustained load, the study's containers isolated on seven of its vCPUs, the images built natively; a smoke session and the largest network, (8,8) with ML-DSA-44, passed. Plan 1.2.
 - **17 November 2026: plan 1.1 approved.** QChain contributes its architecture; every network setting is the study's own and identical in both arms (blocks of 100 transactions, no container memory limits). Experiments E0 to E3.
@@ -218,8 +220,9 @@ The whole story, with the reasons for each turn and every earlier version of the
 - [x] Test machine set up and qualified
 - [x] Images built natively (x86-64)
 - [x] Trial (E0) and frozen values
-- [ ] Main run (E1, E2, E3)
-- [ ] Analysis, figures and tables
+- [x] Main run (E1, E2, E3)
+- [x] Analysis, figures and tables
+- [ ] Results documents
 - [ ] Revert list closed
 - [ ] Paper draft
 - [ ] Public release with the paper
