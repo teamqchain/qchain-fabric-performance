@@ -1,0 +1,23 @@
+{
+  "identity": "mldsa44",
+  "n": 200,
+  "network": "o2p2-mldsa44",
+  "result": {
+    "fresh_connection": {
+      "n": 200,
+      "mean_ms": 6.536,
+      "p50_ms": 6.362,
+      "p95_ms": 8.114,
+      "p99_ms": 9.363,
+      "max_ms": 10.426
+    },
+    "open_connection": {
+      "n": 200,
+      "mean_ms": 3.786,
+      "p50_ms": 3.602,
+      "p95_ms": 4.925,
+      "p99_ms": 5.798,
+      "max_ms": 8.299
+    }
+  }
+}

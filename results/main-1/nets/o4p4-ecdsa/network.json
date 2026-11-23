@@ -1,0 +1,36 @@
+{
+ "blocks": {
+  "blocks": 593
+ },
+ "disk_pct": 73.0,
+ "end_utc": "2026-11-22T23:45:57Z",
+ "errors": {},
+ "index": 9,
+ "ledger_bytes": {
+  "orderer0.orderer.example.com": 1473358832,
+  "peer0.general.uae.com": 1793697321,
+  "peer0.government.uae.com": 1793928227,
+  "peer0.org3.uae.com": 1793951750,
+  "peer0.org4.uae.com": 1793902885
+ },
+ "net": {
+  "identity": "ecdsa",
+  "orgs": 4,
+  "peers": 4
+ },
+ "netid": "o4p4-ecdsa",
+ "runs": 50,
+ "timings": {
+  "blocks_dump_s": 18.831022024154663,
+  "ca_start_s": 2.7552483081817627,
+  "chaincode_start_s": 8.242701053619385,
+  "channel_s": 4.654442071914673,
+  "commit_s": 11.576001405715942,
+  "crypto_s": 0.9247219562530518,
+  "enroll_s": 2.010105848312378,
+  "install_s": 1.6029090881347656,
+  "network_up_s": 36.96986675262451,
+  "node_start_s": 4.327343702316284,
+  "setup_s": 34.137144804000854
+ }
+}

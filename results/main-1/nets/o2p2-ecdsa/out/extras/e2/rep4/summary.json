@@ -1,0 +1,23 @@
+{
+  "identity": "ecdsa",
+  "n": 200,
+  "network": "o2p2-ecdsa",
+  "result": {
+    "fresh_connection": {
+      "n": 200,
+      "mean_ms": 4.912,
+      "p50_ms": 4.639,
+      "p95_ms": 6.228,
+      "p99_ms": 9.279,
+      "max_ms": 9.836
+    },
+    "open_connection": {
+      "n": 200,
+      "mean_ms": 2.402,
+      "p50_ms": 2.365,
+      "p95_ms": 2.579,
+      "p99_ms": 2.842,
+      "max_ms": 4.271
+    }
+  }
+}

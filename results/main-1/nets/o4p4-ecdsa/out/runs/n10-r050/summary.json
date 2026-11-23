@@ -1,0 +1,82 @@
+{
+  "run_id": "n10-r050",
+  "network": "o4p4-ecdsa",
+  "identity": "ecdsa",
+  "client_algorithm": "ECDSA",
+  "client_cert_der_bytes": 561,
+  "orgs": 4,
+  "peers": 4,
+  "endorsements": 3,
+  "function": "issue",
+  "t": 10,
+  "c": 300,
+  "seed": 1326182818408436039,
+  "t0_unix_ns": 1795391124555068739,
+  "ok": 10,
+  "failed": 0,
+  "failures": {},
+  "execution_time_all_peers_s": 2.094663729,
+  "execution_time_gateway_s": 2.090311813,
+  "throughput_all_peers_tps": 4.774035976062867,
+  "throughput_gateway_tps": 4.783975260441204,
+  "latency_all_peers": {
+    "n": 10,
+    "mean_ms": 2094.231,
+    "p50_ms": 2094.285,
+    "p95_ms": 2094.657,
+    "p99_ms": 2094.662,
+    "max_ms": 2094.664
+  },
+  "latency_gateway": {
+    "n": 10,
+    "mean_ms": 2089.857,
+    "p50_ms": 2089.919,
+    "p95_ms": 2090.27,
+    "p99_ms": 2090.274,
+    "max_ms": 2090.275
+  },
+  "burst_response_all_peers": {
+    "n": 10,
+    "mean_ms": 2094.699,
+    "p50_ms": 2094.699,
+    "p95_ms": 2094.699,
+    "p99_ms": 2094.699,
+    "max_ms": 2094.699
+  },
+  "stage_endorse": {
+    "n": 10,
+    "mean_ms": 62.526,
+    "p50_ms": 63.988,
+    "p95_ms": 67.192,
+    "p99_ms": 67.233,
+    "max_ms": 67.244
+  },
+  "stage_order": {
+    "n": 10,
+    "mean_ms": 6.179,
+    "p50_ms": 5.114,
+    "p95_ms": 10.306,
+    "p99_ms": 10.493,
+    "max_ms": 10.539
+  },
+  "stage_commit_gateway": {
+    "n": 10,
+    "mean_ms": 2021.152,
+    "p50_ms": 2017.868,
+    "p95_ms": 2033.37,
+    "p99_ms": 2035.343,
+    "max_ms": 2035.836
+  },
+  "stage_spread_to_all_peers": {
+    "n": 10,
+    "mean_ms": 4.374,
+    "p50_ms": 4.374,
+    "p95_ms": 4.391,
+    "p99_ms": 4.393,
+    "max_ms": 4.393
+  },
+  "blocks_used": 1,
+  "all_peers_delivered": true,
+  "client_done_s": 2.090349323,
+  "client_cpu_s": 0.155164
+}

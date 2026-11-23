@@ -1,0 +1,123 @@
+{
+ "attempt": 1,
+ "c": 300,
+ "containers": {
+  "qfp_ca.general.uae.com": {
+   "cpu_s": 0.0,
+   "mem_peak": 10014720,
+   "rx": 210,
+   "tx": 0
+  },
+  "qfp_ca.government.uae.com": {
+   "cpu_s": 0.0,
+   "mem_peak": 9654272,
+   "rx": 210,
+   "tx": 0
+  },
+  "qfp_chaincode-general": {
+   "cpu_s": 0.006054,
+   "mem_peak": 180523008,
+   "rx": 31780,
+   "tx": 10231
+  },
+  "qfp_chaincode-government": {
+   "cpu_s": 0.002625,
+   "mem_peak": 172359680,
+   "rx": 31978,
+   "tx": 10363
+  },
+  "qfp_orderer0.orderer.example.com": {
+   "cpu_s": 0.014629,
+   "mem_peak": 315219968,
+   "rx": 50077,
+   "tx": 114599
+  },
+  "qfp_peer0.general.uae.com": {
+   "cpu_s": 0.096674,
+   "mem_peak": 652603392,
+   "rx": 208719,
+   "tx": 179029
+  },
+  "qfp_peer0.government.uae.com": {
+   "cpu_s": 0.082675,
+   "mem_peak": 425684992,
+   "rx": 108894,
+   "tx": 74934
+  }
+ },
+ "end_ns": 1795393695011920389,
+ "error": null,
+ "flags": [],
+ "fn": "issue",
+ "id": "n14-r038",
+ "mem_total_peak": 1766060032,
+ "rep": 2,
+ "result": {
+  "all_peers_delivered": true,
+  "exec_s": 2.054159104,
+  "failed": 0,
+  "lat_p50_ms": 2054.159,
+  "ok": 1,
+  "tps": 0.48681720809879386
+ },
+ "run_dir": "n14-r038",
+ "seed": 3816209202257696155,
+ "start_ns": 1795393691557977698,
+ "states": {
+  "qfp_ca.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_ca.government.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_chaincode-general": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_chaincode-government": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_orderer0.orderer.example.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer0.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer0.government.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  }
+ },
+ "swap_mb": [
+  2.5,
+  2.5
+ ],
+ "t": 1,
+ "wall_s": 3.821
+}

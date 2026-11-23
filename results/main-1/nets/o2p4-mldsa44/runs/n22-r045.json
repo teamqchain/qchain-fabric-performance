@@ -1,0 +1,149 @@
+{
+ "attempt": 1,
+ "c": 300,
+ "containers": {
+  "qfp_ca.general.uae.com": {
+   "cpu_s": 0.0,
+   "mem_peak": 9662464,
+   "rx": 168,
+   "tx": 0
+  },
+  "qfp_ca.government.uae.com": {
+   "cpu_s": 0.0,
+   "mem_peak": 9592832,
+   "rx": 168,
+   "tx": 0
+  },
+  "qfp_chaincode-general": {
+   "cpu_s": 13.089426,
+   "mem_peak": 131129344,
+   "rx": 176393053,
+   "tx": 92731089
+  },
+  "qfp_chaincode-government": {
+   "cpu_s": 0.000146,
+   "mem_peak": 138993664,
+   "rx": 168,
+   "tx": 0
+  },
+  "qfp_orderer0.orderer.example.com": {
+   "cpu_s": 0.004393,
+   "mem_peak": 337022976,
+   "rx": 498,
+   "tx": 330
+  },
+  "qfp_peer0.general.uae.com": {
+   "cpu_s": 24.437267,
+   "mem_peak": 515014656,
+   "rx": 179776232,
+   "tx": 267237099
+  },
+  "qfp_peer0.government.uae.com": {
+   "cpu_s": 0.176005,
+   "mem_peak": 443510784,
+   "rx": 301707,
+   "tx": 317699
+  },
+  "qfp_peer1.general.uae.com": {
+   "cpu_s": 0.153825,
+   "mem_peak": 432500736,
+   "rx": 312059,
+   "tx": 314944
+  },
+  "qfp_peer1.government.uae.com": {
+   "cpu_s": 0.15089,
+   "mem_peak": 431448064,
+   "rx": 311658,
+   "tx": 315274
+  }
+ },
+ "end_ns": 1795400031724758480,
+ "error": null,
+ "flags": [],
+ "fn": "get",
+ "id": "n22-r045",
+ "mem_total_peak": 2446884864,
+ "rep": 3,
+ "result": {
+  "all_peers_delivered": true,
+  "exec_s": 11.210485132,
+  "failed": 0,
+  "lat_p50_ms": 328.071,
+  "ok": 10000,
+  "tps": 892.0220563386051
+ },
+ "run_dir": "n22-r045",
+ "seed": 421797127739278027,
+ "start_ns": 1795400019220882550,
+ "states": {
+  "qfp_ca.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_ca.government.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_chaincode-general": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_chaincode-government": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_orderer0.orderer.example.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer0.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer0.government.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer1.general.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  },
+  "qfp_peer1.government.uae.com": {
+   "error": "",
+   "exit": 0,
+   "oom": false,
+   "restarts": 0,
+   "running": true
+  }
+ },
+ "swap_mb": [
+  2.5,
+  2.5
+ ],
+ "t": 10000,
+ "wall_s": 13.015
+}

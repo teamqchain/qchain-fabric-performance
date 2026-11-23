@@ -1,0 +1,459 @@
+{
+ "id": "o4p4-mldsa44",
+ "orgs": 4,
+ "peers": 4,
+ "identity": "mldsa44",
+ "endorsements": 3,
+ "containers": [
+  {
+   "name": "ca.government.uae.com",
+   "role": "ca",
+   "org": "government",
+   "image": "fabric",
+   "stage": "ca",
+   "env": {
+    "FABRIC_CA_HOME": "/var/hyperledger/production",
+    "FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS": "0.0.0.0:37054"
+   },
+   "cmd": [
+    "fabric-ca-server",
+    "start",
+    "-H",
+    "/var/hyperledger/production"
+   ],
+   "mounts": [
+    {
+     "sub": "net/fabric-ca/government",
+     "dst": "/var/hyperledger/production",
+     "ro": false
+    }
+   ],
+   "ready": "Listening on https://"
+  },
+  {
+   "name": "ca.general.uae.com",
+   "role": "ca",
+   "org": "general",
+   "image": "fabric",
+   "stage": "ca",
+   "env": {
+    "FABRIC_CA_HOME": "/var/hyperledger/production",
+    "FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS": "0.0.0.0:38054"
+   },
+   "cmd": [
+    "fabric-ca-server",
+    "start",
+    "-H",
+    "/var/hyperledger/production"
+   ],
+   "mounts": [
+    {
+     "sub": "net/fabric-ca/general",
+     "dst": "/var/hyperledger/production",
+     "ro": false
+    }
+   ],
+   "ready": "Listening on https://"
+  },
+  {
+   "name": "ca.org3.uae.com",
+   "role": "ca",
+   "org": "org3",
+   "image": "fabric",
+   "stage": "ca",
+   "env": {
+    "FABRIC_CA_HOME": "/var/hyperledger/production",
+    "FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS": "0.0.0.0:41054"
+   },
+   "cmd": [
+    "fabric-ca-server",
+    "start",
+    "-H",
+    "/var/hyperledger/production"
+   ],
+   "mounts": [
+    {
+     "sub": "net/fabric-ca/org3",
+     "dst": "/var/hyperledger/production",
+     "ro": false
+    }
+   ],
+   "ready": "Listening on https://"
+  },
+  {
+   "name": "ca.org4.uae.com",
+   "role": "ca",
+   "org": "org4",
+   "image": "fabric",
+   "stage": "ca",
+   "env": {
+    "FABRIC_CA_HOME": "/var/hyperledger/production",
+    "FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS": "0.0.0.0:41055"
+   },
+   "cmd": [
+    "fabric-ca-server",
+    "start",
+    "-H",
+    "/var/hyperledger/production"
+   ],
+   "mounts": [
+    {
+     "sub": "net/fabric-ca/org4",
+     "dst": "/var/hyperledger/production",
+     "ro": false
+    }
+   ],
+   "ready": "Listening on https://"
+  },
+  {
+   "name": "orderer0.orderer.example.com",
+   "role": "orderer",
+   "org": "orderer",
+   "image": "fabric",
+   "stage": "node",
+   "env": {
+    "FABRIC_CFG_PATH": "/etc/hyperledger/fabric",
+    "FABRIC_LOGGING_SPEC": "INFO",
+    "ORDERER_GENERAL_LISTENADDRESS": "0.0.0.0",
+    "ORDERER_GENERAL_LISTENPORT": "27050",
+    "ORDERER_GENERAL_LOCALMSPID": "OrdererMSP",
+    "ORDERER_GENERAL_LOCALMSPDIR": "/var/hyperledger/orderer/msp",
+    "ORDERER_GENERAL_TLS_ENABLED": "true",
+    "ORDERER_GENERAL_TLS_PRIVATEKEY": "/var/hyperledger/orderer/tls/server.key",
+    "ORDERER_GENERAL_TLS_CERTIFICATE": "/var/hyperledger/orderer/tls/server.crt",
+    "ORDERER_GENERAL_TLS_ROOTCAS": "[/var/hyperledger/orderer/tls/ca.crt]",
+    "ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE": "/var/hyperledger/orderer/tls/server.crt",
+    "ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY": "/var/hyperledger/orderer/tls/server.key",
+    "ORDERER_GENERAL_CLUSTER_ROOTCAS": "[/var/hyperledger/orderer/tls/ca.crt]",
+    "ORDERER_GENERAL_BOOTSTRAPMETHOD": "none",
+    "ORDERER_CHANNELPARTICIPATION_ENABLED": "true",
+    "ORDERER_ADMIN_TLS_ENABLED": "true",
+    "ORDERER_ADMIN_LISTENADDRESS": "0.0.0.0:27053",
+    "ORDERER_ADMIN_TLS_CERTIFICATE": "/var/hyperledger/orderer/tls/server.crt",
+    "ORDERER_ADMIN_TLS_PRIVATEKEY": "/var/hyperledger/orderer/tls/server.key",
+    "ORDERER_ADMIN_TLS_ROOTCAS": "[/var/hyperledger/orderer/tls/ca.crt]",
+    "ORDERER_ADMIN_TLS_CLIENTAUTHREQUIRED": "true",
+    "ORDERER_ADMIN_TLS_CLIENTROOTCAS": "[/var/hyperledger/orderer/tls/ca.crt]",
+    "ORDERER_OPERATIONS_LISTENADDRESS": "0.0.0.0:38443"
+   },
+   "cmd": [
+    "orderer"
+   ],
+   "mounts": [
+    {
+     "sub": "net/config",
+     "dst": "/etc/hyperledger/fabric",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/ordererOrganizations/orderer.example.com/orderers/orderer0.orderer.example.com/msp",
+     "dst": "/var/hyperledger/orderer/msp",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/ordererOrganizations/orderer.example.com/orderers/orderer0.orderer.example.com/tls",
+     "dst": "/var/hyperledger/orderer/tls",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/ordererOrganizations/orderer.example.com/orderers/orderer0.orderer.example.com/pqc-keystore",
+     "dst": "/var/hyperledger/orderer/pqc-keystore",
+     "ro": true
+    }
+   ],
+   "data": "/var/hyperledger/production",
+   "ready": "Beginning to serve requests"
+  },
+  {
+   "name": "peer0.government.uae.com",
+   "role": "peer",
+   "org": "government",
+   "image": "fabric",
+   "stage": "node",
+   "env": {
+    "FABRIC_CFG_PATH": "/etc/hyperledger/fabric",
+    "FABRIC_LOGGING_SPEC": "INFO",
+    "CORE_PEER_TLS_ENABLED": "true",
+    "CORE_PEER_PROFILE_ENABLED": "false",
+    "CORE_PEER_TLS_CERT_FILE": "/etc/hyperledger/fabric/tls/server.crt",
+    "CORE_PEER_TLS_KEY_FILE": "/etc/hyperledger/fabric/tls/server.key",
+    "CORE_PEER_TLS_ROOTCERT_FILE": "/etc/hyperledger/fabric/tls/ca.crt",
+    "CORE_PEER_ID": "peer0.government.uae.com",
+    "CORE_PEER_ADDRESS": "peer0.government.uae.com:27051",
+    "CORE_PEER_LISTENADDRESS": "0.0.0.0:27051",
+    "CORE_PEER_CHAINCODEADDRESS": "peer0.government.uae.com:27052",
+    "CORE_PEER_CHAINCODELISTENADDRESS": "0.0.0.0:27052",
+    "CORE_PEER_GOSSIP_BOOTSTRAP": "peer0.government.uae.com:27051",
+    "CORE_PEER_GOSSIP_EXTERNALENDPOINT": "peer0.government.uae.com:27051",
+    "CORE_PEER_LOCALMSPID": "GovernmentMSP",
+    "CORE_PEER_MSPCONFIGPATH": "/etc/hyperledger/fabric/msp",
+    "CORE_PEER_FILESYSTEMPATH": "/var/hyperledger/production",
+    "CORE_OPERATIONS_LISTENADDRESS": "0.0.0.0:39444",
+    "CORE_LEDGER_STATE_STATEDATABASE": "goleveldb"
+   },
+   "cmd": [
+    "peer",
+    "node",
+    "start"
+   ],
+   "mounts": [
+    {
+     "sub": "net/config",
+     "dst": "/etc/hyperledger/fabric",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/government.uae.com/peers/peer0.government.uae.com/msp",
+     "dst": "/etc/hyperledger/fabric/msp",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/government.uae.com/peers/peer0.government.uae.com/tls",
+     "dst": "/etc/hyperledger/fabric/tls",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/government.uae.com/peers/peer0.government.uae.com/pqc-keystore",
+     "dst": "/etc/hyperledger/fabric/pqc-keystore",
+     "ro": true
+    }
+   ],
+   "data": "/var/hyperledger/production",
+   "ready": "Started peer with ID"
+  },
+  {
+   "name": "peer0.general.uae.com",
+   "role": "peer",
+   "org": "general",
+   "image": "fabric",
+   "stage": "node",
+   "env": {
+    "FABRIC_CFG_PATH": "/etc/hyperledger/fabric",
+    "FABRIC_LOGGING_SPEC": "INFO",
+    "CORE_PEER_TLS_ENABLED": "true",
+    "CORE_PEER_PROFILE_ENABLED": "false",
+    "CORE_PEER_TLS_CERT_FILE": "/etc/hyperledger/fabric/tls/server.crt",
+    "CORE_PEER_TLS_KEY_FILE": "/etc/hyperledger/fabric/tls/server.key",
+    "CORE_PEER_TLS_ROOTCERT_FILE": "/etc/hyperledger/fabric/tls/ca.crt",
+    "CORE_PEER_ID": "peer0.general.uae.com",
+    "CORE_PEER_ADDRESS": "peer0.general.uae.com:29051",
+    "CORE_PEER_LISTENADDRESS": "0.0.0.0:29051",
+    "CORE_PEER_CHAINCODEADDRESS": "peer0.general.uae.com:29052",
+    "CORE_PEER_CHAINCODELISTENADDRESS": "0.0.0.0:29052",
+    "CORE_PEER_GOSSIP_BOOTSTRAP": "peer0.general.uae.com:29051",
+    "CORE_PEER_GOSSIP_EXTERNALENDPOINT": "peer0.general.uae.com:29051",
+    "CORE_PEER_LOCALMSPID": "GeneralMSP",
+    "CORE_PEER_MSPCONFIGPATH": "/etc/hyperledger/fabric/msp",
+    "CORE_PEER_FILESYSTEMPATH": "/var/hyperledger/production",
+    "CORE_OPERATIONS_LISTENADDRESS": "0.0.0.0:39445",
+    "CORE_LEDGER_STATE_STATEDATABASE": "goleveldb"
+   },
+   "cmd": [
+    "peer",
+    "node",
+    "start"
+   ],
+   "mounts": [
+    {
+     "sub": "net/config",
+     "dst": "/etc/hyperledger/fabric",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/general.uae.com/peers/peer0.general.uae.com/msp",
+     "dst": "/etc/hyperledger/fabric/msp",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/general.uae.com/peers/peer0.general.uae.com/tls",
+     "dst": "/etc/hyperledger/fabric/tls",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/general.uae.com/peers/peer0.general.uae.com/pqc-keystore",
+     "dst": "/etc/hyperledger/fabric/pqc-keystore",
+     "ro": true
+    }
+   ],
+   "data": "/var/hyperledger/production",
+   "ready": "Started peer with ID"
+  },
+  {
+   "name": "peer0.org3.uae.com",
+   "role": "peer",
+   "org": "org3",
+   "image": "fabric",
+   "stage": "node",
+   "env": {
+    "FABRIC_CFG_PATH": "/etc/hyperledger/fabric",
+    "FABRIC_LOGGING_SPEC": "INFO",
+    "CORE_PEER_TLS_ENABLED": "true",
+    "CORE_PEER_PROFILE_ENABLED": "false",
+    "CORE_PEER_TLS_CERT_FILE": "/etc/hyperledger/fabric/tls/server.crt",
+    "CORE_PEER_TLS_KEY_FILE": "/etc/hyperledger/fabric/tls/server.key",
+    "CORE_PEER_TLS_ROOTCERT_FILE": "/etc/hyperledger/fabric/tls/ca.crt",
+    "CORE_PEER_ID": "peer0.org3.uae.com",
+    "CORE_PEER_ADDRESS": "peer0.org3.uae.com:31051",
+    "CORE_PEER_LISTENADDRESS": "0.0.0.0:31051",
+    "CORE_PEER_CHAINCODEADDRESS": "peer0.org3.uae.com:31052",
+    "CORE_PEER_CHAINCODELISTENADDRESS": "0.0.0.0:31052",
+    "CORE_PEER_GOSSIP_BOOTSTRAP": "peer0.org3.uae.com:31051",
+    "CORE_PEER_GOSSIP_EXTERNALENDPOINT": "peer0.org3.uae.com:31051",
+    "CORE_PEER_LOCALMSPID": "Org3MSP",
+    "CORE_PEER_MSPCONFIGPATH": "/etc/hyperledger/fabric/msp",
+    "CORE_PEER_FILESYSTEMPATH": "/var/hyperledger/production",
+    "CORE_OPERATIONS_LISTENADDRESS": "0.0.0.0:39446",
+    "CORE_LEDGER_STATE_STATEDATABASE": "goleveldb"
+   },
+   "cmd": [
+    "peer",
+    "node",
+    "start"
+   ],
+   "mounts": [
+    {
+     "sub": "net/config",
+     "dst": "/etc/hyperledger/fabric",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/org3.uae.com/peers/peer0.org3.uae.com/msp",
+     "dst": "/etc/hyperledger/fabric/msp",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/org3.uae.com/peers/peer0.org3.uae.com/tls",
+     "dst": "/etc/hyperledger/fabric/tls",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/org3.uae.com/peers/peer0.org3.uae.com/pqc-keystore",
+     "dst": "/etc/hyperledger/fabric/pqc-keystore",
+     "ro": true
+    }
+   ],
+   "data": "/var/hyperledger/production",
+   "ready": "Started peer with ID"
+  },
+  {
+   "name": "peer0.org4.uae.com",
+   "role": "peer",
+   "org": "org4",
+   "image": "fabric",
+   "stage": "node",
+   "env": {
+    "FABRIC_CFG_PATH": "/etc/hyperledger/fabric",
+    "FABRIC_LOGGING_SPEC": "INFO",
+    "CORE_PEER_TLS_ENABLED": "true",
+    "CORE_PEER_PROFILE_ENABLED": "false",
+    "CORE_PEER_TLS_CERT_FILE": "/etc/hyperledger/fabric/tls/server.crt",
+    "CORE_PEER_TLS_KEY_FILE": "/etc/hyperledger/fabric/tls/server.key",
+    "CORE_PEER_TLS_ROOTCERT_FILE": "/etc/hyperledger/fabric/tls/ca.crt",
+    "CORE_PEER_ID": "peer0.org4.uae.com",
+    "CORE_PEER_ADDRESS": "peer0.org4.uae.com:32051",
+    "CORE_PEER_LISTENADDRESS": "0.0.0.0:32051",
+    "CORE_PEER_CHAINCODEADDRESS": "peer0.org4.uae.com:32052",
+    "CORE_PEER_CHAINCODELISTENADDRESS": "0.0.0.0:32052",
+    "CORE_PEER_GOSSIP_BOOTSTRAP": "peer0.org4.uae.com:32051",
+    "CORE_PEER_GOSSIP_EXTERNALENDPOINT": "peer0.org4.uae.com:32051",
+    "CORE_PEER_LOCALMSPID": "Org4MSP",
+    "CORE_PEER_MSPCONFIGPATH": "/etc/hyperledger/fabric/msp",
+    "CORE_PEER_FILESYSTEMPATH": "/var/hyperledger/production",
+    "CORE_OPERATIONS_LISTENADDRESS": "0.0.0.0:39447",
+    "CORE_LEDGER_STATE_STATEDATABASE": "goleveldb"
+   },
+   "cmd": [
+    "peer",
+    "node",
+    "start"
+   ],
+   "mounts": [
+    {
+     "sub": "net/config",
+     "dst": "/etc/hyperledger/fabric",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/org4.uae.com/peers/peer0.org4.uae.com/msp",
+     "dst": "/etc/hyperledger/fabric/msp",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/org4.uae.com/peers/peer0.org4.uae.com/tls",
+     "dst": "/etc/hyperledger/fabric/tls",
+     "ro": true
+    },
+    {
+     "sub": "net/crypto-material/peerOrganizations/org4.uae.com/peers/peer0.org4.uae.com/pqc-keystore",
+     "dst": "/etc/hyperledger/fabric/pqc-keystore",
+     "ro": true
+    }
+   ],
+   "data": "/var/hyperledger/production",
+   "ready": "Started peer with ID"
+  },
+  {
+   "name": "chaincode-government",
+   "role": "chaincode",
+   "org": "government",
+   "image": "chaincode",
+   "stage": "chaincode",
+   "env": {
+    "CHAINCODE_SERVER_ADDRESS": "0.0.0.0:9998"
+   },
+   "env_file": {
+    "CHAINCODE_ID": "net/chaincode-pkg/government/package-id"
+   },
+   "mounts": []
+  },
+  {
+   "name": "chaincode-general",
+   "role": "chaincode",
+   "org": "general",
+   "image": "chaincode",
+   "stage": "chaincode",
+   "env": {
+    "CHAINCODE_SERVER_ADDRESS": "0.0.0.0:9998"
+   },
+   "env_file": {
+    "CHAINCODE_ID": "net/chaincode-pkg/general/package-id"
+   },
+   "mounts": []
+  },
+  {
+   "name": "chaincode-org3",
+   "role": "chaincode",
+   "org": "org3",
+   "image": "chaincode",
+   "stage": "chaincode",
+   "env": {
+    "CHAINCODE_SERVER_ADDRESS": "0.0.0.0:9998"
+   },
+   "env_file": {
+    "CHAINCODE_ID": "net/chaincode-pkg/org3/package-id"
+   },
+   "mounts": []
+  },
+  {
+   "name": "chaincode-org4",
+   "role": "chaincode",
+   "org": "org4",
+   "image": "chaincode",
+   "stage": "chaincode",
+   "env": {
+    "CHAINCODE_SERVER_ADDRESS": "0.0.0.0:9998"
+   },
+   "env_file": {
+    "CHAINCODE_ID": "net/chaincode-pkg/org4/package-id"
+   },
+   "mounts": []
+  }
+ ],
+ "scripts": {
+  "crypto": "01-crypto.sh",
+  "channel": "02-channel.sh",
+  "enroll": "03-enroll.sh",
+  "install": "04-install.sh",
+  "commit": "05-commit.sh"
+ }
+}
