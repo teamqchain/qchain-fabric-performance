@@ -1,6 +1,6 @@
 # QChain Fabric Performance: Consolidated Plan
 
-**Version 1.2, 22 November 2026.** Status: **plan approved by the project lead; the test machine set up and qualified (22 Nov); the trial (E0) is next.** The study: ECDSA against ML-DSA-44 identities on QChain's Fabric architecture, as transactions, peers and organisations grow. Code and results live in the private repository `teamqchain/qchain-fabric-performance`; the test machine is a dedicated university virtual machine (§3).
+**Version 1.2, 22 November 2026.** Status: **complete: the trial (E0) passed on 22 Nov, the main session (E1, E2, E3) ran on 23 Nov, and the findings are in [results.md](results.md); the paper draft is next.** The study: ECDSA against ML-DSA-44 identities on QChain's Fabric architecture, as transactions, peers and organisations grow. Code and results live in the private repository `teamqchain/qchain-fabric-performance`; the test machine is a dedicated university virtual machine (§3).
 
 **This copy lives in the repository as `docs/plan.md`; it is the current plan. Where it disagrees with `docs/methodology.md` or `docs/data-dictionary.md`, those describe what the code does and win.** The reason for each choice is in `docs/decisions-log.md`; how the plan reached this version, and every earlier value, is in `docs/history.md`.
 
@@ -73,7 +73,7 @@ Every difference from QChain's live network is listed in [live-differences.md](l
 
 **E2:** one `getCredential` read on a fresh connection (new TLS handshake, new Gateway, then the read) against the same read on a connection already open. Reads never reach the orderer, so the block settings play no part.
 
-**E3:** writes sent open-loop at 10, 25, 50, 75, 90, 100 and 110 % of the ECDSA write saturation at (2,2) measured in the trial; the same rates for both arms, so the ML-DSA-44 arm reaches overload earlier. At most 480 writes in flight (below the gateway's limit of 500); a send beyond that is counted as dropped. Each repetition runs in a fresh (2,2) network of its own: one repetition writes about 100,000 transactions, and its own network keeps that load out of every E1 ledger (ledger growth is a measured result, M9).
+**E3:** writes sent open-loop at 10, 25, 50, 75, 90, 100 and 110 % of the ECDSA write saturation at (2,2) measured in the trial; the same rates for both arms, so the ML-DSA-44 arm reaches overload earlier. At most 480 writes in flight (below the gateway's limit of 500); a send beyond that is counted as dropped. Each repetition runs in a fresh (2,2) network of its own: one repetition sends about 95,500 writes (7 rates for 60 s each), and its own network keeps that load out of every E1 ledger (ledger growth is a measured result, M9).
 
 ## 5. Grid
 
@@ -88,7 +88,7 @@ Long-running containers per topology = 1 orderer + P peers + O chaincode servers
 | (4,4) (4,8) | 1 / 2 | 3 | 13 / 17 |
 | (8,8) | 1 | 5 | 25 |
 
-Size of a credential write (`issueCredential`, 1,411 transactions per arm in a smoke session): at one endorsement 20.0 KB (ECDSA) and 39.4 KB (ML-DSA-44), of which certificates 2.4 and 17.0 KB; each further endorsement adds a certificate and a signature, about 0.9 KB (ECDSA) and 8.1 KB (ML-DSA-44). Estimated from these: 2 endorsements 20.9 and 47.5 KB; 3: 21.8 and 55.6 KB; 5: 23.6 and 71.8 KB (the study measures them).
+Size of a credential write (`issueCredential`), measured in the main session (`bytes.csv`, 8 peers): at one endorsement 20.6 KB (ECDSA) and 39.9 KB (ML-DSA-44), of which certificates 2.4 and 17.0 KB; each further endorsement adds a certificate and a signature, about 0.9 KB (ECDSA) and 8.1 KB (ML-DSA-44): 2 endorsements 21.5 and 48.0 KB; 3: 22.4 and 56.1 KB; 5: 24.1 and 72.3 KB.
 
 ## 6. Workload and procedure
 
@@ -171,8 +171,8 @@ One machine (peers share the CPU, no real network delay; the reference paper had
 1. Repository and revert list (done 16 Nov).
 2. Code every component (done 16 Nov; updated 17 and 22 Nov).
 3. Test machine set up and qualified; images built natively on it; smoke session and the (8,8) check passed (22 Nov).
-4. **E0, the trial;** report the values (C, E3's reference, memory, disk, time); the project lead approves; freeze.
-5. The main session (E1, E2, E3), in one or more sittings.
-6. Analysis on the test machine (`qfp.py analyse`), then `qfp.py publish` (privacy scan, `SHA256SUMS`). **Transfer of the results:** the machine has no access to the team's GitHub, so the published folder `results/<session>/` is packed on the test machine into one archive with its sha256 (`tar -czf ../<session>-results.tar.gz -C results <session>`, kept in `~/qfp/`, outside the repository), moved to the development laptop by the remote desktop's file transfer into `~/Desktop/qfp-vm-transfer/`, checked there against its sha256 and unpacked into the repository's `results/`; `SHA256SUMS` inside the folder is checked again. Figures, tables and results documents are made on the laptop from the published folder, which is committed with the project lead's approval.
-7. Machines reverted (revert list).
-8. Paper draft.
+4. E0, the trial; report the values (C, E3's reference, memory, disk, time); the project lead approves; freeze (done 22 and 23 Nov: C = 300, E3's reference 346.2 writes/s, no split).
+5. The main session (E1, E2, E3), in one or more sittings (done 23 Nov).
+6. Analysis on the test machine (`qfp.py analyse`), then `qfp.py publish` (privacy scan, `SHA256SUMS`). **Transfer of the results:** the machine has no access to the team's GitHub, so the published folder `results/<session>/` is packed on the test machine into one archive with its sha256 (`tar -czf ../<session>-results.tar.gz -C results <session>`, kept in `~/qfp/`, outside the repository), moved to the development laptop by the remote desktop's file transfer into `~/Desktop/qfp-vm-transfer/`, checked there against its sha256 and unpacked into the repository's `results/`; `SHA256SUMS` inside the folder is checked again. Figures, tables and results documents are made on the laptop from the published folder, which is committed with the project lead's approval (done 23 Nov: [results.md](results.md)).
+7. Machines reverted (revert list) (done 23 Nov; the list then left the repository).
+8. **Paper draft** (next).

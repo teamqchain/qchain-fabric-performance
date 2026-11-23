@@ -31,11 +31,11 @@
 | **Test machine** | a dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB), set up and qualified on 22 November 2026; every change made to it was reverted on 23 November 2026 |
 | **Images** | built natively on the test machine (x86-64); the chaincode image's dependency tree equals the live image's |
 | **Measurements** | the trial (E0) passed on 22 November (7 networks, 30 runs, no failure) and its values were frozen on 23 November: C = 300, E3's reference rate 346.2 writes/s, no split; the main session (E1, E2, E3) completed on 23 November: 30 networks, 1,000 runs, every run clean on its first attempt |
-| **Results** | analysed (200 cells, 100 ECDSA against ML-DSA-44 comparisons, 73 figures), published after the privacy scan and moved to the development laptop, where the analysis reproduces the tables byte for byte |
+| **Results** | analysed (200 cells, 100 ECDSA against ML-DSA-44 comparisons, 73 figures) and published after the privacy scan in [results/main-1/](results/main-1/); the analysis reproduces every table byte for byte from the raw records; findings in [docs/results.md](docs/results.md) |
 | **Next** | the paper draft |
 
 > ⚠️ **Private until publication.** This repository becomes public when the paper is published. Credentials never enter
-> any file, and every run folder will pass an automatic privacy scan before it is committed.
+> any file, and every published file passed an automatic privacy scan before it was committed.
 
 ---
 
@@ -77,7 +77,7 @@ This repository answers it by repeating the design of Nasir, Qasse, Abu Talib an
   host monitor + canary                  results/ (every transaction, checksummed)
         │
         ▼
-  analysis/  ──▶  tables T1–T6 · figures F1–F16
+  analysis/  ──▶  tables · figures F2–F16 (73)
 
  vCPU 7: the rest of the machine (system services, Docker's daemon, desktop, launcher, driver, host monitor)
 ```
@@ -147,7 +147,7 @@ qchain-fabric-performance/
 ├── README.md                this file
 ├── LICENSE
 ├── docker/                  Dockerfiles: fabric (peer, orderer, CA, tools; x86-64, -tags pqc), chaincode, client, analysis
-│   └── chaincode-lock/      the live chaincode image's lock file (recorded in step 3)
+│   └── chaincode-lock/      the live chaincode image's dependency tree and pins (the build checks against them)
 ├── network/
 │   ├── live/                qchain-network's files, byte for byte (SHA256SUMS)
 │   └── gen/qfp_gen.py       one network from the live files: O organisations, P peers, ECDSA or ML-DSA-44
@@ -157,9 +157,8 @@ qchain-fabric-performance/
 │   └── qfp.py               the driver: images, networks, runs, Docker statistics, quality, trial report, analysis, publish
 ├── monitor/monitor-linux.sh the host monitor: other CPU on the study's CPUs, steal, isolation, package updates
 ├── analysis/                run_all.py (tables, figures F2–F16), figstyle.py, selftest.py
-├── config/                  thresholds.json, frozen after the trial (written by `qfp.py freeze`)
-├── results/                 published sessions (raw/ is local and ignored)
-└── docs/                    plan, decisions, history, methodology, data dictionary, provenance, revert list, differences from live
+├── results/main-1/          the published main session: raw records, tables, 73 figures, SHA256SUMS (raw/ is local and ignored)
+└── docs/                    plan, methodology, results, data dictionary, provenance, decisions, history, differences from live
 ```
 
 ---
@@ -200,7 +199,7 @@ scripts/run-linux.sh release                          # CPU settings and automat
 
 ## Recent updates
 
-- **23 November 2026: main session complete.** 30 networks and 1,000 runs, every run clean on its first attempt; the analysis gives 200 cells and 100 ECDSA against ML-DSA-44 comparisons. The results were published after the privacy scan and moved to the development laptop, where the analysis reproduces the tables byte for byte and the figures were finished.
+- **23 November 2026: main session complete.** 30 networks and 1,000 runs, every run clean on its first attempt; the analysis gives 200 cells, 100 ECDSA against ML-DSA-44 comparisons and 73 figures, and reproduces every table byte for byte. The published session and the results document are in the repository, and the test machine is restored.
 - **23 November 2026: trial passed, values frozen, main session started.** The trial ran 7 networks and 30 runs in 42 minutes without a failure; the project lead froze C = 300, E3's reference rate 346.2 writes/s and no split of the (8,8) ML-DSA-44 network. The main session started the same night.
 - **22 November 2026: the test machine.** A dedicated university virtual machine (Ubuntu 22.04, Intel Xeon Silver 4210R, 8 vCPUs, 26.4 GiB) set up and qualified: a constant speed under sustained load, the study's containers isolated on seven of its vCPUs, the images built natively; a smoke session and the largest network, (8,8) with ML-DSA-44, passed. Plan 1.2.
 - **17 November 2026: plan 1.1 approved.** QChain contributes its architecture; every network setting is the study's own and identical in both arms (blocks of 100 transactions, no container memory limits). Experiments E0 to E3.
@@ -297,4 +296,4 @@ See [LICENSE](LICENSE).
 
 ## Disclaimer
 
-This is an academic research project. The measurements will describe one machine under controlled conditions and the team's Fabric fork of 30 October 2026; they are not a certification of any algorithm or product. The live network's host is a tested environment only. Both networks of the study are built for the test machine and differ from QChain's live network in the ways listed in [docs/live-differences.md](docs/live-differences.md).
+This is an academic research project. The measurements describe one machine under controlled conditions and the team's Fabric fork of 30 October 2026; they are not a certification of any algorithm or product. The live network's host is a tested environment only. Both networks of the study are built for the test machine and differ from QChain's live network in the ways listed in [docs/live-differences.md](docs/live-differences.md).

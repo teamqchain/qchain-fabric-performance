@@ -17,14 +17,14 @@ Analysis of the main session `main-1`, run on the test machine on 23 November 20
 2. **The cost grows with the organisations, not with the peers.** At 10,000 writes the throughput ratio stays at 0.72 to 0.73 from 1 to 8 peers in one organisation, but falls from 0.72 (1 organisation) to 0.60 (8 organisations) at 8 peers, because every extra organisation adds an endorsement, and with it an ML-DSA-44 certificate and signature, to each transaction.
 3. **Reads cost less.** For 10,000 reads, ML-DSA-44 reaches 0.81 to 0.86 of ECDSA's throughput in every topology (all ten comparisons are differences); for 1,000 reads 0.73 to 0.84 (seven of ten). Short read bursts (10 and 100 reads at one peer) show no difference.
 4. **Small bursts hide the cost.** Bursts of 1 and 10 writes wait for the 2 s block timer in both arms (about 2.0 s), so the identities do not matter there.
-5. **Size is the largest effect.** A credential write is 20.6 KB with ECDSA and 39.9 KB with ML-DSA-44 at one endorsement (1.94×), and 24.1 against 72.3 KB at five (3.0×). Certificates make most of the difference: 811 against 5,681 bytes each; signatures are 70 against 2,420 bytes. The ledger grows by 30 to 33 GB per million writes per peer with ECDSA and by 49 to 82 GB with ML-DSA-44, and the orderer sends twice as many bytes per write.
+5. **Size is the largest effect.** A credential write is 20.6 KB with ECDSA and 39.9 KB with ML-DSA-44 at one endorsement (1.94×), and 24.1 against 72.3 KB at five (3.0×). Certificates make most of the difference: 811 against 5,681 bytes each; signatures are 70 against 2,420 bytes. The ledger grows by 30 to 33 GB per million writes per peer with ECDSA and by 49 to 82 GB with ML-DSA-44, and the orderer sends nearly twice as many bytes per write (1.94×).
 6. **CPU and memory follow.** At 8 peers, a write costs 1.5 to 1.7 times the CPU time with ML-DSA-44 (148.5 against 89.6 ms at 8 organisations), and the whole network's peak memory is 1.18 to 1.29 times as high (4.9 against 3.8 GB at 8 organisations).
 7. **A new connection costs 1.4 times as much.** A read on a new connection (with its TLS handshake) takes 6.6 ms with ML-DSA-44 against 4.7 ms with ECDSA; on an open connection 3.7 against 2.4 ms.
 8. **Under offered load, ML-DSA-44 saturates at about two thirds of ECDSA's rate.** At (2,2), ECDSA keeps up to about 333 writes/s; ML-DSA-44 tops out at 229 to 242 writes/s and drops sends from 260 writes/s on, where its median latency rises to 1.7 to 1.9 s.
 
 ## 1. Data quality
 
-All 1,000 runs of E1 are clean on their first attempt (`runs.csv`: no flag, no repeat, no error), so every cell uses all five repetitions. The host monitor saw no CPU use on the study's CPUs outside the study above the 5 % threshold and no steal; the canary stayed within its 3 % band.
+All 1,000 runs of E1 are clean on their first attempt (`runs.csv`: no flag, no repeat, no error), so every cell uses all five repetitions. No run passed the thresholds for CPU use on the study's CPUs outside the study (5 %) or for steal (2 %), the CPU isolation held at every sample, and the canary stayed within its 3 % band.
 
 The intervals of reads are wider than those of writes (for example 0.71 to 1.51 for the ratio of 10 reads at one peer), because a read burst is short and one slow repetition moves its median. Read ratios close to 1 are therefore reported as no difference, and small read differences (under about 10 %) should be read with care.
 
@@ -54,7 +54,7 @@ Figures F5 (execution time, latency and throughput against 1, 2, 4 and 8 peers, 
 | 4 | 348 / 253 /s | 0.73 (0.68–0.78) | 1,173 / 982 /s | 0.84 (0.80–0.99) |
 | 8 | 239 / 171 /s | 0.72 (0.65–0.79) | 1,134 / 974 /s | 0.86 (0.80–0.88) |
 
-More peers in one organisation lower both arms' write throughput alike (each peer validates and commits every block on the same machine), so the ratio stays at 0.72 to 0.73. One endorsement is enough in one organisation, so the transaction itself does not grow with the peers. Reads go to the gateway peer only and stay flat for both arms. At 1,000 transactions the pattern is the same (F5).
+More peers in one organisation lower both arms' write throughput alike (each peer validates and commits every block on the same machine), so the ratio stays at 0.72 to 0.73. One endorsement is enough in one organisation, so the transaction itself does not grow with the peers. Reads go to the gateway peer only and stay flat for both arms. At 1,000 writes the write ratio stays at 0.71 to 0.75 (F5, F6).
 
 ## 4. RQ3: more organisations (4 and 8 peers)
 
@@ -90,7 +90,7 @@ Figures F11 to F13.
 
 - **CPU per write** (8 peers, 10,000 writes): 24.5, 32.8, 47.0 and 89.6 ms with ECDSA against 36.7, 51.8, 74.6 and 148.5 ms with ML-DSA-44 at 1, 2, 4 and 8 organisations (1.50 to 1.66×). The peers that validate and commit (the "other peers") take most of it.
 - **Peak memory** (8 peers): the whole network 3.2 to 3.8 GB with ECDSA against 3.8 to 4.9 GB with ML-DSA-44; the gateway peer 391 to 445 MB against 611 to 699 MB.
-- **Orderer egress** (one organisation): 20.8, 41.5, 82.9 and 165.6 KB per write with ECDSA against 40.3, 80.5, 160.9 and 321.5 KB with ML-DSA-44 at 1, 2, 4 and 8 peers: it doubles with ML-DSA-44 and with every doubling of the peers.
+- **Orderer egress** (one organisation): 20.8, 41.5, 82.9 and 165.6 KB per write with ECDSA against 40.3, 80.5, 160.9 and 321.5 KB with ML-DSA-44 at 1, 2, 4 and 8 peers: it is 1.94 times as much with ML-DSA-44, and it doubles with every doubling of the peers in both arms.
 
 ### Stages of a write
 
@@ -127,4 +127,4 @@ Table `setup.csv`: bringing a network up took 20 to 76 s with ECDSA and 22 to 64
 
 ## 6. What it means for QChain
 
-QChain's live network (two organisations, two peers) corresponds to the (2,2) cells: switching its identities from ECDSA to ML-DSA-44 costs about 31 % of write throughput (0.69 at 10,000 writes), 15 % of read throughput, and roughly doubles the ledger and the orderer's traffic per credential. For a credential registry these are moderate costs; they grow with every organisation that must endorse a credential.
+QChain's live network (two organisations, two peers) corresponds to the (2,2) cells: switching its identities from ECDSA to ML-DSA-44 costs about 31 % of write throughput (0.69 at 10,000 writes) and 15 % of read throughput, and nearly doubles the ledger (1.87×) and the orderer's traffic per credential. For a credential registry these are moderate costs; they grow with every organisation that must endorse a credential.

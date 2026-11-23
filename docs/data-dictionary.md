@@ -1,6 +1,6 @@
 # Data dictionary
 
-Every file a session writes. Raw files live in `results/raw/<session>/` (not committed); `scripts/qfp.py publish` copies what is kept into `results/<session>/` after the privacy scan, with `SHA256SUMS` written last. Times in `*_ns` columns are nanoseconds since the run's t0 (monotonic clock of the client); `-1` means the step was not reached.
+Every file a session writes. Raw files live in `results/raw/<session>/` (not committed); `scripts/qfp.py publish` copies what is kept into `results/<session>/` after the privacy scan, with `SHA256SUMS` written last: `plan.json`, `state.json`, `driver.log`, `session-host.txt`, `trial-report.json` (a trial only), `host/`, `analysis/` and, per network, `network.json`, `runs/`, `out/`, `setup.log`, `gen/client.json` and `gen/topology.json`. The published main session is `results/main-1/`. Times in `*_ns` columns are nanoseconds since the run's t0 (monotonic clock of the client); `-1` means the step was not reached.
 
 ## Session folder
 
@@ -45,3 +45,7 @@ Every file a session writes. Raw files live in `results/raw/<session>/` (not com
 | `ratios.csv`, `ratios.md` | ML-DSA-44 / ECDSA per cell, with intervals and `_differs` |
 | `bytes.csv` | per topology and arm (a split network's halves averaged): mean bytes per write by part, transactions per block, ledger growth per peer |
 | `e2.csv`, `e3.csv`, `setup.csv` | E2 distributions, E3 levels (offered and achieved rate, dropped, latency), bring-up timings |
+
+## Analysis: `analysis/figures/`
+
+Each figure as PDF and PNG; in F2 to F8 one figure holds one function. Names: `F<n>-<metric>-<setting>-<write|read>-<lines|bars>` for F2 to F5 and F7 (for example `F5-latency-peers-T1000-read-lines`), `F6-ratio-peers-x-T-<write|read>` and `F8-ratio-orgs-x-peers-<write|read>` for the heatmaps, and one name each for F9 to F16 (`F12` has two: network total and gateway peer). 73 figures in the main session.
