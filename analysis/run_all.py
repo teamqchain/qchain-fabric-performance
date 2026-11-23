@@ -30,6 +30,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import figstyle as fs  # noqa: E402
+from matplotlib.ticker import FuncFormatter  # noqa: E402
 
 B = 10000
 RNG = np.random.default_rng(20261116)
@@ -339,15 +340,32 @@ def fmt_ms(v):
         return "%.1f ms" % v
     if v < 1000:
         return "%.0f ms" % v
-    return "%.2f s" % (v / 1000)
+    if v < 10000:
+        return "%.2f s" % (v / 1000)
+    if v < 100000:
+        return "%.1f s" % (v / 1000)
+    return "{:,.0f} s".format(v / 1000)
 
 
 def fmt_s(v):
-    return "" if v != v else ("%.2f s" % v if v < 10 else "%.0f s" % v)
+    return "" if v != v else fmt_ms(v * 1000)
 
 
 def fmt_tps(v):
-    return "" if v != v else ("%.1f/s" % v if v < 100 else "%.0f/s" % v)
+    return "" if v != v else ("%.1f/s" % v if v < 100 else "{:,.0f}/s".format(v))
+
+
+def unit_ticks(ax, unit, which="y"):
+    """Plain-unit tick labels on a linear axis, in the unit of the values plotted: "ms" (shown in seconds once the
+    axis reaches 1 s), "s", "tps", "MB" or "bytes" (shown in KB)."""
+    axis = ax.yaxis if which == "y" else ax.xaxis
+    hi = (ax.get_ylim() if which == "y" else ax.get_xlim())[1]
+    f = {"ms": (lambda v, _: "%g s" % (v / 1000)) if hi >= 1000 else (lambda v, _: "%g ms" % v),
+         "s": lambda v, _: "%g s" % v,
+         "MB": lambda v, _: "{:,.0f} MB".format(v),
+         "bytes": lambda v, _: "%g KB" % (v / 1000),
+         "tps": lambda v, _: "{:,.0f}/s".format(v) if v == int(v) else "%g/s" % v}[unit]
+    axis.set_major_formatter(FuncFormatter(f))
 
 
 def cell(cs, ident, o, p, fn, t):
@@ -357,53 +375,102 @@ def cell(cs, ident, o, p, fn, t):
     return None
 
 
-def lines_vs_t(cs, outdir, o, p, metric, ylabel, name, title, fmt, log_y=True, unit="ms"):
-    fig, axes = fs.new_fig(7.0, 3.0, 1, 2)
-    for ax, fn in zip(axes, ("issue", "get")):
-        series = {}
-        allv = []
-        for ident in fs.ARMS:
-            pts = [(t, cell(cs, ident, o, p, fn, t)) for t in (1, 10, 100, 1000, 10000)]
-            pts = [(t, c) for t, c in pts if c and c[metric] == c[metric]]
-            if not pts:
-                continue
-            xs = [t for t, _ in pts]
-            ys = [c[metric] for _, c in pts]
-            allv += ys + [c[metric + "_lo"] for _, c in pts if c[metric + "_lo"] == c[metric + "_lo"]] + \
-                [c[metric + "_hi"] for _, c in pts if c[metric + "_hi"] == c[metric + "_hi"]]
-            lo = [c[metric] - c[metric + "_lo"] if c[metric + "_lo"] == c[metric + "_lo"] else 0 for _, c in pts]
-            hi = [c[metric + "_hi"] - c[metric] if c[metric + "_hi"] == c[metric + "_hi"] else 0 for _, c in pts]
-            ax.errorbar(xs, ys, yerr=[lo, hi], color=fs.ARMCOL[ident], marker=fs.ARMMARK[ident], markersize=3.5,
+FN_LABEL = {"issue": ("write", "writes (issueCredential)"), "get": ("read", "reads (getCredential)")}
+# metric: file-name part, title, axis label, value format, unit
+FIG_METRICS = {"exec_s": ("execution-time", "Execution time", "execution time", fmt_s, "s"),
+           "lat_mean_ms": ("latency", "Mean latency", "mean latency", fmt_ms, "ms"),
+           "tps": ("throughput", "Throughput", "throughput", fmt_tps, "tps")}
+LOG_TICKS = {"ms": [(0.1, "0.1 ms"), (1, "1 ms"), (10, "10 ms"), (100, "100 ms"), (1000, "1 s"), (10000, "10 s"), (100000, "100 s")],
+             "s": [(0.0001, "0.1 ms"), (0.001, "1 ms"), (0.01, "10 ms"), (0.1, "100 ms"), (1, "1 s"), (10, "10 s"), (100, "100 s"),
+                   (1000, "1,000 s")],
+             "tps": [(0.1, "0.1/s"), (1, "1/s"), (10, "10/s"), (100, "100/s"), (1000, "1,000/s"), (10000, "10,000/s")]}
+
+
+
+def tick_text(v, unit):
+    if unit == "ms":
+        return "%g ms" % v if v < 1000 else "%g s" % (v / 1000)
+    if unit == "s":
+        return "%g ms" % (v * 1000) if v < 1 else "%g s" % v
+    return "{:,.0f}/s".format(v) if v >= 1 else "%g/s" % v
+
+
+def log_ticks(unit, lo, hi):
+    """Plain-unit ticks for a logarithmic value axis: powers of ten, or steps of 1, 2 and 5 when the values span
+    less than one and a half powers of ten (so that the axis keeps more than one labelled tick)."""
+    if hi / lo >= 30:
+        return LOG_TICKS[unit]
+    return [(m * 10.0 ** e, tick_text(m * 10.0 ** e, unit)) for e in range(-4, 6) for m in (1, 2, 5)]
+
+
+def metric_fig(cs, outdir, xs, keyfn, metric, fn, kind, name, title, xlabel, xlog, ylog):
+    """One metric of one function against one setting, both arms: kind "lines" (the 95 % interval and the value at
+    every point) or "bars" (the value at the end of every bar). keyfn(ident, x, fn) gives the cell. xlog: the base
+    of the setting's logarithmic axis in the line charts (10 for the burst size, 2 for peers and organisations);
+    ylog: a logarithmic value axis (the burst-size figures, whose values span several orders of magnitude)."""
+    _, _, ylabel, fmt, unit = FIG_METRICS[metric]
+    fig, ax = fs.new_fig(6.2, 2.8)
+    w = 0.38
+    texts, allv, series = [], [], {}
+    ok = lambda v: v is not None and v == v  # noqa: E731
+    for j, ident in enumerate(fs.ARMS):
+        pts = [(i, x, keyfn(ident, x, fn)) for i, x in enumerate(xs)]
+        pts = [(i, x, c) for i, x, c in pts if c and ok(c.get(metric))]
+        if not pts:
+            continue
+        ys = [c[metric] for _, _, c in pts]
+        lo = [c.get(metric + "_lo") for _, _, c in pts]
+        hi = [c.get(metric + "_hi") for _, _, c in pts]
+        allv += ys + [v for v in lo + hi if ok(v)]
+        if kind == "bars":
+            pos = [i + (j - 0.5) * w for i, _, _ in pts]
+            ax.bar(pos, ys, width=w, color=fs.ARMCOL[ident], label=fs.ARMNAME[ident])
+            texts += fs.label_bars(ax, pos, ys, [fmt(v) for v in ys], orient="v")
+        else:
+            px = [x for _, x, _ in pts]
+            el = [y - v if ok(v) else 0 for y, v in zip(ys, lo)]
+            eh = [v - y if ok(v) else 0 for y, v in zip(ys, hi)]
+            ax.errorbar(px, ys, yerr=[el, eh], color=fs.ARMCOL[ident], marker=fs.ARMMARK[ident], markersize=3.5,
                         capsize=2, label=fs.ARMNAME[ident])
-            series[ident] = dict(zip(xs, ys))
-        # at each burst size the higher value is labelled above its point, the lower one below
+            series[ident] = dict(zip(px, ys))
+    if kind == "lines":
+        # at each setting the higher value is labelled above its point, the lower one below
         for x in sorted({x for s in series.values() for x in s}):
             here = sorted(((s[x], ident) for ident, s in series.items() if x in s), reverse=True)
             for rank, (y, ident) in enumerate(here):
                 ax.annotate(fmt(y), (x, y), xytext=(0, 6 if rank == 0 else -10), textcoords="offset points",
-                            ha="center", fontsize=5.5, color=fs.ARMCOL[ident])
-        fs.log_axis(ax, "x", [(1, "1"), (10, "10"), (100, "100"), (1000, "1,000"), (10000, "10,000")],
-                    "transactions in the burst")
-        if log_y:
-            if unit == "ms":
-                fs.log_axis(ax, "y", [(1, "1 ms"), (10, "10 ms"), (100, "100 ms"), (1000, "1 s"), (10000, "10 s"), (100000, "100 s")], ylabel)
-            elif unit == "s":
-                fs.log_axis(ax, "y", [(0.01, "10 ms"), (0.1, "0.1 s"), (1, "1 s"), (10, "10 s"), (100, "100 s"), (1000, "1,000 s")], ylabel)
-            else:
-                fs.log_axis(ax, "y", [(1, "1/s"), (10, "10/s"), (100, "100/s"), (1000, "1,000/s")], ylabel)
-        else:
-            ax.set_ylabel(ylabel)
-        if allv and log_y:
-            ax.set_ylim(min(v for v in allv if v > 0) / 3, max(allv) * 3)
-        ax.set_xlim(0.5, 20000)
-        ax.set_title({"issue": "write (issueCredential)", "get": "read (getCredential)"}[fn])
+                            ha="center", fontsize=5.5, color=fs.ARMCOL[ident], zorder=5,
+                            bbox=dict(boxstyle="square,pad=0.1", fc="white", ec="none", alpha=0.85))
+        fs.log_axis(ax, "x", [(x, "{:,}".format(x)) for x in xs], xlabel, base=xlog)
+        m = 2.0 if xlog == 10 else 1.35
+        ax.set_xlim(xs[0] / m, xs[-1] * m)
         ax.grid(True, which="major")
-    h, lab = axes[0].get_legend_handles_labels()
+    else:
+        ax.set_xticks(range(len(xs)))
+        ax.set_xticklabels(["{:,}".format(x) for x in xs])
+        ax.set_xlabel(xlabel)
+    if ylog and allv:
+        lo_v, hi_v = min(v for v in allv if v > 0), max(allv)
+        fs.log_axis(ax, "y", log_ticks(unit, lo_v, hi_v), ylabel)
+        ax.set_ylim(lo_v / 3, hi_v * 3)
+    else:
+        ax.set_ylabel(ylabel)
+        if allv and kind == "lines":  # lines zoom to the data; the bar chart of the same values starts at zero
+            lo_v, hi_v = min(allv), max(allv)
+            span = max(hi_v - lo_v, 0.1 * hi_v)
+            ax.set_ylim(max(0, lo_v - 0.4 * span), hi_v + 0.4 * span)
+        elif allv:
+            ax.set_ylim(0, max(allv) * 1.05)
+    h, lab = ax.get_legend_handles_labels()
     fs.headline(fig, title, h, lab, ncol=2)
+    if kind == "bars":
+        fs.fit_labels(fig, ax, texts, orient="v")
+    if not ylog:
+        unit_ticks(ax, unit)
     fs.save(fig, name, outdir)
 
 
-def bars_vs(cs, outdir, xs, keyfn, metric, xlabel, ylabel, name, title, fmt, fn="issue", t=10000, log_y=False):
+def bars_vs(cs, outdir, xs, keyfn, metric, xlabel, ylabel, name, title, fmt, fn="issue", t=10000, log_y=False, yunit=None):
     fig, ax = fs.new_fig(6.2, 2.8)
     w = 0.38
     texts = []
@@ -423,46 +490,78 @@ def bars_vs(cs, outdir, xs, keyfn, metric, xlabel, ylabel, name, title, fmt, fn=
     h, lab = ax.get_legend_handles_labels()
     fs.headline(fig, title, h, lab, ncol=2)
     fs.fit_labels(fig, ax, texts, orient="v")
+    if yunit:
+        unit_ticks(ax, yunit)
     fs.save(fig, name, outdir)
 
 
-def heatmap(rat, outdir, rows, cols, keyfn, name, title, xlabel, ylabel):
-    fig, axes = fs.new_fig(7.0, 2.9, 1, 2)
-    for ax, fn in zip(axes, ("issue", "get")):
-        m = np.full((len(rows), len(cols)), np.nan)
-        for i, rv in enumerate(rows):
-            for j, cv in enumerate(cols):
-                r = keyfn(rv, cv, fn)
-                if r:
-                    m[i, j] = r["tps_ratio"]
-        im = ax.imshow(m, cmap="PRGn", vmin=0.5, vmax=1.5, aspect="auto", origin="lower")  # neither arm's hue
-        for i in range(len(rows)):
-            for j in range(len(cols)):
-                if m[i, j] == m[i, j]:
-                    ax.text(j, i, "%.2f×" % m[i, j], ha="center", va="center", fontsize=6)
-        ax.set_xticks(range(len(cols)))
-        ax.set_xticklabels(["{:,}".format(c) for c in cols])
-        ax.set_yticks(range(len(rows)))
-        ax.set_yticklabels(["{:,}".format(r) for r in rows])
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
-        ax.set_title({"issue": "write", "get": "read"}[fn])
-    fig.colorbar(im, ax=axes, label="throughput, ML-DSA-44 / ECDSA", shrink=0.8)
+def heatmap(rat, outdir, rows, cols, keyfn, fn, name, title, xlabel, ylabel):
+    """The throughput ratio ML-DSA-44 / ECDSA of one function over two settings (one figure per function)."""
+    fig, ax = fs.new_fig(5.6, 3.0)
+    m = np.full((len(rows), len(cols)), np.nan)
+    for i, rv in enumerate(rows):
+        for j, cv in enumerate(cols):
+            r = keyfn(rv, cv, fn)
+            if r:
+                m[i, j] = r["tps_ratio"]
+    im = ax.imshow(m, cmap="PRGn", vmin=0.5, vmax=1.5, aspect="auto", origin="lower")  # neither arm's hue
+    for i in range(len(rows)):
+        for j in range(len(cols)):
+            if m[i, j] == m[i, j]:
+                ax.text(j, i, "%.2f×" % m[i, j], ha="center", va="center", fontsize=6)
+    ax.set_xticks(range(len(cols)))
+    ax.set_xticklabels(["{:,}".format(c) for c in cols])
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels(["{:,}".format(r) for r in rows])
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    fig.colorbar(im, ax=ax, label="throughput, ML-DSA-44 / ECDSA", shrink=0.85)
     fs.headline(fig, title)
     fs.save(fig, name, outdir)
 
 
-def stacked(rows, labels, parts, partcol, partname, outdir, name, title, ylabel, scale=1.0, fmt=lambda v: "%.1f KB" % (v / 1000)):
+def stacked(rows, labels, parts, partcol, partname, outdir, name, title, ylabel, scale=1.0, fmt=lambda v: "%.1f KB" % (v / 1000),
+            groups=None, xlabel=None):
+    """One stacked bar per row. With groups (one name per row; consecutive rows with the same name form a group,
+    for example the two arms of one setting), the bars stand in groups with a gap between them: each bar is named
+    by its label and each group once, underneath."""
     fig, ax = fs.new_fig(6.2, 3.0)
-    x = np.arange(len(rows))
+    if groups:
+        x, pos = [], 0.0
+        for i, g in enumerate(groups):
+            if i and g != groups[i - 1]:
+                pos += 0.6
+            x.append(pos)
+            pos += 1
+        x = np.array(x)
+    else:
+        x = np.arange(len(rows))
     bottom = np.zeros(len(rows))
     for p in parts:
         v = np.array([r.get(p, 0) * scale for r in rows])
         ax.bar(x, v, bottom=bottom, color=partcol[p], label=partname[p], width=0.6)
         bottom += v
     texts = fs.label_bars(ax, x, bottom, [fmt(v) for v in bottom], orient="v")
-    ax.set_xticks(x)
-    ax.set_xticklabels(labels, fontsize=6)
+    if groups:
+        names, centres, i = [], [], 0
+        while i < len(groups):
+            j = i
+            while j < len(groups) and groups[j] == groups[i]:
+                j += 1
+            names.append(groups[i])
+            centres.append(float(np.mean(x[i:j])))
+            i = j
+        ax.xaxis.remove_overlapping_locs = False  # keep a bar's name where a group's centre falls on it
+        ax.set_xticks(centres, names)
+        ax.set_xticks(x, labels, minor=True)
+        # sizes through tick_params, which reach every tick label (set_xticklabels only reaches those that exist)
+        ax.tick_params(axis="x", which="major", labelsize=6.5, length=0, pad=12)
+        ax.tick_params(axis="x", which="minor", labelsize=6, length=0)
+    else:
+        ax.set_xticks(x)
+        ax.set_xticklabels(labels, fontsize=6)
+    if xlabel:
+        ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     h, lab = ax.get_legend_handles_labels()
     fs.headline(fig, title, h, lab, ncol=3)
@@ -471,52 +570,68 @@ def stacked(rows, labels, parts, partcol, partname, outdir, name, title, ylabel,
 
 
 def figures(cs, rat, byt, e2, e3, outdir):
-    # RQ1: one peer (F2-F4)
-    lines_vs_t(cs, outdir, 1, 1, "exec_s", "execution time", "F2-execution-time-1x1",
-               "Execution time against the burst size, one organisation, one peer", fmt_s, unit="s")
-    lines_vs_t(cs, outdir, 1, 1, "lat_mean_ms", "mean latency", "F3-latency-1x1",
-               "Mean latency against the burst size, one organisation, one peer", fmt_ms)
-    lines_vs_t(cs, outdir, 1, 1, "tps", "throughput", "F4-throughput-1x1",
-               "Throughput against the burst size, one organisation, one peer", fmt_tps, unit="tps")
-    # RQ2: peers (F5, F6)
-    pk = lambda ident, p, fn, t: cell(cs, ident, 1, p, fn, t)  # noqa: E731
+    # F2-F8: every figure holds one metric of one function (write or read), as a line chart and as a bar chart
+    kinds, fns = ("lines", "bars"), ("issue", "get")
+    # RQ1: one organisation, one peer, against the burst size (F2-F4)
+    one = lambda ident, t, fn: cell(cs, ident, 1, 1, fn, t)  # noqa: E731
+    for fig_no, metric in (("F2", "exec_s"), ("F3", "lat_mean_ms"), ("F4", "tps")):
+        slug, mtitle = FIG_METRICS[metric][:2]
+        for fn in fns:
+            for kind in kinds:
+                metric_fig(cs, outdir, [1, 10, 100, 1000, 10000], one, metric, fn, kind,
+                           "%s-%s-1x1-%s-%s" % (fig_no, slug, FN_LABEL[fn][0], kind),
+                           "%s of %s, one organisation, one peer" % (mtitle, FN_LABEL[fn][1]),
+                           "transactions in the burst", 10, True)
+    # RQ2: one organisation, against peers (F5, F6)
     for t in (1000, 10000):
-        bars_vs(cs, outdir, [1, 2, 4, 8], pk, "exec_s", "peers (one organisation)", "execution time",
-                "F5-execution-time-peers-T%d" % t, "Execution time against peers, %s writes" % "{:,}".format(t), fmt_s, t=t)
-        bars_vs(cs, outdir, [1, 2, 4, 8], pk, "lat_mean_ms", "peers (one organisation)", "mean latency",
-                "F5-latency-peers-T%d" % t, "Mean latency against peers, %s writes" % "{:,}".format(t), fmt_ms, t=t)
-        bars_vs(cs, outdir, [1, 2, 4, 8], pk, "tps", "peers (one organisation)", "throughput (transactions per second)",
-                "F5-throughput-peers-T%d" % t, "Throughput against peers, %s writes" % "{:,}".format(t), fmt_tps, t=t)
+        pk = lambda ident, p, fn, t=t: cell(cs, ident, 1, p, fn, t)  # noqa: E731
+        for metric in FIG_METRICS:
+            slug, mtitle = FIG_METRICS[metric][:2]
+            for fn in fns:
+                for kind in kinds:
+                    metric_fig(cs, outdir, [1, 2, 4, 8], pk, metric, fn, kind,
+                               "F5-%s-peers-T%d-%s-%s" % (slug, t, FN_LABEL[fn][0], kind),
+                               "%s of %s, one organisation, %s transactions" % (mtitle, FN_LABEL[fn][1], "{:,}".format(t)),
+                               "peers, one organisation", 2, False)
     rk = lambda p, t, fn: next((r for r in rat if (r["orgs"], r["peers"], r["fn"], r["t"]) == (1, p, fn, t)), None)  # noqa: E731
-    heatmap(rat, outdir, [1, 2, 4, 8], [1, 10, 100, 1000, 10000], rk, "F6-ratio-peers-x-T",
-            "Throughput of ML-DSA-44 relative to ECDSA, one organisation", "transactions in the burst", "peers")
-    # RQ3: organisations (F7, F8)
+    for fn in fns:
+        heatmap(rat, outdir, [1, 2, 4, 8], [1, 10, 100, 1000, 10000], rk, fn, "F6-ratio-peers-x-T-%s" % FN_LABEL[fn][0],
+                "ML-DSA-44 / ECDSA throughput, %s, one organisation" % FN_LABEL[fn][1], "transactions in the burst", "peers")
+    # RQ3: organisations, at 4 and 8 peers, 10,000 transactions (F7, F8)
     for p in (4, 8):
-        ok = lambda ident, o, fn, t, p=p: cell(cs, ident, o, p, fn, t)  # noqa: E731
         orgs = [o for o in (1, 2, 4, 8) if o <= p]
-        bars_vs(cs, outdir, orgs, ok, "tps", "organisations (%d peers in total)" % p, "throughput (transactions per second)",
-                "F7-throughput-orgs-P%d" % p, "Throughput against organisations, %d peers, 10,000 writes" % p, fmt_tps)
-        bars_vs(cs, outdir, orgs, ok, "lat_mean_ms", "organisations (%d peers in total)" % p, "mean latency",
-                "F7-latency-orgs-P%d" % p, "Mean latency against organisations, %d peers, 10,000 writes" % p, fmt_ms)
+        ok = lambda ident, o, fn, p=p: cell(cs, ident, o, p, fn, 10000)  # noqa: E731
+        for metric in FIG_METRICS:
+            slug, mtitle = FIG_METRICS[metric][:2]
+            for fn in fns:
+                for kind in kinds:
+                    metric_fig(cs, outdir, orgs, ok, metric, fn, kind,
+                               "F7-%s-orgs-P%d-%s-%s" % (slug, p, FN_LABEL[fn][0], kind),
+                               "%s of %s, %d peers, 10,000 transactions" % (mtitle, FN_LABEL[fn][1], p),
+                               "organisations, %d peers in total" % p, 2, False)
     ok2 = lambda o, p, fn: next((r for r in rat if (r["orgs"], r["peers"], r["fn"], r["t"]) == (o, p, fn, 10000)), None)  # noqa: E731
-    heatmap(rat, outdir, [1, 2, 4, 8], [1, 2, 4, 8], ok2, "F8-ratio-orgs-x-peers",
-            "Throughput of ML-DSA-44 relative to ECDSA, 10,000 transactions", "peers", "organisations")
+    for fn in fns:
+        heatmap(rat, outdir, [1, 2, 4, 8], [1, 2, 4, 8], ok2, fn, "F8-ratio-orgs-x-peers-%s" % FN_LABEL[fn][0],
+                "ML-DSA-44 / ECDSA throughput, %s, 10,000 transactions" % FN_LABEL[fn][1], "peers", "organisations")
     # RQ4: bytes, ledger, CPU, memory, orderer egress, stages (F9-F14)
     sel = sorted([b for b in byt if b["peers"] == 8], key=lambda b: (b["endorsements"], fs.ARMS.index(b["identity"])))
     if sel:
-        stacked(sel, ["%s\n%d endorsement%s" % (fs.ARMNAME[b["identity"]], b["endorsements"], "s" if b["endorsements"] > 1 else "") for b in sel],
+        stacked(sel, [fs.ARMNAME[b["identity"]] for b in sel],
                 fs.PARTS, fs.PARTCOL, fs.PARTNAME, outdir, "F9-bytes-per-write", "Bytes of one credential write, by part (8 peers)",
-                "bytes per transaction")
+                "kilobytes per transaction", scale=1e-3, fmt=lambda v: "%.1f KB" % v,
+                groups=["%d endorsement%s" % (b["endorsements"], "s" if b["endorsements"] > 1 else "") for b in sel])
     sel = [b for b in byt if b.get("ledger_gb_per_million_writes_per_peer") == b.get("ledger_gb_per_million_writes_per_peer")]
     if sel:
         sel.sort(key=lambda b: (b["orgs"], b["peers"], fs.ARMS.index(b["identity"])))
         fig, ax = fs.new_fig(7.0, 2.8)
-        x = np.arange(len(sel))
+        topos = sorted({(b["orgs"], b["peers"]) for b in sel})
+        w = 0.38
+        x = np.array([topos.index((b["orgs"], b["peers"])) + (fs.ARMS.index(b["identity"]) - 0.5) * w for b in sel])
         v = [b["ledger_gb_per_million_writes_per_peer"] for b in sel]
-        ax.bar(x, v, color=[fs.ARMCOL[b["identity"]] for b in sel])
+        ax.bar(x, v, width=w, color=[fs.ARMCOL[b["identity"]] for b in sel])
         texts = fs.label_bars(ax, x, v, ["%.0f GB" % y for y in v], orient="v", fontsize=5)
-        ax.set_xticks(x)
-        ax.set_xticklabels(["%d×%d" % (b["orgs"], b["peers"]) for b in sel], fontsize=6)
+        ax.set_xticks(range(len(topos)))
+        ax.set_xticklabels(["%d×%d" % tp for tp in topos], fontsize=6)
         ax.set_xlabel("organisations × peers")
         ax.set_ylabel("GB per million writes, per peer")
         from matplotlib.patches import Patch
@@ -531,21 +646,23 @@ def figures(cs, rat, byt, e2, e3, outdir):
                 sel.append(c)
     if sel:
         roles = list(fs.ROLECOL)
-        stacked(sel, ["%s\n%d org%s" % (fs.ARMNAME[c["identity"]], c["orgs"], "s" if c["orgs"] > 1 else "") for c in sel],
+        stacked(sel, [fs.ARMNAME[c["identity"]] for c in sel],
                 ["cpu_ms_per_tx|" + r for r in roles], {"cpu_ms_per_tx|" + r: fs.ROLECOL[r] for r in roles},
                 {"cpu_ms_per_tx|" + r: r for r in roles}, outdir, "F11-cpu-per-write",
                 "CPU time per credential write, by component (8 peers, 10,000 writes)", "CPU time per transaction (ms)",
-                fmt=lambda v: "%.1f ms" % v)
+                fmt=lambda v: "%.1f ms" % v,
+                groups=["%d organisation%s" % (c["orgs"], "s" if c["orgs"] > 1 else "") for c in sel])
     om = lambda ident, o, fn, t: cell(cs, ident, o, 8, fn, t)  # noqa: E731
     bars_vs(cs, outdir, [1, 2, 4, 8], om, "mem_total_peak_mb", "organisations (8 peers in total)", "peak memory of the network",
             "F12-memory-total-orgs-P8", "Peak memory of the whole network against organisations, 8 peers, 10,000 writes",
-            lambda v: "%.0f MB" % v)
+            lambda v: "{:,.0f} MB".format(v), yunit="MB")
     bars_vs(cs, outdir, [1, 2, 4, 8], om, "mem_peak_mb|gateway peer", "organisations (8 peers in total)", "peak memory of the gateway peer",
             "F12-memory-gateway-orgs-P8", "Peak memory of the gateway peer against organisations, 8 peers, 10,000 writes",
-            lambda v: "%.0f MB" % v)
+            lambda v: "{:,.0f} MB".format(v), yunit="MB")
     pk2 = lambda ident, p, fn, t: cell(cs, ident, 1, p, fn, t)  # noqa: E731
-    bars_vs(cs, outdir, [1, 2, 4, 8], pk2, "orderer_egress_bytes_per_tx", "peers (one organisation)", "orderer egress per transaction (bytes)",
-            "F13-orderer-egress", "Bytes the orderer sends per write, against peers (10,000 writes)", lambda v: "%.0f KB" % (v / 1000))
+    bars_vs(cs, outdir, [1, 2, 4, 8], pk2, "orderer_egress_bytes_per_tx", "peers (one organisation)", "orderer egress per transaction",
+            "F13-orderer-egress", "Bytes the orderer sends per write, against peers (10,000 writes)", lambda v: "%.0f KB" % (v / 1000),
+            yunit="bytes")
     sel = []
     for (o, p) in ((1, 1), (2, 2), (8, 8)):
         for ident in fs.ARMS:
@@ -553,10 +670,11 @@ def figures(cs, rat, byt, e2, e3, outdir):
             if c:
                 sel.append(c)
     if sel:
-        stacked(sel, ["%s\n%d×%d" % (fs.ARMNAME[c["identity"]], c["orgs"], c["peers"]) for c in sel],
+        stacked(sel, [fs.ARMNAME[c["identity"]] for c in sel],
                 ["stage_%s_ms" % s for s in fs.STAGES], {"stage_%s_ms" % s: fs.STAGECOL[s] for s in fs.STAGES},
                 {"stage_%s_ms" % s: s for s in fs.STAGES}, outdir, "F14-stages",
-                "Median time of each stage of a write (1,000 writes)", "milliseconds", fmt=fmt_ms)
+                "Median time of each stage of a write (1,000 writes)", "milliseconds", fmt=fmt_ms,
+                groups=["%d×%d" % (c["orgs"], c["peers"]) for c in sel], xlabel="organisations × peers")
     # E2 and E3 (F15, F16)
     if e2:
         fig, ax = fs.new_fig(5.0, 2.6)
@@ -570,10 +688,12 @@ def figures(cs, rat, byt, e2, e3, outdir):
         ax.barh(y, [r[2] for r in rows], color=[fs.ARMCOL[r[0]] for r in rows])
         texts = fs.label_bars(ax, y, [r[2] for r in rows], [fmt_ms(r[2]) for r in rows])
         ax.set_yticks(y)
-        ax.set_yticklabels(["%s, %s" % (fs.ARMNAME[r[0]], r[1].replace("_", " ")) for r in rows], fontsize=6)
+        mode_name = {"open_connection": "open connection", "fresh_connection": "new connection"}
+        ax.set_yticklabels(["%s, %s" % (fs.ARMNAME[r[0]], mode_name.get(r[1], r[1].replace("_", " "))) for r in rows], fontsize=6)
         ax.set_xlabel("median time of one read")
         fs.headline(fig, "A read on an open connection and on a new one (TLS handshake)")
         fs.fit_labels(fig, ax, texts)
+        unit_ticks(ax, "ms", which="x")
         fs.save(fig, "F15-connection-setup", outdir)
     if e3:
         fig, ax = fs.new_fig(5.2, 2.8)
@@ -585,7 +705,8 @@ def figures(cs, rat, byt, e2, e3, outdir):
             xs = sorted(pts)
             ax.plot(xs, [np.median(pts[x]) for x in xs], marker=fs.ARMMARK[ident], color=fs.ARMCOL[ident], label=fs.ARMNAME[ident])
         ax.set_xlabel("offered load (transactions per second)")
-        fs.log_axis(ax, "y", [(10, "10 ms"), (100, "100 ms"), (1000, "1 s"), (10000, "10 s")], "median latency")
+        fs.log_axis(ax, "y", [(10, "10 ms"), (20, "20 ms"), (50, "50 ms"), (100, "100 ms"), (200, "200 ms"), (500, "500 ms"),
+                              (1000, "1 s"), (2000, "2 s"), (5000, "5 s"), (10000, "10 s")], "median latency")
         ax.grid(True)
         h, lab = ax.get_legend_handles_labels()
         fs.headline(fig, "Latency against offered load, 2 organisations, 2 peers (E3)", h, lab, ncol=2)

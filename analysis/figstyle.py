@@ -5,7 +5,10 @@ plain units, value labels on bars, check_layout() and save(). Changed: this stud
 machine colours, and the output folder is passed in. The rules are the same:
 - Every logarithmic axis says "(log scale)" in its label, and its ticks are written in plain units.
 - Bar charts print the value at the end of every bar.
-- save() checks every figure after drawing it: no two texts overlap and nothing falls outside the image.
+- save() checks every figure after drawing it: no two texts overlap and nothing falls outside the image
+  (labelled minor ticks included).
+- One figure holds one function (writes or reads), never both; a result against a setting is drawn both as a
+  line chart and as a bar chart (project lead, 23 Nov 2026).
 - The two arms keep blue (ECDSA) and vermillion (ML-DSA-44) in every figure; this is a separate paper, so the
   KPI study's machine colours do not apply (project lead, 16 Nov 2026).
 """
@@ -199,12 +202,14 @@ def check_layout(fig, name):
         for axis in (ax.xaxis, ax.yaxis):
             lo, hi = sorted(axis.get_view_interval())
             span = (hi - lo) * 1e-9
-            for tick, loc in zip(axis.get_major_ticks(), axis.get_majorticklocs()):
-                if not (lo - span <= loc <= hi + span):
-                    continue  # matplotlib does not draw ticks outside the visible range
-                for t in (tick.label1, tick.label2):
-                    if t.get_visible() and t.get_text():
-                        items.append(("tick", ax, _ext(t, r), t.get_text()[:20]))
+            for ticks, locs in ((axis.get_major_ticks(), axis.get_majorticklocs()),
+                                (axis.get_minor_ticks(), axis.get_minorticklocs())):   # labelled minor ticks too
+                for tick, loc in zip(ticks, locs):
+                    if not (lo - span <= loc <= hi + span):
+                        continue  # matplotlib does not draw ticks outside the visible range
+                    for t in (tick.label1, tick.label2):
+                        if t.get_visible() and t.get_text():
+                            items.append(("tick", ax, _ext(t, r), t.get_text()[:20]))
         for t in ax.texts:
             if t.get_visible() and t.get_text():
                 items.append(("text", ax, _ext(t, r), t.get_text()[:20]))
