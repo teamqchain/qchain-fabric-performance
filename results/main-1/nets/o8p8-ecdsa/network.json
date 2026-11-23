@@ -1,0 +1,40 @@
+{
+ "blocks": {
+  "blocks": 597
+ },
+ "disk_pct": 76.0,
+ "end_utc": "2026-11-22T21:42:41Z",
+ "errors": {},
+ "index": 0,
+ "ledger_bytes": {
+  "orderer0.orderer.example.com": 1575043228,
+  "peer0.general.uae.com": 1893851317,
+  "peer0.government.uae.com": 1894507342,
+  "peer0.org3.uae.com": 1894607553,
+  "peer0.org4.uae.com": 1894543616,
+  "peer0.org5.uae.com": 1894618294,
+  "peer0.org6.uae.com": 1894603675,
+  "peer0.org7.uae.com": 1894641427,
+  "peer0.org8.uae.com": 1894618459
+ },
+ "net": {
+  "identity": "ecdsa",
+  "orgs": 8,
+  "peers": 8
+ },
+ "netid": "o8p8-ecdsa",
+ "runs": 50,
+ "timings": {
+  "blocks_dump_s": 19.93172526359558,
+  "ca_start_s": 8.006917238235474,
+  "chaincode_start_s": 21.37625527381897,
+  "channel_s": 6.082841873168945,
+  "commit_s": 20.373580932617188,
+  "crypto_s": 1.676692247390747,
+  "enroll_s": 3.0302159786224365,
+  "install_s": 2.520970344543457,
+  "network_up_s": 75.63956689834595,
+  "node_start_s": 11.446979522705078,
+  "setup_s": 42.535019874572754
+ }
+}

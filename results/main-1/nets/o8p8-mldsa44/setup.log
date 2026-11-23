@@ -1,0 +1,3 @@
+setup: 100 holders in 24.6 s
+setup: 1000 pool credentials in 24.2 s
+setup: warm-up 200 writes and 200 reads in 4.8 s

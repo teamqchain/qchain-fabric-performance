@@ -1,0 +1,1256 @@
+2026-11-22T21:20:06Z network 1/30: {"identity": "ecdsa", "orgs": 8, "peers": 8}
+2026-11-22T21:21:22Z network o8p8-ecdsa up in 76 s
+2026-11-22T21:22:07Z setup done in 43 s; canary 1386173/s
+2026-11-22T21:22:19Z o8p8-ecdsa n01-r001 get T=10000 rep 3 att 1: ok=10000 tps=1126.404177094532 p50=265.022 ms flags=-
+2026-11-22T21:22:29Z o8p8-ecdsa n01-r002 issue T=10 rep 4 att 1: ok=10 tps=4.5280212089398155 p50=2208.29 ms flags=-
+2026-11-22T21:22:37Z o8p8-ecdsa n01-r003 get T=10 rep 2 att 1: ok=10 tps=361.325914348776 p50=26.601 ms flags=-
+2026-11-22T21:22:49Z o8p8-ecdsa n01-r004 issue T=10 rep 5 att 1: ok=10 tps=4.414077601404356 p50=2265.25 ms flags=-
+2026-11-22T21:23:10Z o8p8-ecdsa n01-r005 issue T=1000 rep 5 att 1: ok=1000 tps=75.85738695342668 p50=3619.59 ms flags=-
+2026-11-22T21:25:23Z o8p8-ecdsa n01-r006 issue T=10000 rep 5 att 1: ok=10000 tps=79.98413773072858 p50=3781.263 ms flags=-
+2026-11-22T21:27:41Z o8p8-ecdsa n01-r007 issue T=10000 rep 2 att 1: ok=10000 tps=76.95698367933728 p50=3919.691 ms flags=-
+2026-11-22T21:27:57Z o8p8-ecdsa n01-r008 get T=10000 rep 2 att 1: ok=10000 tps=1181.326886448504 p50=255.735 ms flags=-
+2026-11-22T21:28:07Z o8p8-ecdsa n01-r009 issue T=1 rep 2 att 1: ok=1 tps=0.4846829723696075 p50=2063.204 ms flags=-
+2026-11-22T21:28:15Z o8p8-ecdsa n01-r010 get T=100 rep 3 att 1: ok=100 tps=593.4527245085217 p50=147.906 ms flags=-
+2026-11-22T21:28:23Z o8p8-ecdsa n01-r011 get T=10 rep 3 att 1: ok=10 tps=488.16859937496844 p50=18.702 ms flags=-
+2026-11-22T21:28:33Z o8p8-ecdsa n01-r012 issue T=100 rep 1 att 1: ok=100 tps=52.650168696642446 p50=1883.633 ms flags=-
+2026-11-22T21:28:41Z o8p8-ecdsa n01-r013 get T=10 rep 5 att 1: ok=10 tps=430.79745131611855 p50=20.409 ms flags=-
+2026-11-22T21:29:02Z o8p8-ecdsa n01-r014 issue T=1000 rep 4 att 1: ok=1000 tps=73.77085372852919 p50=3796.124 ms flags=-
+2026-11-22T21:31:21Z o8p8-ecdsa n01-r015 issue T=10000 rep 1 att 1: ok=10000 tps=76.51472987785743 p50=3938.184 ms flags=-
+2026-11-22T21:31:29Z o8p8-ecdsa n01-r016 get T=1 rep 2 att 1: ok=1 tps=221.7640084997709 p50=4.509 ms flags=-
+2026-11-22T21:31:37Z o8p8-ecdsa n01-r017 get T=1000 rep 5 att 1: ok=1000 tps=1022.1098813074799 p50=274.916 ms flags=-
+2026-11-22T21:31:46Z o8p8-ecdsa n01-r018 get T=1000 rep 2 att 1: ok=1000 tps=1086.693848936819 p50=253.848 ms flags=-
+2026-11-22T21:31:56Z o8p8-ecdsa n01-r019 issue T=1 rep 4 att 1: ok=1 tps=0.48128297211286386 p50=2077.78 ms flags=-
+2026-11-22T21:32:04Z o8p8-ecdsa n01-r020 get T=10 rep 1 att 1: ok=10 tps=276.44628958213264 p50=33.837 ms flags=-
+2026-11-22T21:32:13Z o8p8-ecdsa n01-r021 get T=1000 rep 1 att 1: ok=1000 tps=851.3420476438577 p50=332.042 ms flags=-
+2026-11-22T21:32:21Z o8p8-ecdsa n01-r022 get T=1 rep 4 att 1: ok=1 tps=116.00259242593555 p50=8.62 ms flags=-
+2026-11-22T21:32:43Z o8p8-ecdsa n01-r023 issue T=1000 rep 3 att 1: ok=1000 tps=72.34294858737016 p50=3871.364 ms flags=-
+2026-11-22T21:32:51Z o8p8-ecdsa n01-r024 get T=100 rep 4 att 1: ok=100 tps=979.3575424315225 p50=81.025 ms flags=-
+2026-11-22T21:33:01Z o8p8-ecdsa n01-r025 issue T=1 rep 5 att 1: ok=1 tps=0.4825797213978473 p50=2072.196 ms flags=-
+2026-11-22T21:35:24Z o8p8-ecdsa n01-r026 issue T=10000 rep 4 att 1: ok=10000 tps=73.96454915579108 p50=4066.667 ms flags=-
+2026-11-22T21:35:34Z o8p8-ecdsa n01-r027 issue T=10 rep 2 att 1: ok=10 tps=4.569770071826905 p50=2187.685 ms flags=-
+2026-11-22T21:35:44Z o8p8-ecdsa n01-r028 issue T=10 rep 1 att 1: ok=10 tps=4.564904845567338 p50=2189.147 ms flags=-
+2026-11-22T21:36:02Z o8p8-ecdsa n01-r029 get T=10000 rep 4 att 1: ok=10000 tps=1062.865371689609 p50=282.705 ms flags=-
+2026-11-22T21:36:23Z o8p8-ecdsa n01-r030 issue T=1000 rep 1 att 1: ok=1000 tps=72.23604403945261 p50=4121.084 ms flags=-
+2026-11-22T21:36:33Z o8p8-ecdsa n01-r031 issue T=100 rep 3 att 1: ok=100 tps=65.21746239138183 p50=1525.459 ms flags=-
+2026-11-22T21:36:41Z o8p8-ecdsa n01-r032 get T=1000 rep 3 att 1: ok=1000 tps=1089.7048770697445 p50=261.456 ms flags=-
+2026-11-22T21:36:49Z o8p8-ecdsa n01-r033 get T=10 rep 4 att 1: ok=10 tps=580.6136133686981 p50=15.801 ms flags=-
+2026-11-22T21:36:59Z o8p8-ecdsa n01-r034 issue T=1 rep 1 att 1: ok=1 tps=0.4849458633886049 p50=2062.086 ms flags=-
+2026-11-22T21:37:08Z o8p8-ecdsa n01-r035 get T=1000 rep 4 att 1: ok=1000 tps=805.2151906918425 p50=350.173 ms flags=-
+2026-11-22T21:37:18Z o8p8-ecdsa n01-r036 issue T=100 rep 2 att 1: ok=100 tps=62.034974548175875 p50=1604.524 ms flags=-
+2026-11-22T21:37:27Z o8p8-ecdsa n01-r037 issue T=100 rep 4 att 1: ok=100 tps=66.70709143090217 p50=1488.492 ms flags=-
+2026-11-22T21:37:35Z o8p8-ecdsa n01-r038 get T=100 rep 5 att 1: ok=100 tps=977.8173528708542 p50=88.162 ms flags=-
+2026-11-22T21:37:45Z o8p8-ecdsa n01-r039 issue T=10 rep 3 att 1: ok=10 tps=4.530616486091267 p50=2206.652 ms flags=-
+2026-11-22T21:37:53Z o8p8-ecdsa n01-r040 get T=1 rep 5 att 1: ok=1 tps=199.68322253576926 p50=5.008 ms flags=-
+2026-11-22T21:38:01Z o8p8-ecdsa n01-r041 get T=1 rep 1 att 1: ok=1 tps=118.87985692571459 p50=8.412 ms flags=-
+2026-11-22T21:38:08Z o8p8-ecdsa n01-r042 get T=1 rep 3 att 1: ok=1 tps=146.37737228318107 p50=6.832 ms flags=-
+2026-11-22T21:38:16Z o8p8-ecdsa n01-r043 get T=100 rep 2 att 1: ok=100 tps=689.4320959610607 p50=125.616 ms flags=-
+2026-11-22T21:38:26Z o8p8-ecdsa n01-r044 issue T=100 rep 5 att 1: ok=100 tps=61.74664992516575 p50=1607.978 ms flags=-
+2026-11-22T21:38:36Z o8p8-ecdsa n01-r045 issue T=1 rep 3 att 1: ok=1 tps=0.485298277645305 p50=2060.588 ms flags=-
+2026-11-22T21:38:52Z o8p8-ecdsa n01-r046 get T=10000 rep 1 att 1: ok=10000 tps=1138.6076951096125 p50=262.6 ms flags=-
+2026-11-22T21:39:15Z o8p8-ecdsa n01-r047 issue T=1000 rep 2 att 1: ok=1000 tps=69.59609269201233 p50=4250.552 ms flags=-
+2026-11-22T21:39:31Z o8p8-ecdsa n01-r048 get T=10000 rep 5 att 1: ok=10000 tps=1172.0874692402933 p50=256.485 ms flags=-
+2026-11-22T21:41:58Z o8p8-ecdsa n01-r049 issue T=10000 rep 3 att 1: ok=10000 tps=71.81321957788342 p50=4213.828 ms flags=-
+2026-11-22T21:42:06Z o8p8-ecdsa n01-r050 get T=100 rep 1 att 1: ok=100 tps=846.5037250269444 p50=92.817 ms flags=-
+2026-11-22T21:42:55Z network o8p8-ecdsa done (50 runs)
+2026-11-22T21:42:55Z network 2/30: {"identity": "mldsa44", "orgs": 8, "peers": 8}
+2026-11-22T21:43:57Z network o8p8-mldsa44 up in 62 s
+2026-11-22T21:44:54Z setup done in 54 s; canary 1386101/s
+2026-11-22T21:44:57Z o8p8-mldsa44 n02-r001 get T=10 rep 5 att 1: ok=10 tps=343.7891651062936 p50=24.381 ms flags=-
+2026-11-22T21:45:06Z o8p8-mldsa44 n02-r002 get T=1000 rep 5 att 1: ok=1000 tps=718.9264978031979 p50=383.681 ms flags=-
+2026-11-22T21:45:16Z o8p8-mldsa44 n02-r003 issue T=1 rep 3 att 1: ok=1 tps=0.4784469012655612 p50=2090.096 ms flags=-
+2026-11-22T21:45:24Z o8p8-mldsa44 n02-r004 get T=100 rep 3 att 1: ok=100 tps=452.0324030025819 p50=190.11 ms flags=-
+2026-11-22T21:45:32Z o8p8-mldsa44 n02-r005 get T=1 rep 3 att 1: ok=1 tps=55.247590141553715 p50=18.1 ms flags=-
+2026-11-22T21:45:41Z o8p8-mldsa44 n02-r006 get T=1000 rep 4 att 1: ok=1000 tps=626.9507549228772 p50=461.497 ms flags=-
+2026-11-22T21:45:51Z o8p8-mldsa44 n02-r007 issue T=10 rep 4 att 1: ok=10 tps=4.299160650103115 p50=2323.062 ms flags=-
+2026-11-22T21:49:29Z o8p8-mldsa44 n02-r008 issue T=10000 rep 3 att 1: ok=10000 tps=47.75259837010741 p50=6311.496 ms flags=-
+2026-11-22T21:49:36Z o8p8-mldsa44 n02-r009 get T=10 rep 3 att 1: ok=10 tps=413.5395837194759 p50=20.79 ms flags=-
+2026-11-22T21:50:06Z o8p8-mldsa44 n02-r010 issue T=1000 rep 2 att 1: ok=1000 tps=45.719072813666514 p50=6032.819 ms flags=-
+2026-11-22T21:50:14Z o8p8-mldsa44 n02-r011 get T=1 rep 2 att 1: ok=1 tps=75.4728259335498 p50=13.25 ms flags=-
+2026-11-22T21:50:22Z o8p8-mldsa44 n02-r012 get T=100 rep 2 att 1: ok=100 tps=615.1484513766918 p50=127.946 ms flags=-
+2026-11-22T21:50:32Z o8p8-mldsa44 n02-r013 issue T=100 rep 4 att 1: ok=100 tps=41.48418503101776 p50=2396.874 ms flags=-
+2026-11-22T21:54:15Z o8p8-mldsa44 n02-r014 issue T=10000 rep 1 att 1: ok=10000 tps=46.351313957913625 p50=6521.925 ms flags=-
+2026-11-22T21:58:00Z o8p8-mldsa44 n02-r015 issue T=10000 rep 2 att 1: ok=10000 tps=46.18575138971013 p50=6555.875 ms flags=-
+2026-11-22T21:58:30Z o8p8-mldsa44 n02-r016 issue T=1000 rep 3 att 1: ok=1000 tps=44.88377202954065 p50=6571.431 ms flags=-
+2026-11-22T21:58:40Z o8p8-mldsa44 n02-r017 issue T=10 rep 5 att 1: ok=10 tps=4.3669900703611235 p50=2287.714 ms flags=-
+2026-11-22T21:58:50Z o8p8-mldsa44 n02-r018 issue T=100 rep 3 att 1: ok=100 tps=41.386258606721 p50=2396.048 ms flags=-
+2026-11-22T21:59:01Z o8p8-mldsa44 n02-r019 issue T=1 rep 2 att 1: ok=1 tps=0.48101818612537606 p50=2078.923 ms flags=-
+2026-11-22T21:59:31Z o8p8-mldsa44 n02-r020 issue T=1000 rep 4 att 1: ok=1000 tps=44.18427235546801 p50=6261.166 ms flags=-
+2026-11-22T21:59:41Z o8p8-mldsa44 n02-r021 issue T=100 rep 2 att 1: ok=100 tps=39.548758802366756 p50=2503.697 ms flags=-
+2026-11-22T21:59:52Z o8p8-mldsa44 n02-r022 issue T=10 rep 2 att 1: ok=10 tps=4.357896408714658 p50=2291.682 ms flags=-
+2026-11-22T21:59:59Z o8p8-mldsa44 n02-r023 get T=10 rep 1 att 1: ok=10 tps=466.300030496022 p50=17.581 ms flags=-
+2026-11-22T22:00:10Z o8p8-mldsa44 n02-r024 issue T=100 rep 1 att 1: ok=100 tps=39.95766071885472 p50=2494.065 ms flags=-
+2026-11-22T22:00:28Z o8p8-mldsa44 n02-r025 get T=10000 rep 1 att 1: ok=10000 tps=922.3396324449355 p50=318.013 ms flags=-
+2026-11-22T22:00:38Z o8p8-mldsa44 n02-r026 get T=1000 rep 2 att 1: ok=1000 tps=800.3484377750335 p50=357.558 ms flags=-
+2026-11-22T22:00:45Z o8p8-mldsa44 n02-r027 get T=1 rep 4 att 1: ok=1 tps=178.66347216378438 p50=5.597 ms flags=-
+2026-11-22T22:00:55Z o8p8-mldsa44 n02-r028 issue T=10 rep 1 att 1: ok=10 tps=4.443621645686043 p50=2250.003 ms flags=-
+2026-11-22T22:01:03Z o8p8-mldsa44 n02-r029 get T=100 rep 4 att 1: ok=100 tps=467.52899397419645 p50=171.175 ms flags=-
+2026-11-22T22:01:13Z o8p8-mldsa44 n02-r030 get T=1000 rep 3 att 1: ok=1000 tps=636.0510608078356 p50=464.878 ms flags=-
+2026-11-22T22:05:04Z o8p8-mldsa44 n02-r031 issue T=10000 rep 4 att 1: ok=10000 tps=44.79277679888811 p50=6764.664 ms flags=-
+2026-11-22T22:05:12Z o8p8-mldsa44 n02-r032 get T=100 rep 5 att 1: ok=100 tps=593.3213987129529 p50=147.346 ms flags=-
+2026-11-22T22:05:22Z o8p8-mldsa44 n02-r033 issue T=1 rep 5 att 1: ok=1 tps=0.4810969808630032 p50=2078.583 ms flags=-
+2026-11-22T22:05:32Z o8p8-mldsa44 n02-r034 issue T=1 rep 1 att 1: ok=1 tps=0.48075867048899235 p50=2080.046 ms flags=-
+2026-11-22T22:05:42Z o8p8-mldsa44 n02-r035 issue T=1 rep 4 att 1: ok=1 tps=0.4761422962584555 p50=2100.212 ms flags=-
+2026-11-22T22:06:01Z o8p8-mldsa44 n02-r036 get T=10000 rep 5 att 1: ok=10000 tps=882.4044618922094 p50=332.971 ms flags=-
+2026-11-22T22:06:09Z o8p8-mldsa44 n02-r037 get T=10 rep 2 att 1: ok=10 tps=450.8448584683024 p50=17.318 ms flags=-
+2026-11-22T22:06:19Z o8p8-mldsa44 n02-r038 issue T=100 rep 5 att 1: ok=100 tps=40.99442384336176 p50=2426.508 ms flags=-
+2026-11-22T22:06:27Z o8p8-mldsa44 n02-r039 get T=10 rep 4 att 1: ok=10 tps=301.03301284556034 p50=26.211 ms flags=-
+2026-11-22T22:06:35Z o8p8-mldsa44 n02-r040 get T=1 rep 1 att 1: ok=1 tps=74.72507896199093 p50=13.382 ms flags=-
+2026-11-22T22:06:55Z o8p8-mldsa44 n02-r041 get T=10000 rep 3 att 1: ok=10000 tps=866.7107705096217 p50=333.589 ms flags=-
+2026-11-22T22:07:26Z o8p8-mldsa44 n02-r042 issue T=1000 rep 5 att 1: ok=1000 tps=41.88757183505781 p50=7189.989 ms flags=-
+2026-11-22T22:07:46Z o8p8-mldsa44 n02-r043 get T=10000 rep 2 att 1: ok=10000 tps=857.1544062209155 p50=335.26 ms flags=-
+2026-11-22T22:07:55Z o8p8-mldsa44 n02-r044 get T=1000 rep 1 att 1: ok=1000 tps=774.5283339120776 p50=386.363 ms flags=-
+2026-11-22T22:08:03Z o8p8-mldsa44 n02-r045 get T=100 rep 1 att 1: ok=100 tps=638.9629906693449 p50=132.428 ms flags=-
+2026-11-22T22:08:10Z o8p8-mldsa44 n02-r046 get T=1 rep 5 att 1: ok=1 tps=126.17172526964791 p50=7.926 ms flags=-
+2026-11-22T22:08:21Z o8p8-mldsa44 n02-r047 issue T=10 rep 3 att 1: ok=10 tps=4.283459632275708 p50=2334.014 ms flags=-
+2026-11-22T22:08:40Z o8p8-mldsa44 n02-r048 get T=10000 rep 4 att 1: ok=10000 tps=831.5288409801049 p50=338.516 ms flags=-
+2026-11-22T22:12:38Z o8p8-mldsa44 n02-r049 issue T=10000 rep 5 att 1: ok=10000 tps=43.5070527556449 p50=6988.944 ms flags=-
+2026-11-22T22:13:09Z o8p8-mldsa44 n02-r050 issue T=1000 rep 1 att 1: ok=1000 tps=44.15120191969062 p50=6337.77 ms flags=-
+2026-11-22T22:13:14Z network n02 FAILED: Docker's disk at 86 %: network o8p8-mldsa44 stopped (disk guard)
+2026-11-22T22:13:28Z network 3/30: {"identity": "mldsa44", "orgs": 2, "peers": 2}
+2026-11-22T22:13:54Z network o2p2-mldsa44-e3r2 up in 26 s
+2026-11-22T22:14:29Z setup done in 32 s; canary 1396313/s
+2026-11-22T22:15:31Z o2p2-mldsa44-e3r2 E3 10% rep 2: {"achieved_tps": 34.18541797050875, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 2077, "mean_ms": 1195.27, "p50_ms": 1194.843, "p95_ms": 2093.085, "p99_ms": 2176.254
+2026-11-22T22:16:40Z o2p2-mldsa44-e3r2 E3 90% rep 2: {"achieved_tps": 241.83328384086516, "dropped": 3579, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 15115, "mean_ms": 1719.743, "p50_ms": 1723.797, "p95_ms": 2158.232, "p99_ms": 23
+2026-11-22T22:17:48Z o2p2-mldsa44-e3r2 E3 100% rep 2: {"achieved_tps": 238.70211613362073, "dropped": 5856, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14916, "mean_ms": 1745.191, "p50_ms": 1760.634, "p95_ms": 2190.507, "p99_ms": 23
+2026-11-22T22:18:56Z o2p2-mldsa44-e3r2 E3 50% rep 2: {"achieved_tps": 168.24820200918637, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 10386, "mean_ms": 638.905, "p50_ms": 630.033, "p95_ms": 897.32, "p99_ms": 990.409, 
+2026-11-22T22:20:05Z o2p2-mldsa44-e3r2 E3 75% rep 2: {"achieved_tps": 225.62618456742035, "dropped": 1477, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14101, "mean_ms": 1750.872, "p50_ms": 1762.666, "p95_ms": 2240.631, "p99_ms": 24
+2026-11-22T22:21:12Z o2p2-mldsa44-e3r2 E3 25% rep 2: {"achieved_tps": 84.9038412526597, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 5193, "mean_ms": 872.426, "p50_ms": 867.827, "p95_ms": 1392.214, "p99_ms": 1636.979, 
+2026-11-22T22:22:21Z o2p2-mldsa44-e3r2 E3 110% rep 2: {"achieved_tps": 223.89785649100975, "dropped": 8788, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14061, "mean_ms": 1919.685, "p50_ms": 1936.03, "p95_ms": 2372.821, "p99_ms": 268
+2026-11-22T22:23:27Z network o2p2-mldsa44-e3r2 done (0 runs)
+2026-11-22T22:23:27Z network 4/30: {"identity": "ecdsa", "orgs": 2, "peers": 2}
+2026-11-22T22:23:53Z network o2p2-ecdsa-e3r2 up in 26 s
+2026-11-22T22:24:36Z setup done in 40 s; canary 1393794/s
+2026-11-22T22:25:39Z o2p2-ecdsa-e3r2 E3 90% rep 2: {"achieved_tps": 302.33119771782316, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 18694, "mean_ms": 369.153, "p50_ms": 361.799, "p95_ms": 514.865, "p99_ms": 565.873, "
+2026-11-22T22:26:45Z o2p2-ecdsa-e3r2 E3 10% rep 2: {"achieved_tps": 34.21143820237268, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 2077, "mean_ms": 1123.994, "p50_ms": 1126.655, "p95_ms": 2026.325, "p99_ms": 2107.217,
+2026-11-22T22:27:54Z o2p2-ecdsa-e3r2 E3 110% rep 2: {"achieved_tps": 346.84722804329994, "dropped": 1201, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 21648, "mean_ms": 1151.983, "p50_ms": 1164.753, "p95_ms": 1438.738, "p99_ms": 1568
+2026-11-22T22:29:01Z o2p2-ecdsa-e3r2 E3 25% rep 2: {"achieved_tps": 85.04465542134446, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 5193, "mean_ms": 735.147, "p50_ms": 730.843, "p95_ms": 1254.185, "p99_ms": 1536.294, "
+2026-11-22T22:30:08Z o2p2-ecdsa-e3r2 E3 50% rep 2: {"achieved_tps": 168.52282418596133, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 10386, "mean_ms": 468.253, "p50_ms": 458.905, "p95_ms": 720.502, "p99_ms": 763.599, "
+2026-11-22T22:31:17Z o2p2-ecdsa-e3r2 E3 100% rep 2: {"achieved_tps": 330.81187045707645, "dropped": 133, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 20639, "mean_ms": 931.069, "p50_ms": 912.56, "p95_ms": 1342.978, "p99_ms": 1541.998
+2026-11-22T22:32:24Z o2p2-ecdsa-e3r2 E3 75% rep 2: {"achieved_tps": 252.00006348550988, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 15578, "mean_ms": 415.186, "p50_ms": 408.217, "p95_ms": 587.102, "p99_ms": 623.543, "
+2026-11-22T22:33:07Z network o2p2-ecdsa-e3r2 done (0 runs)
+2026-11-22T22:33:07Z network 5/30: {"identity": "ecdsa", "orgs": 2, "peers": 2}
+2026-11-22T22:33:33Z network o2p2-ecdsa-e3r4 up in 26 s
+2026-11-22T22:34:15Z setup done in 40 s; canary 1389030/s
+2026-11-22T22:35:17Z o2p2-ecdsa-e3r4 E3 25% rep 4: {"achieved_tps": 85.07827856671904, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 5193, "mean_ms": 729.12, "p50_ms": 724.632, "p95_ms": 1247.647, "p99_ms": 1511.648, "m
+2026-11-22T22:36:25Z o2p2-ecdsa-e3r4 E3 50% rep 4: {"achieved_tps": 168.52658633532096, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 10386, "mean_ms": 450.918, "p50_ms": 441.539, "p95_ms": 703.195, "p99_ms": 736.144, "
+2026-11-22T22:37:31Z o2p2-ecdsa-e3r4 E3 10% rep 4: {"achieved_tps": 34.189433522383816, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 2077, "mean_ms": 1119.392, "p50_ms": 1123.788, "p95_ms": 2021.245, "p99_ms": 2103.623
+2026-11-22T22:38:40Z o2p2-ecdsa-e3r4 E3 110% rep 4: {"achieved_tps": 352.00046668837405, "dropped": 878, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 21971, "mean_ms": 1031.756, "p50_ms": 1069.407, "p95_ms": 1415.413, "p99_ms": 1580.
+2026-11-22T22:39:48Z o2p2-ecdsa-e3r4 E3 75% rep 4: {"achieved_tps": 252.0046435066045, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 15578, "mean_ms": 400.659, "p50_ms": 393.616, "p95_ms": 572.528, "p99_ms": 620.086, "m
+2026-11-22T22:40:56Z o2p2-ecdsa-e3r4 E3 100% rep 4: {"achieved_tps": 334.77320529368126, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 20772, "mean_ms": 616.939, "p50_ms": 608.149, "p95_ms": 842.259, "p99_ms": 950.437, "
+2026-11-22T22:42:04Z o2p2-ecdsa-e3r4 E3 90% rep 4: {"achieved_tps": 302.03132044290277, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 18694, "mean_ms": 461.829, "p50_ms": 454.387, "p95_ms": 625.304, "p99_ms": 688.025, "
+2026-11-22T22:42:48Z network o2p2-ecdsa-e3r4 done (0 runs)
+2026-11-22T22:42:48Z network 6/30: {"identity": "mldsa44", "orgs": 2, "peers": 2}
+2026-11-22T22:43:15Z network o2p2-mldsa44-e3r4 up in 27 s
+2026-11-22T22:43:50Z setup done in 32 s; canary 1402529/s
+2026-11-22T22:44:53Z o2p2-mldsa44-e3r4 E3 90% rep 4: {"achieved_tps": 241.80252061733253, "dropped": 3514, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 15180, "mean_ms": 1719.482, "p50_ms": 1719.889, "p95_ms": 2157.877, "p99_ms": 23
+2026-11-22T22:46:02Z o2p2-mldsa44-e3r4 E3 110% rep 4: {"achieved_tps": 240.00370467041196, "dropped": 7789, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 15060, "mean_ms": 1770.866, "p50_ms": 1793.046, "p95_ms": 2194.683, "p99_ms": 24
+2026-11-22T22:47:09Z o2p2-mldsa44-e3r4 E3 10% rep 4: {"achieved_tps": 34.183704146392955, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 2077, "mean_ms": 1198.228, "p50_ms": 1201.258, "p95_ms": 2098.755, "p99_ms": 2182.7
+2026-11-22T22:48:18Z o2p2-mldsa44-e3r4 E3 100% rep 4: {"achieved_tps": 232.48145363243714, "dropped": 6220, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14552, "mean_ms": 1810.272, "p50_ms": 1827.304, "p95_ms": 2251.375, "p99_ms": 24
+2026-11-22T22:49:25Z o2p2-mldsa44-e3r4 E3 25% rep 4: {"achieved_tps": 84.86813465544873, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 5193, "mean_ms": 864.432, "p50_ms": 859.169, "p95_ms": 1384.556, "p99_ms": 1663.334,
+2026-11-22T22:50:33Z o2p2-mldsa44-e3r4 E3 75% rep 4: {"achieved_tps": 228.8735908858651, "dropped": 1281, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14297, "mean_ms": 1763.423, "p50_ms": 1778.6, "p95_ms": 2231.035, "p99_ms": 2454.
+2026-11-22T22:51:41Z o2p2-mldsa44-e3r4 E3 50% rep 4: {"achieved_tps": 168.27516427928003, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 10386, "mean_ms": 663.644, "p50_ms": 654.519, "p95_ms": 931.972, "p99_ms": 1192.487
+2026-11-22T22:52:47Z network o2p2-mldsa44-e3r4 done (0 runs)
+2026-11-22T22:52:47Z network 7/30: {"identity": "mldsa44", "orgs": 1, "peers": 4}
+2026-11-22T22:53:11Z network o1p4-mldsa44 up in 24 s
+2026-11-22T22:53:42Z setup done in 29 s; canary 1385726/s
+2026-11-22T22:53:46Z o1p4-mldsa44 n07-r001 issue T=10 rep 5 att 1: ok=10 tps=4.764796323932954 p50=2095.649 ms flags=-
+2026-11-22T22:54:03Z o1p4-mldsa44 n07-r002 get T=10000 rep 4 att 1: ok=10000 tps=935.892018799649 p50=313.97 ms flags=-
+2026-11-22T22:54:10Z o1p4-mldsa44 n07-r003 get T=100 rep 1 att 1: ok=100 tps=765.6663450255484 p50=114.777 ms flags=-
+2026-11-22T22:54:54Z o1p4-mldsa44 n07-r004 issue T=10000 rep 5 att 1: ok=10000 tps=272.3311113944254 p50=1088.163 ms flags=-
+2026-11-22T22:55:00Z o1p4-mldsa44 n07-r005 get T=1 rep 3 att 1: ok=1 tps=82.1711322294573 p50=12.17 ms flags=-
+2026-11-22T22:55:09Z o1p4-mldsa44 n07-r006 issue T=1 rep 1 att 1: ok=1 tps=0.49085844931954026 p50=2037.247 ms flags=-
+2026-11-22T22:55:20Z o1p4-mldsa44 n07-r007 issue T=1000 rep 5 att 1: ok=1000 tps=234.9760829922893 p50=1146.05 ms flags=-
+2026-11-22T22:55:28Z o1p4-mldsa44 n07-r008 issue T=100 rep 3 att 1: ok=100 tps=168.91458249353929 p50=576.764 ms flags=-
+2026-11-22T22:55:35Z o1p4-mldsa44 n07-r009 get T=1 rep 4 att 1: ok=1 tps=104.89009144213281 p50=9.534 ms flags=-
+2026-11-22T22:55:51Z o1p4-mldsa44 n07-r010 get T=10000 rep 3 att 1: ok=10000 tps=990.607060190032 p50=295.979 ms flags=-
+2026-11-22T22:55:58Z o1p4-mldsa44 n07-r011 get T=10 rep 2 att 1: ok=10 tps=386.2099265683618 p50=21.56 ms flags=-
+2026-11-22T22:56:07Z o1p4-mldsa44 n07-r012 issue T=10 rep 1 att 1: ok=10 tps=4.776128242386598 p50=2093.522 ms flags=-
+2026-11-22T22:56:14Z o1p4-mldsa44 n07-r013 issue T=100 rep 1 att 1: ok=100 tps=152.18601097116866 p50=633.281 ms flags=-
+2026-11-22T22:56:21Z o1p4-mldsa44 n07-r014 get T=100 rep 2 att 1: ok=100 tps=587.6417552045932 p50=135.796 ms flags=-
+2026-11-22T22:56:29Z o1p4-mldsa44 n07-r015 issue T=100 rep 5 att 1: ok=100 tps=141.50664147554116 p50=690.748 ms flags=-
+2026-11-22T22:56:37Z o1p4-mldsa44 n07-r016 get T=1000 rep 4 att 1: ok=1000 tps=710.1293212814313 p50=412.301 ms flags=-
+2026-11-22T22:56:43Z o1p4-mldsa44 n07-r017 get T=10 rep 4 att 1: ok=10 tps=295.91779332681114 p50=24.132 ms flags=-
+2026-11-22T22:56:50Z o1p4-mldsa44 n07-r018 get T=1 rep 1 att 1: ok=1 tps=93.91673154747538 p50=10.648 ms flags=-
+2026-11-22T22:56:56Z o1p4-mldsa44 n07-r019 get T=10 rep 5 att 1: ok=10 tps=436.4816419531488 p50=17.493 ms flags=-
+2026-11-22T22:57:08Z o1p4-mldsa44 n07-r020 issue T=1000 rep 4 att 1: ok=1000 tps=228.8497901051629 p50=1215.001 ms flags=-
+2026-11-22T22:57:17Z o1p4-mldsa44 n07-r021 issue T=10 rep 4 att 1: ok=10 tps=4.804888525875076 p50=2080.723 ms flags=-
+2026-11-22T22:57:34Z o1p4-mldsa44 n07-r022 get T=10000 rep 1 att 1: ok=10000 tps=981.8078987299823 p50=295.793 ms flags=-
+2026-11-22T22:57:41Z o1p4-mldsa44 n07-r023 get T=100 rep 4 att 1: ok=100 tps=738.3698079404141 p50=112.008 ms flags=-
+2026-11-22T22:57:48Z o1p4-mldsa44 n07-r024 get T=1000 rep 3 att 1: ok=1000 tps=836.4706748316588 p50=334.079 ms flags=-
+2026-11-22T22:58:05Z o1p4-mldsa44 n07-r025 get T=10000 rep 2 att 1: ok=10000 tps=985.5700996387027 p50=296.857 ms flags=-
+2026-11-22T22:58:16Z o1p4-mldsa44 n07-r026 issue T=1000 rep 2 att 1: ok=1000 tps=227.30563337938491 p50=1273.706 ms flags=-
+2026-11-22T22:58:25Z o1p4-mldsa44 n07-r027 issue T=1 rep 2 att 1: ok=1 tps=0.49004744055672966 p50=2040.619 ms flags=-
+2026-11-22T22:58:32Z o1p4-mldsa44 n07-r028 get T=100 rep 5 att 1: ok=100 tps=583.7531481661342 p50=142.566 ms flags=-
+2026-11-22T22:58:39Z o1p4-mldsa44 n07-r029 issue T=100 rep 2 att 1: ok=100 tps=149.4292185642499 p50=649.391 ms flags=-
+2026-11-22T22:59:25Z o1p4-mldsa44 n07-r030 issue T=10000 rep 2 att 1: ok=10000 tps=256.2966840155409 p50=1169.159 ms flags=-
+2026-11-22T22:59:34Z o1p4-mldsa44 n07-r031 issue T=10 rep 3 att 1: ok=10 tps=4.758466314539303 p50=2100.949 ms flags=-
+2026-11-22T22:59:40Z o1p4-mldsa44 n07-r032 get T=1 rep 5 att 1: ok=1 tps=87.32070221911594 p50=11.452 ms flags=-
+2026-11-22T22:59:58Z o1p4-mldsa44 n07-r033 get T=10000 rep 5 att 1: ok=10000 tps=943.6551721601647 p50=308.202 ms flags=-
+2026-11-22T23:00:05Z o1p4-mldsa44 n07-r034 issue T=100 rep 4 att 1: ok=100 tps=163.50913628555185 p50=598.483 ms flags=-
+2026-11-22T23:00:14Z o1p4-mldsa44 n07-r035 issue T=1 rep 3 att 1: ok=1 tps=0.49076060733448823 p50=2037.653 ms flags=-
+2026-11-22T23:00:25Z o1p4-mldsa44 n07-r036 issue T=1000 rep 3 att 1: ok=1000 tps=217.58562065268782 p50=1260.018 ms flags=-
+2026-11-22T23:01:12Z o1p4-mldsa44 n07-r037 issue T=10000 rep 4 att 1: ok=10000 tps=252.58778721456832 p50=1174.293 ms flags=-
+2026-11-22T23:01:20Z o1p4-mldsa44 n07-r038 issue T=1 rep 4 att 1: ok=1 tps=0.4927782645583833 p50=2029.31 ms flags=-
+2026-11-22T23:02:08Z o1p4-mldsa44 n07-r039 issue T=10000 rep 3 att 1: ok=10000 tps=246.19071551784003 p50=1212.556 ms flags=-
+2026-11-22T23:02:17Z o1p4-mldsa44 n07-r040 issue T=1 rep 5 att 1: ok=1 tps=0.49052441022399657 p50=2038.635 ms flags=-
+2026-11-22T23:03:05Z o1p4-mldsa44 n07-r041 issue T=10000 rep 1 att 1: ok=10000 tps=237.48372392948895 p50=1253.982 ms flags=-
+2026-11-22T23:03:12Z o1p4-mldsa44 n07-r042 get T=10 rep 3 att 1: ok=10 tps=509.56707079751635 p50=15.2 ms flags=-
+2026-11-22T23:03:23Z o1p4-mldsa44 n07-r043 issue T=1000 rep 1 att 1: ok=1000 tps=220.58176091126919 p50=1218.674 ms flags=-
+2026-11-22T23:03:31Z o1p4-mldsa44 n07-r044 get T=1000 rep 1 att 1: ok=1000 tps=861.4824526676622 p50=334.658 ms flags=-
+2026-11-22T23:03:38Z o1p4-mldsa44 n07-r045 get T=10 rep 1 att 1: ok=10 tps=569.230171976958 p50=14.846 ms flags=-
+2026-11-22T23:03:46Z o1p4-mldsa44 n07-r046 get T=1000 rep 5 att 1: ok=1000 tps=719.889513718672 p50=371.53 ms flags=-
+2026-11-22T23:03:54Z o1p4-mldsa44 n07-r047 get T=1000 rep 2 att 1: ok=1000 tps=796.995963452153 p50=367.902 ms flags=-
+2026-11-22T23:04:01Z o1p4-mldsa44 n07-r048 get T=1 rep 2 att 1: ok=1 tps=105.74123069469132 p50=9.457 ms flags=-
+2026-11-22T23:04:07Z o1p4-mldsa44 n07-r049 get T=100 rep 3 att 1: ok=100 tps=585.5227634767974 p50=147.169 ms flags=-
+2026-11-22T23:04:17Z o1p4-mldsa44 n07-r050 issue T=10 rep 2 att 1: ok=10 tps=4.786527115526051 p50=2089.081 ms flags=-
+2026-11-22T23:05:07Z network o1p4-mldsa44 done (50 runs)
+2026-11-22T23:05:07Z network 8/30: {"identity": "ecdsa", "orgs": 1, "peers": 4}
+2026-11-22T23:05:32Z network o1p4-ecdsa up in 24 s
+2026-11-22T23:06:01Z setup done in 27 s; canary 1387317/s
+2026-11-22T23:06:03Z o1p4-ecdsa n08-r001 get T=1 rep 3 att 1: ok=1 tps=199.5253292417339 p50=5.012 ms flags=-
+2026-11-22T23:06:11Z o1p4-ecdsa n08-r002 issue T=1 rep 3 att 1: ok=1 tps=0.492500846229729 p50=2030.453 ms flags=-
+2026-11-22T23:06:18Z o1p4-ecdsa n08-r003 get T=10 rep 1 att 1: ok=10 tps=419.00264130885023 p50=21.913 ms flags=-
+2026-11-22T23:06:51Z o1p4-ecdsa n08-r004 issue T=10000 rep 3 att 1: ok=10000 tps=372.53744233479426 p50=793.875 ms flags=-
+2026-11-22T23:07:06Z o1p4-ecdsa n08-r005 get T=10000 rep 2 att 1: ok=10000 tps=1190.7927743596597 p50=250.829 ms flags=-
+2026-11-22T23:07:42Z o1p4-ecdsa n08-r006 issue T=10000 rep 1 att 1: ok=10000 tps=350.1681105203694 p50=859.488 ms flags=-
+2026-11-22T23:07:48Z o1p4-ecdsa n08-r007 get T=10 rep 4 att 1: ok=10 tps=451.39905947394766 p50=19.742 ms flags=-
+2026-11-22T23:07:56Z o1p4-ecdsa n08-r008 get T=1000 rep 3 att 1: ok=1000 tps=1077.7654620560415 p50=254.085 ms flags=-
+2026-11-22T23:08:06Z o1p4-ecdsa n08-r009 issue T=1000 rep 3 att 1: ok=1000 tps=317.25156683577256 p50=879.986 ms flags=-
+2026-11-22T23:08:13Z o1p4-ecdsa n08-r010 get T=100 rep 4 att 1: ok=100 tps=906.1522737426575 p50=94.703 ms flags=-
+2026-11-22T23:08:28Z o1p4-ecdsa n08-r011 get T=10000 rep 4 att 1: ok=10000 tps=1172.9435977563921 p50=255.861 ms flags=-
+2026-11-22T23:08:37Z o1p4-ecdsa n08-r012 issue T=10 rep 4 att 1: ok=10 tps=4.858633975380354 p50=2057.734 ms flags=-
+2026-11-22T23:08:43Z o1p4-ecdsa n08-r013 get T=1 rep 2 att 1: ok=1 tps=100.08964028183642 p50=9.991 ms flags=-
+2026-11-22T23:08:53Z o1p4-ecdsa n08-r014 issue T=1000 rep 2 att 1: ok=1000 tps=299.50664968152876 p50=887.592 ms flags=-
+2026-11-22T23:09:02Z o1p4-ecdsa n08-r015 issue T=1 rep 1 att 1: ok=1 tps=0.49326115537552867 p50=2027.324 ms flags=-
+2026-11-22T23:09:09Z o1p4-ecdsa n08-r016 get T=100 rep 5 att 1: ok=100 tps=663.4282698302889 p50=131.08 ms flags=-
+2026-11-22T23:09:15Z o1p4-ecdsa n08-r017 get T=1 rep 1 att 1: ok=1 tps=131.47162500506167 p50=7.606 ms flags=-
+2026-11-22T23:09:22Z o1p4-ecdsa n08-r018 issue T=100 rep 1 att 1: ok=100 tps=187.7162643885221 p50=528 ms flags=-
+2026-11-22T23:09:29Z o1p4-ecdsa n08-r019 get T=100 rep 3 att 1: ok=100 tps=862.287890005591 p50=94.031 ms flags=-
+2026-11-22T23:09:38Z o1p4-ecdsa n08-r020 issue T=1 rep 5 att 1: ok=1 tps=0.49173452025667924 p50=2033.618 ms flags=-
+2026-11-22T23:09:45Z o1p4-ecdsa n08-r021 get T=10 rep 2 att 1: ok=10 tps=409.2792947692101 p50=23.762 ms flags=-
+2026-11-22T23:09:52Z o1p4-ecdsa n08-r022 issue T=100 rep 3 att 1: ok=100 tps=220.02731093397514 p50=445.795 ms flags=-
+2026-11-22T23:10:00Z o1p4-ecdsa n08-r023 get T=1000 rep 2 att 1: ok=1000 tps=931.0283873478731 p50=304.583 ms flags=-
+2026-11-22T23:10:35Z o1p4-ecdsa n08-r024 issue T=10000 rep 4 att 1: ok=10000 tps=348.077935883711 p50=863.222 ms flags=-
+2026-11-22T23:10:42Z o1p4-ecdsa n08-r025 issue T=100 rep 2 att 1: ok=100 tps=246.0139067823687 p50=396.633 ms flags=-
+2026-11-22T23:10:51Z o1p4-ecdsa n08-r026 issue T=10 rep 3 att 1: ok=10 tps=4.845882667055852 p50=2063.243 ms flags=-
+2026-11-22T23:11:00Z o1p4-ecdsa n08-r027 issue T=10 rep 1 att 1: ok=10 tps=4.839155515061028 p50=2066.243 ms flags=-
+2026-11-22T23:11:08Z o1p4-ecdsa n08-r028 get T=1000 rep 5 att 1: ok=1000 tps=849.8122465613435 p50=332.129 ms flags=-
+2026-11-22T23:11:14Z o1p4-ecdsa n08-r029 get T=10 rep 5 att 1: ok=10 tps=444.1670275893905 p50=20.507 ms flags=-
+2026-11-22T23:11:21Z o1p4-ecdsa n08-r030 get T=1 rep 5 att 1: ok=1 tps=107.2892533290246 p50=9.321 ms flags=-
+2026-11-22T23:11:29Z o1p4-ecdsa n08-r031 issue T=100 rep 4 att 1: ok=100 tps=206.26515984466994 p50=475.845 ms flags=-
+2026-11-22T23:11:45Z o1p4-ecdsa n08-r032 get T=10000 rep 1 att 1: ok=10000 tps=994.9241537574535 p50=301.054 ms flags=-
+2026-11-22T23:11:55Z o1p4-ecdsa n08-r033 issue T=1000 rep 1 att 1: ok=1000 tps=314.6529312657399 p50=924.193 ms flags=-
+2026-11-22T23:12:02Z o1p4-ecdsa n08-r034 issue T=100 rep 5 att 1: ok=100 tps=211.78133599930456 p50=466.512 ms flags=-
+2026-11-22T23:12:38Z o1p4-ecdsa n08-r035 issue T=10000 rep 2 att 1: ok=10000 tps=339.1210596228555 p50=880.729 ms flags=-
+2026-11-22T23:12:45Z o1p4-ecdsa n08-r036 get T=100 rep 2 att 1: ok=100 tps=877.1205046039178 p50=93.39 ms flags=-
+2026-11-22T23:12:53Z o1p4-ecdsa n08-r037 get T=1000 rep 1 att 1: ok=1000 tps=1053.46879832426 p50=262.441 ms flags=-
+2026-11-22T23:13:00Z o1p4-ecdsa n08-r038 get T=100 rep 1 att 1: ok=100 tps=746.27787937439 p50=109.257 ms flags=-
+2026-11-22T23:13:07Z o1p4-ecdsa n08-r039 get T=1000 rep 4 att 1: ok=1000 tps=1067.1379717089985 p50=264.239 ms flags=-
+2026-11-22T23:13:16Z o1p4-ecdsa n08-r040 issue T=10 rep 2 att 1: ok=10 tps=4.860127069033126 p50=2057.402 ms flags=-
+2026-11-22T23:13:53Z o1p4-ecdsa n08-r041 issue T=10000 rep 5 att 1: ok=10000 tps=333.60369125806966 p50=894.226 ms flags=-
+2026-11-22T23:13:59Z o1p4-ecdsa n08-r042 get T=10 rep 3 att 1: ok=10 tps=571.4731789921431 p50=15.534 ms flags=-
+2026-11-22T23:14:06Z o1p4-ecdsa n08-r043 get T=1 rep 4 att 1: ok=1 tps=126.88526121107414 p50=7.881 ms flags=-
+2026-11-22T23:14:21Z o1p4-ecdsa n08-r044 get T=10000 rep 5 att 1: ok=10000 tps=1160.756606962359 p50=254.877 ms flags=-
+2026-11-22T23:14:31Z o1p4-ecdsa n08-r045 issue T=1000 rep 4 att 1: ok=1000 tps=318.44731711877085 p50=853.906 ms flags=-
+2026-11-22T23:14:40Z o1p4-ecdsa n08-r046 issue T=10 rep 5 att 1: ok=10 tps=4.859101996949861 p50=2057.423 ms flags=-
+2026-11-22T23:14:49Z o1p4-ecdsa n08-r047 issue T=1 rep 2 att 1: ok=1 tps=0.4932322554116426 p50=2027.442 ms flags=-
+2026-11-22T23:14:57Z o1p4-ecdsa n08-r048 issue T=1 rep 4 att 1: ok=1 tps=0.49404977834805003 p50=2024.088 ms flags=-
+2026-11-22T23:15:07Z o1p4-ecdsa n08-r049 issue T=1000 rep 5 att 1: ok=1000 tps=306.70341312565415 p50=845.067 ms flags=-
+2026-11-22T23:15:22Z o1p4-ecdsa n08-r050 get T=10000 rep 3 att 1: ok=10000 tps=1175.4513216199687 p50=249.303 ms flags=-
+2026-11-22T23:15:55Z network o1p4-ecdsa done (50 runs)
+2026-11-22T23:15:55Z network 9/30: {"identity": "mldsa44", "orgs": 4, "peers": 4}
+2026-11-22T23:16:34Z network o4p4-mldsa44 up in 39 s
+2026-11-22T23:17:13Z setup done in 36 s; canary 1383825/s
+2026-11-22T23:17:15Z o4p4-mldsa44 n09-r001 get T=10 rep 5 att 1: ok=10 tps=587.1932678526719 p50=14.884 ms flags=-
+2026-11-22T23:18:35Z o4p4-mldsa44 n09-r002 issue T=10000 rep 3 att 1: ok=10000 tps=136.25497852296542 p50=2213.772 ms flags=-
+2026-11-22T23:18:42Z o4p4-mldsa44 n09-r003 get T=1 rep 5 att 1: ok=1 tps=90.83359167920699 p50=11.009 ms flags=-
+2026-11-22T23:18:50Z o4p4-mldsa44 n09-r004 get T=100 rep 4 att 1: ok=100 tps=609.0586325823651 p50=142.869 ms flags=-
+2026-11-22T23:19:05Z o4p4-mldsa44 n09-r005 issue T=1000 rep 2 att 1: ok=1000 tps=118.3200972229613 p50=2213.104 ms flags=-
+2026-11-22T23:19:23Z o4p4-mldsa44 n09-r006 get T=10000 rep 1 att 1: ok=10000 tps=944.7226468680979 p50=302.304 ms flags=-
+2026-11-22T23:19:40Z o4p4-mldsa44 n09-r007 get T=10000 rep 2 att 1: ok=10000 tps=963.0512057041877 p50=301.603 ms flags=-
+2026-11-22T23:19:50Z o4p4-mldsa44 n09-r008 issue T=1 rep 1 att 1: ok=1 tps=0.48399734319532 p50=2066.127 ms flags=-
+2026-11-22T23:19:57Z o4p4-mldsa44 n09-r009 get T=100 rep 3 att 1: ok=100 tps=405.736000194948 p50=212.501 ms flags=-
+2026-11-22T23:20:04Z o4p4-mldsa44 n09-r010 get T=10 rep 3 att 1: ok=10 tps=351.8214447062113 p50=23.528 ms flags=-
+2026-11-22T23:21:28Z o4p4-mldsa44 n09-r011 issue T=10000 rep 4 att 1: ok=10000 tps=130.99789606532292 p50=2280.976 ms flags=-
+2026-11-22T23:21:37Z o4p4-mldsa44 n09-r012 issue T=10 rep 1 att 1: ok=10 tps=4.673357045859748 p50=2139.463 ms flags=-
+2026-11-22T23:21:46Z o4p4-mldsa44 n09-r013 issue T=1 rep 3 att 1: ok=1 tps=0.4861752135155861 p50=2056.872 ms flags=-
+2026-11-22T23:21:55Z o4p4-mldsa44 n09-r014 issue T=10 rep 2 att 1: ok=10 tps=4.6736663616272125 p50=2139.069 ms flags=-
+2026-11-22T23:22:03Z o4p4-mldsa44 n09-r015 issue T=100 rep 2 att 1: ok=100 tps=81.36916893156663 p50=1202.074 ms flags=-
+2026-11-22T23:23:27Z o4p4-mldsa44 n09-r016 issue T=10000 rep 1 att 1: ok=10000 tps=131.14921770872508 p50=2291.817 ms flags=-
+2026-11-22T23:23:42Z o4p4-mldsa44 n09-r017 issue T=1000 rep 1 att 1: ok=1000 tps=123.37379870145695 p50=2193.041 ms flags=-
+2026-11-22T23:23:51Z o4p4-mldsa44 n09-r018 issue T=10 rep 5 att 1: ok=10 tps=4.650442223060681 p50=2147.737 ms flags=-
+2026-11-22T23:23:59Z o4p4-mldsa44 n09-r019 get T=1000 rep 2 att 1: ok=1000 tps=876.4643860691136 p50=337.212 ms flags=-
+2026-11-22T23:24:08Z o4p4-mldsa44 n09-r020 issue T=1 rep 5 att 1: ok=1 tps=0.4834268283881139 p50=2068.565 ms flags=-
+2026-11-22T23:24:16Z o4p4-mldsa44 n09-r021 issue T=100 rep 4 att 1: ok=100 tps=85.24620067742633 p50=1152.896 ms flags=-
+2026-11-22T23:24:24Z o4p4-mldsa44 n09-r022 get T=100 rep 1 att 1: ok=100 tps=628.642164106182 p50=131.963 ms flags=-
+2026-11-22T23:24:31Z o4p4-mldsa44 n09-r023 get T=10 rep 2 att 1: ok=10 tps=388.06061662055856 p50=15.416 ms flags=-
+2026-11-22T23:25:57Z o4p4-mldsa44 n09-r024 issue T=10000 rep 5 att 1: ok=10000 tps=126.3373560609437 p50=2377.959 ms flags=-
+2026-11-22T23:26:05Z o4p4-mldsa44 n09-r025 get T=1000 rep 4 att 1: ok=1000 tps=839.6090612289105 p50=354.019 ms flags=-
+2026-11-22T23:26:23Z o4p4-mldsa44 n09-r026 get T=10000 rep 4 att 1: ok=10000 tps=962.8899726078158 p50=308.1 ms flags=-
+2026-11-22T23:26:30Z o4p4-mldsa44 n09-r027 get T=1 rep 1 att 1: ok=1 tps=95.79389139597468 p50=10.439 ms flags=-
+2026-11-22T23:26:38Z o4p4-mldsa44 n09-r028 get T=1000 rep 3 att 1: ok=1000 tps=783.0067613103643 p50=350.32 ms flags=-
+2026-11-22T23:26:56Z o4p4-mldsa44 n09-r029 get T=10000 rep 3 att 1: ok=10000 tps=951.6984055236159 p50=303.199 ms flags=-
+2026-11-22T23:27:03Z o4p4-mldsa44 n09-r030 get T=1 rep 3 att 1: ok=1 tps=122.60659662723965 p50=8.156 ms flags=-
+2026-11-22T23:27:11Z o4p4-mldsa44 n09-r031 get T=1000 rep 1 att 1: ok=1000 tps=784.0112244440888 p50=349.299 ms flags=-
+2026-11-22T23:27:19Z o4p4-mldsa44 n09-r032 get T=1000 rep 5 att 1: ok=1000 tps=767.1417672546852 p50=372.198 ms flags=-
+2026-11-22T23:27:26Z o4p4-mldsa44 n09-r033 get T=10 rep 1 att 1: ok=10 tps=505.93351234272865 p50=15.171 ms flags=-
+2026-11-22T23:27:34Z o4p4-mldsa44 n09-r034 issue T=100 rep 5 att 1: ok=100 tps=95.39374485071124 p50=1040.768 ms flags=-
+2026-11-22T23:27:42Z o4p4-mldsa44 n09-r035 issue T=100 rep 1 att 1: ok=100 tps=94.73268697006286 p50=1037.404 ms flags=-
+2026-11-22T23:27:58Z o4p4-mldsa44 n09-r036 issue T=1000 rep 4 att 1: ok=1000 tps=115.87930402206317 p50=2311.353 ms flags=-
+2026-11-22T23:28:08Z o4p4-mldsa44 n09-r037 issue T=10 rep 4 att 1: ok=10 tps=4.623056140348528 p50=2162.942 ms flags=-
+2026-11-22T23:28:17Z o4p4-mldsa44 n09-r038 issue T=10 rep 3 att 1: ok=10 tps=4.652128206834499 p50=2148.822 ms flags=-
+2026-11-22T23:28:34Z o4p4-mldsa44 n09-r039 get T=10000 rep 5 att 1: ok=10000 tps=944.3645659919599 p50=314.914 ms flags=-
+2026-11-22T23:28:41Z o4p4-mldsa44 n09-r040 get T=100 rep 2 att 1: ok=100 tps=741.3006698466983 p50=111.702 ms flags=-
+2026-11-22T23:28:48Z o4p4-mldsa44 n09-r041 get T=10 rep 4 att 1: ok=10 tps=254.49687710699556 p50=32.497 ms flags=-
+2026-11-22T23:28:57Z o4p4-mldsa44 n09-r042 issue T=100 rep 3 att 1: ok=100 tps=82.41222996965311 p50=1192.566 ms flags=-
+2026-11-22T23:30:24Z o4p4-mldsa44 n09-r043 issue T=10000 rep 2 att 1: ok=10000 tps=125.9459204517753 p50=2378.476 ms flags=-
+2026-11-22T23:30:31Z o4p4-mldsa44 n09-r044 get T=1 rep 4 att 1: ok=1 tps=88.29379654848954 p50=11.326 ms flags=-
+2026-11-22T23:30:38Z o4p4-mldsa44 n09-r045 get T=1 rep 2 att 1: ok=1 tps=88.95754830150238 p50=11.241 ms flags=-
+2026-11-22T23:30:53Z o4p4-mldsa44 n09-r046 issue T=1000 rep 3 att 1: ok=1000 tps=114.92240891284806 p50=2447.67 ms flags=-
+2026-11-22T23:31:02Z o4p4-mldsa44 n09-r047 issue T=1 rep 4 att 1: ok=1 tps=0.4836942290692567 p50=2067.422 ms flags=-
+2026-11-22T23:31:12Z o4p4-mldsa44 n09-r048 issue T=1 rep 2 att 1: ok=1 tps=0.485423791474366 p50=2060.056 ms flags=-
+2026-11-22T23:31:19Z o4p4-mldsa44 n09-r049 get T=100 rep 5 att 1: ok=100 tps=553.8395667339653 p50=145.645 ms flags=-
+2026-11-22T23:31:35Z o4p4-mldsa44 n09-r050 issue T=1000 rep 5 att 1: ok=1000 tps=113.64990499671447 p50=2451.299 ms flags=-
+2026-11-22T23:32:37Z network o4p4-mldsa44 done (50 runs)
+2026-11-22T23:32:37Z network 10/30: {"identity": "ecdsa", "orgs": 4, "peers": 4}
+2026-11-22T23:33:14Z network o4p4-ecdsa up in 37 s
+2026-11-22T23:33:50Z setup done in 34 s; canary 1385633/s
+2026-11-22T23:33:53Z o4p4-ecdsa n10-r001 issue T=100 rep 5 att 1: ok=100 tps=140.7370969217768 p50=698.387 ms flags=-
+2026-11-22T23:34:02Z o4p4-ecdsa n10-r002 issue T=1 rep 5 att 1: ok=1 tps=0.4885367836015691 p50=2046.929 ms flags=-
+2026-11-22T23:34:09Z o4p4-ecdsa n10-r003 get T=100 rep 3 att 1: ok=100 tps=682.1317159099029 p50=117.613 ms flags=-
+2026-11-22T23:35:02Z o4p4-ecdsa n10-r004 issue T=10000 rep 3 att 1: ok=10000 tps=216.2490028707389 p50=1378.843 ms flags=-
+2026-11-22T23:35:11Z o4p4-ecdsa n10-r005 issue T=1 rep 4 att 1: ok=1 tps=0.49061549335125115 p50=2038.256 ms flags=-
+2026-11-22T23:35:18Z o4p4-ecdsa n10-r006 get T=10 rep 2 att 1: ok=10 tps=402.31202282525305 p50=24.012 ms flags=-
+2026-11-22T23:35:25Z o4p4-ecdsa n10-r007 get T=1 rep 3 att 1: ok=1 tps=167.94678505347508 p50=5.954 ms flags=-
+2026-11-22T23:35:38Z o4p4-ecdsa n10-r008 issue T=1000 rep 4 att 1: ok=1000 tps=189.48637102516332 p50=1454.382 ms flags=-
+2026-11-22T23:35:54Z o4p4-ecdsa n10-r009 get T=10000 rep 1 att 1: ok=10000 tps=1142.0537979388719 p50=261.647 ms flags=-
+2026-11-22T23:36:01Z o4p4-ecdsa n10-r010 get T=1 rep 5 att 1: ok=1 tps=109.33700880622135 p50=9.146 ms flags=-
+2026-11-22T23:36:10Z o4p4-ecdsa n10-r011 issue T=1 rep 1 att 1: ok=1 tps=0.4873063622139731 p50=2052.097 ms flags=-
+2026-11-22T23:36:19Z o4p4-ecdsa n10-r012 issue T=10 rep 3 att 1: ok=10 tps=4.725968144560681 p50=2115.72 ms flags=-
+2026-11-22T23:36:27Z o4p4-ecdsa n10-r013 get T=1000 rep 1 att 1: ok=1000 tps=845.6870908916815 p50=338.992 ms flags=-
+2026-11-22T23:37:23Z o4p4-ecdsa n10-r014 issue T=10000 rep 5 att 1: ok=10000 tps=206.0404027144733 p50=1447.067 ms flags=-
+2026-11-22T23:37:35Z o4p4-ecdsa n10-r015 issue T=1000 rep 3 att 1: ok=1000 tps=195.0591027198921 p50=1388.424 ms flags=-
+2026-11-22T23:37:42Z o4p4-ecdsa n10-r016 get T=1 rep 4 att 1: ok=1 tps=112.96529841591023 p50=8.852 ms flags=-
+2026-11-22T23:37:50Z o4p4-ecdsa n10-r017 get T=1000 rep 2 att 1: ok=1000 tps=1052.5748451632141 p50=278.091 ms flags=-
+2026-11-22T23:37:58Z o4p4-ecdsa n10-r018 get T=1000 rep 3 att 1: ok=1000 tps=1041.4425569071082 p50=279.817 ms flags=-
+2026-11-22T23:38:11Z o4p4-ecdsa n10-r019 issue T=1000 rep 1 att 1: ok=1000 tps=187.81000067786076 p50=1469.284 ms flags=-
+2026-11-22T23:38:18Z o4p4-ecdsa n10-r020 issue T=100 rep 1 att 1: ok=100 tps=148.8926313779705 p50=667.572 ms flags=-
+2026-11-22T23:38:27Z o4p4-ecdsa n10-r021 issue T=10 rep 4 att 1: ok=10 tps=4.751737444404915 p50=2104.137 ms flags=-
+2026-11-22T23:38:37Z o4p4-ecdsa n10-r022 issue T=10 rep 5 att 1: ok=10 tps=4.727759399902738 p50=2114.312 ms flags=-
+2026-11-22T23:38:46Z o4p4-ecdsa n10-r023 issue T=10 rep 1 att 1: ok=10 tps=4.708094193437516 p50=2122.559 ms flags=-
+2026-11-22T23:38:54Z o4p4-ecdsa n10-r024 issue T=100 rep 2 att 1: ok=100 tps=114.69400317793685 p50=867.697 ms flags=-
+2026-11-22T23:39:01Z o4p4-ecdsa n10-r025 get T=10 rep 4 att 1: ok=10 tps=425.0543527627236 p50=22.244 ms flags=-
+2026-11-22T23:39:08Z o4p4-ecdsa n10-r026 get T=1 rep 2 att 1: ok=1 tps=106.88227814873053 p50=9.356 ms flags=-
+2026-11-22T23:39:15Z o4p4-ecdsa n10-r027 get T=10 rep 1 att 1: ok=10 tps=381.9280215395182 p50=23.797 ms flags=-
+2026-11-22T23:39:22Z o4p4-ecdsa n10-r028 get T=100 rep 5 att 1: ok=100 tps=623.9799565657536 p50=130.759 ms flags=-
+2026-11-22T23:39:31Z o4p4-ecdsa n10-r029 issue T=1 rep 2 att 1: ok=1 tps=0.4877108987755717 p50=2050.395 ms flags=-
+2026-11-22T23:39:40Z o4p4-ecdsa n10-r030 issue T=1 rep 3 att 1: ok=1 tps=0.4890473828423907 p50=2044.792 ms flags=-
+2026-11-22T23:39:47Z o4p4-ecdsa n10-r031 get T=100 rep 2 att 1: ok=100 tps=694.9829114126827 p50=118.001 ms flags=-
+2026-11-22T23:39:55Z o4p4-ecdsa n10-r032 get T=10 rep 5 att 1: ok=10 tps=305.1754459742415 p50=30.283 ms flags=-
+2026-11-22T23:40:11Z o4p4-ecdsa n10-r033 get T=10000 rep 2 att 1: ok=10000 tps=1043.2124993829243 p50=281.469 ms flags=-
+2026-11-22T23:40:28Z o4p4-ecdsa n10-r034 get T=10000 rep 4 att 1: ok=10000 tps=1091.3639061414522 p50=278.089 ms flags=-
+2026-11-22T23:40:35Z o4p4-ecdsa n10-r035 get T=1 rep 1 att 1: ok=1 tps=145.06355959863814 p50=6.894 ms flags=-
+2026-11-22T23:41:31Z o4p4-ecdsa n10-r036 issue T=10000 rep 4 att 1: ok=10000 tps=203.8574099461065 p50=1461.175 ms flags=-
+2026-11-22T23:42:28Z o4p4-ecdsa n10-r037 issue T=10000 rep 2 att 1: ok=10000 tps=198.6187555943829 p50=1513.606 ms flags=-
+2026-11-22T23:42:41Z o4p4-ecdsa n10-r038 issue T=1000 rep 2 att 1: ok=1000 tps=180.92733273832943 p50=1513.678 ms flags=-
+2026-11-22T23:42:48Z o4p4-ecdsa n10-r039 get T=100 rep 1 att 1: ok=100 tps=1031.1704046009504 p50=72.192 ms flags=-
+2026-11-22T23:43:01Z o4p4-ecdsa n10-r040 issue T=1000 rep 5 att 1: ok=1000 tps=182.83312833796546 p50=1491.937 ms flags=-
+2026-11-22T23:44:00Z o4p4-ecdsa n10-r041 issue T=10000 rep 1 att 1: ok=10000 tps=191.98141213728562 p50=1568.718 ms flags=-
+2026-11-22T23:44:07Z o4p4-ecdsa n10-r042 get T=10 rep 3 att 1: ok=10 tps=590.1451774840966 p50=14.739 ms flags=-
+2026-11-22T23:44:15Z o4p4-ecdsa n10-r043 issue T=100 rep 3 att 1: ok=100 tps=137.7408527425725 p50=719.994 ms flags=-
+2026-11-22T23:44:31Z o4p4-ecdsa n10-r044 get T=10000 rep 5 att 1: ok=10000 tps=1143.0929925966138 p50=261.694 ms flags=-
+2026-11-22T23:44:39Z o4p4-ecdsa n10-r045 get T=1000 rep 5 att 1: ok=1000 tps=1112.2696004568875 p50=255.517 ms flags=-
+2026-11-22T23:44:55Z o4p4-ecdsa n10-r046 get T=10000 rep 3 att 1: ok=10000 tps=1132.6113844262961 p50=262.028 ms flags=-
+2026-11-22T23:45:02Z o4p4-ecdsa n10-r047 get T=100 rep 4 att 1: ok=100 tps=764.6706382334187 p50=101.177 ms flags=-
+2026-11-22T23:45:10Z o4p4-ecdsa n10-r048 issue T=100 rep 4 att 1: ok=100 tps=116.91849142301322 p50=841.652 ms flags=-
+2026-11-22T23:45:18Z o4p4-ecdsa n10-r049 get T=1000 rep 4 att 1: ok=1000 tps=1071.207157882499 p50=264.943 ms flags=-
+2026-11-22T23:45:27Z o4p4-ecdsa n10-r050 issue T=10 rep 2 att 1: ok=10 tps=4.774035976062867 p50=2094.285 ms flags=-
+2026-11-22T23:46:06Z network o4p4-ecdsa done (50 runs)
+2026-11-22T23:46:06Z network 11/30: {"identity": "ecdsa", "orgs": 1, "peers": 2}
+2026-11-22T23:46:28Z network o1p2-ecdsa up in 22 s
+2026-11-22T23:46:57Z setup done in 26 s; canary 1388356/s
+2026-11-22T23:46:58Z o1p2-ecdsa n11-r001 get T=100 rep 2 att 1: ok=100 tps=1045.6742896287526 p50=81.974 ms flags=-
+2026-11-22T23:47:13Z o1p2-ecdsa n11-r002 get T=10000 rep 5 att 1: ok=10000 tps=1172.9155804637576 p50=254.457 ms flags=-
+2026-11-22T23:47:20Z o1p2-ecdsa n11-r003 get T=100 rep 3 att 1: ok=100 tps=1152.1806412774754 p50=72.571 ms flags=-
+2026-11-22T23:47:29Z o1p2-ecdsa n11-r004 issue T=1000 rep 5 att 1: ok=1000 tps=352.13734960127084 p50=731.329 ms flags=-
+2026-11-22T23:47:36Z o1p2-ecdsa n11-r005 get T=1 rep 1 att 1: ok=1 tps=179.19316485591975 p50=5.581 ms flags=-
+2026-11-22T23:47:43Z o1p2-ecdsa n11-r006 issue T=100 rep 5 att 1: ok=100 tps=260.56045464651766 p50=367.87 ms flags=-
+2026-11-22T23:48:13Z o1p2-ecdsa n11-r007 issue T=10000 rep 2 att 1: ok=10000 tps=435.4791258052693 p50=681.921 ms flags=-
+2026-11-22T23:48:20Z o1p2-ecdsa n11-r008 get T=1000 rep 1 att 1: ok=1000 tps=1073.9908327837043 p50=262.654 ms flags=-
+2026-11-22T23:48:27Z o1p2-ecdsa n11-r009 get T=1000 rep 5 att 1: ok=1000 tps=1091.5940391765307 p50=247.209 ms flags=-
+2026-11-22T23:48:58Z o1p2-ecdsa n11-r010 issue T=10000 rep 3 att 1: ok=10000 tps=424.1548080309969 p50=696.831 ms flags=-
+2026-11-22T23:49:07Z o1p2-ecdsa n11-r011 issue T=1000 rep 3 att 1: ok=1000 tps=383.74432705724666 p50=741.658 ms flags=-
+2026-11-22T23:49:14Z o1p2-ecdsa n11-r012 get T=10 rep 4 att 1: ok=10 tps=504.5987362728329 p50=17.888 ms flags=-
+2026-11-22T23:49:20Z o1p2-ecdsa n11-r013 get T=1 rep 4 att 1: ok=1 tps=140.71891888469 p50=7.106 ms flags=-
+2026-11-22T23:49:51Z o1p2-ecdsa n11-r014 issue T=10000 rep 4 att 1: ok=10000 tps=419.89193975957306 p50=707.61 ms flags=-
+2026-11-22T23:50:06Z o1p2-ecdsa n11-r015 get T=10000 rep 4 att 1: ok=10000 tps=1217.6284443272543 p50=242.737 ms flags=-
+2026-11-22T23:50:15Z o1p2-ecdsa n11-r016 issue T=1000 rep 4 att 1: ok=1000 tps=371.90637856283996 p50=762.329 ms flags=-
+2026-11-22T23:50:22Z o1p2-ecdsa n11-r017 get T=1 rep 3 att 1: ok=1 tps=144.32190712740956 p50=6.929 ms flags=-
+2026-11-22T23:50:28Z o1p2-ecdsa n11-r018 get T=100 rep 1 att 1: ok=100 tps=922.7870146297176 p50=104.386 ms flags=-
+2026-11-22T23:50:35Z o1p2-ecdsa n11-r019 get T=100 rep 4 att 1: ok=100 tps=979.2593170428128 p50=82.009 ms flags=-
+2026-11-22T23:50:44Z o1p2-ecdsa n11-r020 issue T=1000 rep 1 att 1: ok=1000 tps=378.6239561276003 p50=753.941 ms flags=-
+2026-11-22T23:50:51Z o1p2-ecdsa n11-r021 issue T=100 rep 2 att 1: ok=100 tps=300.9825545394686 p50=324.39 ms flags=-
+2026-11-22T23:51:00Z o1p2-ecdsa n11-r022 issue T=1 rep 5 att 1: ok=1 tps=0.4936954513242218 p50=2025.54 ms flags=-
+2026-11-22T23:51:07Z o1p2-ecdsa n11-r023 get T=1000 rep 4 att 1: ok=1000 tps=1044.0236620988937 p50=255.212 ms flags=-
+2026-11-22T23:51:16Z o1p2-ecdsa n11-r024 issue T=10 rep 4 att 1: ok=10 tps=4.826543927384307 p50=2070.158 ms flags=-
+2026-11-22T23:51:31Z o1p2-ecdsa n11-r025 get T=10000 rep 3 att 1: ok=10000 tps=1146.5219177486797 p50=258.13 ms flags=-
+2026-11-22T23:51:40Z o1p2-ecdsa n11-r026 issue T=10 rep 1 att 1: ok=10 tps=4.886403484040084 p50=2045.812 ms flags=-
+2026-11-22T23:51:48Z o1p2-ecdsa n11-r027 issue T=1 rep 1 att 1: ok=1 tps=0.494652776527165 p50=2021.62 ms flags=-
+2026-11-22T23:51:57Z o1p2-ecdsa n11-r028 issue T=1 rep 3 att 1: ok=1 tps=0.49422052439855874 p50=2023.388 ms flags=-
+2026-11-22T23:52:04Z o1p2-ecdsa n11-r029 get T=1000 rep 2 att 1: ok=1000 tps=903.0387842063755 p50=319.785 ms flags=-
+2026-11-22T23:52:13Z o1p2-ecdsa n11-r030 issue T=1 rep 2 att 1: ok=1 tps=0.4938629266566829 p50=2024.853 ms flags=-
+2026-11-22T23:52:22Z o1p2-ecdsa n11-r031 issue T=10 rep 5 att 1: ok=10 tps=4.872451557702908 p50=2051.705 ms flags=-
+2026-11-22T23:52:29Z o1p2-ecdsa n11-r032 get T=1000 rep 3 att 1: ok=1000 tps=949.0818210423163 p50=283.938 ms flags=-
+2026-11-22T23:52:38Z o1p2-ecdsa n11-r033 issue T=1 rep 4 att 1: ok=1 tps=0.49418995180462405 p50=2023.513 ms flags=-
+2026-11-22T23:53:08Z o1p2-ecdsa n11-r034 issue T=10000 rep 1 att 1: ok=10000 tps=425.7271186398781 p50=696.769 ms flags=-
+2026-11-22T23:53:17Z o1p2-ecdsa n11-r035 issue T=10 rep 3 att 1: ok=10 tps=4.845303256745195 p50=2063.152 ms flags=-
+2026-11-22T23:53:23Z o1p2-ecdsa n11-r036 get T=1 rep 5 att 1: ok=1 tps=142.49561113517706 p50=7.018 ms flags=-
+2026-11-22T23:53:29Z o1p2-ecdsa n11-r037 get T=10 rep 3 att 1: ok=10 tps=634.7302561441254 p50=13.189 ms flags=-
+2026-11-22T23:53:38Z o1p2-ecdsa n11-r038 issue T=10 rep 2 att 1: ok=10 tps=4.8417559697083865 p50=2064.925 ms flags=-
+2026-11-22T23:53:45Z o1p2-ecdsa n11-r039 get T=10 rep 1 att 1: ok=10 tps=337.93733526610964 p50=28.696 ms flags=-
+2026-11-22T23:54:01Z o1p2-ecdsa n11-r040 get T=10000 rep 1 att 1: ok=10000 tps=1086.6360959045214 p50=270.69 ms flags=-
+2026-11-22T23:54:07Z o1p2-ecdsa n11-r041 get T=100 rep 5 att 1: ok=100 tps=753.6106011428172 p50=125.301 ms flags=-
+2026-11-22T23:54:23Z o1p2-ecdsa n11-r042 get T=10000 rep 2 att 1: ok=10000 tps=1110.2997537678134 p50=270.419 ms flags=-
+2026-11-22T23:54:30Z o1p2-ecdsa n11-r043 issue T=100 rep 1 att 1: ok=100 tps=255.82866536198654 p50=384.739 ms flags=-
+2026-11-22T23:54:37Z o1p2-ecdsa n11-r044 issue T=100 rep 3 att 1: ok=100 tps=271.09773308861776 p50=363.452 ms flags=-
+2026-11-22T23:54:43Z o1p2-ecdsa n11-r045 get T=1 rep 2 att 1: ok=1 tps=151.90204141153453 p50=6.583 ms flags=-
+2026-11-22T23:54:50Z o1p2-ecdsa n11-r046 get T=10 rep 2 att 1: ok=10 tps=301.8667074951451 p50=30.528 ms flags=-
+2026-11-22T23:54:59Z o1p2-ecdsa n11-r047 issue T=1000 rep 2 att 1: ok=1000 tps=341.5662939186833 p50=795.2 ms flags=-
+2026-11-22T23:55:30Z o1p2-ecdsa n11-r048 issue T=10000 rep 5 att 1: ok=10000 tps=422.30698041471254 p50=705.325 ms flags=-
+2026-11-22T23:55:37Z o1p2-ecdsa n11-r049 issue T=100 rep 4 att 1: ok=100 tps=274.79417559015866 p50=357.958 ms flags=-
+2026-11-22T23:55:43Z o1p2-ecdsa n11-r050 get T=10 rep 5 att 1: ok=10 tps=466.3622471552952 p50=19.802 ms flags=-
+2026-11-22T23:56:13Z network o1p2-ecdsa done (50 runs)
+2026-11-22T23:56:13Z network 12/30: {"identity": "mldsa44", "orgs": 1, "peers": 2}
+2026-11-22T23:56:35Z network o1p2-mldsa44 up in 22 s
+2026-11-22T23:57:06Z setup done in 28 s; canary 1393254/s
+2026-11-22T23:57:10Z o1p2-mldsa44 n12-r001 issue T=10 rep 1 att 1: ok=10 tps=4.772093235500765 p50=2090.445 ms flags=-
+2026-11-22T23:57:16Z o1p2-mldsa44 n12-r002 get T=10 rep 2 att 1: ok=10 tps=487.62536055628686 p50=14.893 ms flags=-
+2026-11-22T23:57:25Z o1p2-mldsa44 n12-r003 issue T=1 rep 1 att 1: ok=1 tps=0.48924084096551407 p50=2043.983 ms flags=-
+2026-11-22T23:57:33Z o1p2-mldsa44 n12-r004 issue T=10 rep 4 att 1: ok=10 tps=4.826435218929855 p50=2071.519 ms flags=-
+2026-11-22T23:57:44Z o1p2-mldsa44 n12-r005 issue T=1000 rep 4 att 1: ok=1000 tps=262.75465691968105 p50=987.522 ms flags=-
+2026-11-22T23:57:54Z o1p2-mldsa44 n12-r006 issue T=1000 rep 3 att 1: ok=1000 tps=264.980740694978 p50=947.625 ms flags=-
+2026-11-22T23:58:01Z o1p2-mldsa44 n12-r007 get T=100 rep 3 att 1: ok=100 tps=760.9582052685063 p50=114.868 ms flags=-
+2026-11-22T23:58:11Z o1p2-mldsa44 n12-r008 issue T=1000 rep 2 att 1: ok=1000 tps=273.05802451155 p50=979.029 ms flags=-
+2026-11-22T23:58:18Z o1p2-mldsa44 n12-r009 get T=100 rep 1 att 1: ok=100 tps=624.785214462898 p50=120.643 ms flags=-
+2026-11-22T23:58:25Z o1p2-mldsa44 n12-r010 issue T=100 rep 1 att 1: ok=100 tps=164.20762248893539 p50=595.659 ms flags=-
+2026-11-22T23:58:32Z o1p2-mldsa44 n12-r011 get T=100 rep 2 att 1: ok=100 tps=743.522688710092 p50=111.698 ms flags=-
+2026-11-22T23:58:38Z o1p2-mldsa44 n12-r012 get T=10 rep 1 att 1: ok=10 tps=296.0947588503612 p50=31.172 ms flags=-
+2026-11-22T23:58:55Z o1p2-mldsa44 n12-r013 get T=10000 rep 3 att 1: ok=10000 tps=942.2781068572092 p50=308.985 ms flags=-
+2026-11-22T23:59:03Z o1p2-mldsa44 n12-r014 get T=1000 rep 4 att 1: ok=1000 tps=919.1653143975498 p50=315.287 ms flags=-
+2026-11-22T23:59:20Z o1p2-mldsa44 n12-r015 get T=10000 rep 1 att 1: ok=10000 tps=992.322198237701 p50=295.819 ms flags=-
+2026-11-22T23:59:28Z o1p2-mldsa44 n12-r016 get T=1000 rep 2 att 1: ok=1000 tps=836.6623318745033 p50=349.346 ms flags=-
+2026-11-22T23:59:39Z o1p2-mldsa44 n12-r017 issue T=1000 rep 5 att 1: ok=1000 tps=230.76723642551957 p50=1000.388 ms flags=-
+2026-11-23T00:00:17Z o1p2-mldsa44 n12-r018 issue T=10000 rep 1 att 1: ok=10000 tps=310.9451236510958 p50=962.326 ms flags=-
+2026-11-23T00:00:26Z o1p2-mldsa44 n12-r019 issue T=1 rep 5 att 1: ok=1 tps=0.48972208794532296 p50=2041.974 ms flags=-
+2026-11-23T00:00:32Z o1p2-mldsa44 n12-r020 get T=10 rep 5 att 1: ok=10 tps=440.6223685205985 p50=16.878 ms flags=-
+2026-11-23T00:00:39Z o1p2-mldsa44 n12-r021 get T=10 rep 3 att 1: ok=10 tps=326.17105192773613 p50=25.587 ms flags=-
+2026-11-23T00:01:18Z o1p2-mldsa44 n12-r022 issue T=10000 rep 2 att 1: ok=10000 tps=306.26826853067615 p50=965.57 ms flags=-
+2026-11-23T00:01:27Z o1p2-mldsa44 n12-r023 issue T=1 rep 2 att 1: ok=1 tps=0.48999892592235433 p50=2040.821 ms flags=-
+2026-11-23T00:01:37Z o1p2-mldsa44 n12-r024 issue T=1000 rep 1 att 1: ok=1000 tps=266.2770658275501 p50=1004.699 ms flags=-
+2026-11-23T00:01:43Z o1p2-mldsa44 n12-r025 get T=1 rep 4 att 1: ok=1 tps=183.99402828981783 p50=5.435 ms flags=-
+2026-11-23T00:01:50Z o1p2-mldsa44 n12-r026 get T=1 rep 3 att 1: ok=1 tps=72.39519203259059 p50=13.813 ms flags=-
+2026-11-23T00:02:07Z o1p2-mldsa44 n12-r027 get T=10000 rep 4 att 1: ok=10000 tps=953.4821339827271 p50=305.412 ms flags=-
+2026-11-23T00:02:14Z o1p2-mldsa44 n12-r028 get T=100 rep 4 att 1: ok=100 tps=653.5552973561904 p50=134.417 ms flags=-
+2026-11-23T00:02:21Z o1p2-mldsa44 n12-r029 issue T=100 rep 3 att 1: ok=100 tps=175.4876502154324 p50=550.82 ms flags=-
+2026-11-23T00:02:28Z o1p2-mldsa44 n12-r030 issue T=100 rep 5 att 1: ok=100 tps=174.4014917075814 p50=567.904 ms flags=-
+2026-11-23T00:02:34Z o1p2-mldsa44 n12-r031 get T=1 rep 1 att 1: ok=1 tps=77.23934828836445 p50=12.947 ms flags=-
+2026-11-23T00:02:41Z o1p2-mldsa44 n12-r032 get T=10 rep 4 att 1: ok=10 tps=375.77013149023594 p50=24.255 ms flags=-
+2026-11-23T00:02:59Z o1p2-mldsa44 n12-r033 get T=10000 rep 2 att 1: ok=10000 tps=883.9697015332682 p50=322.308 ms flags=-
+2026-11-23T00:03:07Z o1p2-mldsa44 n12-r034 issue T=10 rep 2 att 1: ok=10 tps=4.804458475199203 p50=2080.538 ms flags=-
+2026-11-23T00:03:14Z o1p2-mldsa44 n12-r035 get T=100 rep 5 att 1: ok=100 tps=802.4760559200624 p50=107.142 ms flags=-
+2026-11-23T00:03:20Z o1p2-mldsa44 n12-r036 get T=1 rep 5 att 1: ok=1 tps=81.33549631529868 p50=12.295 ms flags=-
+2026-11-23T00:03:59Z o1p2-mldsa44 n12-r037 issue T=10000 rep 4 att 1: ok=10000 tps=306.9308489178519 p50=968.019 ms flags=-
+2026-11-23T00:04:08Z o1p2-mldsa44 n12-r038 issue T=10 rep 3 att 1: ok=10 tps=4.808496820069407 p50=2079.346 ms flags=-
+2026-11-23T00:04:16Z o1p2-mldsa44 n12-r039 issue T=1 rep 4 att 1: ok=1 tps=0.4907715725741282 p50=2037.608 ms flags=-
+2026-11-23T00:04:33Z o1p2-mldsa44 n12-r040 get T=10000 rep 5 att 1: ok=10000 tps=954.2043129582081 p50=309.116 ms flags=-
+2026-11-23T00:05:13Z o1p2-mldsa44 n12-r041 issue T=10000 rep 3 att 1: ok=10000 tps=303.1667244182905 p50=979.586 ms flags=-
+2026-11-23T00:05:21Z o1p2-mldsa44 n12-r042 get T=1000 rep 5 att 1: ok=1000 tps=802.9594619074442 p50=361.075 ms flags=-
+2026-11-23T00:05:28Z o1p2-mldsa44 n12-r043 get T=1000 rep 3 att 1: ok=1000 tps=871.5898524070662 p50=334.315 ms flags=-
+2026-11-23T00:05:35Z o1p2-mldsa44 n12-r044 issue T=100 rep 4 att 1: ok=100 tps=197.58556056420463 p50=481.355 ms flags=-
+2026-11-23T00:05:45Z o1p2-mldsa44 n12-r045 issue T=1 rep 3 att 1: ok=1 tps=0.38822750347868923 p50=2575.809 ms flags=-
+2026-11-23T00:05:51Z o1p2-mldsa44 n12-r046 get T=1 rep 2 att 1: ok=1 tps=131.2126396610935 p50=7.621 ms flags=-
+2026-11-23T00:05:58Z o1p2-mldsa44 n12-r047 issue T=100 rep 2 att 1: ok=100 tps=157.15018721128936 p50=617.433 ms flags=-
+2026-11-23T00:06:06Z o1p2-mldsa44 n12-r048 get T=1000 rep 1 att 1: ok=1000 tps=755.4515388769194 p50=370.553 ms flags=-
+2026-11-23T00:06:15Z o1p2-mldsa44 n12-r049 issue T=10 rep 5 att 1: ok=10 tps=4.855490804974496 p50=2059.064 ms flags=-
+2026-11-23T00:06:55Z o1p2-mldsa44 n12-r050 issue T=10000 rep 5 att 1: ok=10000 tps=296.00181765575684 p50=995.319 ms flags=-
+2026-11-23T00:07:40Z network o1p2-mldsa44 done (50 runs)
+2026-11-23T00:07:40Z network 13/30: {"identity": "ecdsa", "orgs": 2, "peers": 2}
+2026-11-23T00:08:06Z network o2p2-ecdsa up in 25 s
+2026-11-23T00:08:48Z setup done in 40 s; canary 1388096/s
+2026-11-23T00:08:50Z o2p2-ecdsa n13-r001 get T=1000 rep 3 att 1: ok=1000 tps=1100.015242691215 p50=265.534 ms flags=-
+2026-11-23T00:08:57Z o2p2-ecdsa n13-r002 get T=1 rep 1 att 1: ok=1 tps=168.4091399008407 p50=5.938 ms flags=-
+2026-11-23T00:09:04Z o2p2-ecdsa n13-r003 get T=100 rep 2 att 1: ok=100 tps=912.9227362905366 p50=98.574 ms flags=-
+2026-11-23T00:09:11Z o2p2-ecdsa n13-r004 get T=1 rep 2 att 1: ok=1 tps=137.7182265803614 p50=7.261 ms flags=-
+2026-11-23T00:09:19Z o2p2-ecdsa n13-r005 get T=1000 rep 2 att 1: ok=1000 tps=818.112658879452 p50=337.443 ms flags=-
+2026-11-23T00:09:26Z o2p2-ecdsa n13-r006 issue T=100 rep 4 att 1: ok=100 tps=138.9737524387392 p50=713.236 ms flags=-
+2026-11-23T00:09:35Z o2p2-ecdsa n13-r007 issue T=1 rep 5 att 1: ok=1 tps=0.488902552281111 p50=2045.397 ms flags=-
+2026-11-23T00:09:43Z o2p2-ecdsa n13-r008 issue T=1 rep 4 att 1: ok=1 tps=0.4902526259476167 p50=2039.765 ms flags=-
+2026-11-23T00:09:59Z o2p2-ecdsa n13-r009 get T=10000 rep 5 att 1: ok=10000 tps=1080.1610041416232 p50=274.832 ms flags=-
+2026-11-23T00:10:10Z o2p2-ecdsa n13-r010 issue T=1000 rep 2 att 1: ok=1000 tps=271.8479378674009 p50=800.682 ms flags=-
+2026-11-23T00:10:19Z o2p2-ecdsa n13-r011 issue T=10 rep 2 att 1: ok=10 tps=4.820845985965014 p50=2073.52 ms flags=-
+2026-11-23T00:10:26Z o2p2-ecdsa n13-r012 issue T=100 rep 5 att 1: ok=100 tps=170.73271259961336 p50=575.889 ms flags=-
+2026-11-23T00:10:33Z o2p2-ecdsa n13-r013 get T=1000 rep 4 att 1: ok=1000 tps=1113.2704153566053 p50=245.291 ms flags=-
+2026-11-23T00:10:40Z o2p2-ecdsa n13-r014 get T=100 rep 5 att 1: ok=100 tps=860.5713488087584 p50=100.112 ms flags=-
+2026-11-23T00:10:46Z o2p2-ecdsa n13-r015 get T=1 rep 3 att 1: ok=1 tps=127.84955891262928 p50=7.822 ms flags=-
+2026-11-23T00:10:57Z o2p2-ecdsa n13-r016 issue T=1000 rep 1 att 1: ok=1000 tps=239.3285972222281 p50=858.879 ms flags=-
+2026-11-23T00:11:13Z o2p2-ecdsa n13-r017 get T=10000 rep 4 att 1: ok=10000 tps=1139.988040499466 p50=260.004 ms flags=-
+2026-11-23T00:11:47Z o2p2-ecdsa n13-r018 issue T=10000 rep 1 att 1: ok=10000 tps=363.96008133972504 p50=803.669 ms flags=-
+2026-11-23T00:11:53Z o2p2-ecdsa n13-r019 get T=10 rep 4 att 1: ok=10 tps=547.9027242545304 p50=17.03 ms flags=-
+2026-11-23T00:12:01Z o2p2-ecdsa n13-r020 get T=1000 rep 5 att 1: ok=1000 tps=1037.3042738183958 p50=269.394 ms flags=-
+2026-11-23T00:12:10Z o2p2-ecdsa n13-r021 issue T=10 rep 3 att 1: ok=10 tps=4.807577757906884 p50=2079.395 ms flags=-
+2026-11-23T00:12:16Z o2p2-ecdsa n13-r022 get T=10 rep 5 att 1: ok=10 tps=350.212649120546 p50=26.838 ms flags=-
+2026-11-23T00:12:24Z o2p2-ecdsa n13-r023 get T=1000 rep 1 att 1: ok=1000 tps=770.8485829505531 p50=355.848 ms flags=-
+2026-11-23T00:12:31Z o2p2-ecdsa n13-r024 get T=10 rep 3 att 1: ok=10 tps=630.5292290336263 p50=14.15 ms flags=-
+2026-11-23T00:12:40Z o2p2-ecdsa n13-r025 issue T=10 rep 1 att 1: ok=10 tps=4.748941075420274 p50=2104.455 ms flags=-
+2026-11-23T00:12:48Z o2p2-ecdsa n13-r026 issue T=1 rep 3 att 1: ok=1 tps=0.49206491008521513 p50=2032.252 ms flags=-
+2026-11-23T00:12:57Z o2p2-ecdsa n13-r027 issue T=1 rep 2 att 1: ok=1 tps=0.4919979751921731 p50=2032.529 ms flags=-
+2026-11-23T00:13:13Z o2p2-ecdsa n13-r028 get T=10000 rep 3 att 1: ok=10000 tps=1107.7773851727334 p50=264.174 ms flags=-
+2026-11-23T00:13:23Z o2p2-ecdsa n13-r029 issue T=1000 rep 3 att 1: ok=1000 tps=253.83574320076207 p50=982.33 ms flags=-
+2026-11-23T00:13:31Z o2p2-ecdsa n13-r030 issue T=100 rep 3 att 1: ok=100 tps=162.58705451500688 p50=597.038 ms flags=-
+2026-11-23T00:13:38Z o2p2-ecdsa n13-r031 issue T=100 rep 2 att 1: ok=100 tps=162.05784578962388 p50=608.685 ms flags=-
+2026-11-23T00:13:44Z o2p2-ecdsa n13-r032 get T=1 rep 4 att 1: ok=1 tps=117.20994845223677 p50=8.532 ms flags=-
+2026-11-23T00:13:52Z o2p2-ecdsa n13-r033 issue T=100 rep 1 att 1: ok=100 tps=133.46740044729998 p50=743.62 ms flags=-
+2026-11-23T00:14:03Z o2p2-ecdsa n13-r034 issue T=1000 rep 5 att 1: ok=1000 tps=249.73214504292346 p50=893.885 ms flags=-
+2026-11-23T00:14:09Z o2p2-ecdsa n13-r035 get T=100 rep 3 att 1: ok=100 tps=874.0959302277048 p50=92.641 ms flags=-
+2026-11-23T00:14:45Z o2p2-ecdsa n13-r036 issue T=10000 rep 2 att 1: ok=10000 tps=350.31185468408455 p50=836.868 ms flags=-
+2026-11-23T00:14:51Z o2p2-ecdsa n13-r037 get T=100 rep 1 att 1: ok=100 tps=938.1646574103652 p50=93.718 ms flags=-
+2026-11-23T00:15:00Z o2p2-ecdsa n13-r038 issue T=10 rep 4 att 1: ok=10 tps=4.811881786450109 p50=2077.812 ms flags=-
+2026-11-23T00:15:35Z o2p2-ecdsa n13-r039 issue T=10000 rep 3 att 1: ok=10000 tps=354.92100385844947 p50=825.098 ms flags=-
+2026-11-23T00:15:44Z o2p2-ecdsa n13-r040 issue T=10 rep 5 att 1: ok=10 tps=4.796627311751381 p50=2083.911 ms flags=-
+2026-11-23T00:15:59Z o2p2-ecdsa n13-r041 get T=10000 rep 2 att 1: ok=10000 tps=1120.0768886547287 p50=265.63 ms flags=-
+2026-11-23T00:16:14Z o2p2-ecdsa n13-r042 get T=10000 rep 1 att 1: ok=10000 tps=1169.4393912666244 p50=254.143 ms flags=-
+2026-11-23T00:16:50Z o2p2-ecdsa n13-r043 issue T=10000 rep 5 att 1: ok=10000 tps=346.6011350839741 p50=837.545 ms flags=-
+2026-11-23T00:16:59Z o2p2-ecdsa n13-r044 issue T=1 rep 1 att 1: ok=1 tps=0.49021723202584216 p50=2039.912 ms flags=-
+2026-11-23T00:17:06Z o2p2-ecdsa n13-r045 get T=100 rep 4 att 1: ok=100 tps=910.8552439789986 p50=98.117 ms flags=-
+2026-11-23T00:17:16Z o2p2-ecdsa n13-r046 issue T=1000 rep 4 att 1: ok=1000 tps=266.7896365553941 p50=873.144 ms flags=-
+2026-11-23T00:17:23Z o2p2-ecdsa n13-r047 get T=10 rep 2 att 1: ok=10 tps=434.15423650525986 p50=21.437 ms flags=-
+2026-11-23T00:17:29Z o2p2-ecdsa n13-r048 get T=1 rep 5 att 1: ok=1 tps=132.2076294378796 p50=7.564 ms flags=-
+2026-11-23T00:17:36Z o2p2-ecdsa n13-r049 get T=10 rep 1 att 1: ok=10 tps=594.7560242391628 p50=14.378 ms flags=-
+2026-11-23T00:18:12Z o2p2-ecdsa n13-r050 issue T=10000 rep 4 att 1: ok=10000 tps=335.6411746957858 p50=863.855 ms flags=-
+2026-11-23T00:18:20Z o2p2-ecdsa E2 rep 1: {"fresh_connection": {"n": 200, "mean_ms": 6.305, "p50_ms": 5.874, "p95_ms": 8.932, "p99_ms": 10.853, "max_ms": 14.703}, "open_connection": {"n": 200, "mean_ms": 2.612, "p50_ms": 2.573, "p95_ms": 2.88
+2026-11-23T00:18:23Z o2p2-ecdsa E2 rep 2: {"fresh_connection": {"n": 200, "mean_ms": 4.957, "p50_ms": 4.677, "p95_ms": 6.038, "p99_ms": 8.383, "max_ms": 11.261}, "open_connection": {"n": 200, "mean_ms": 2.432, "p50_ms": 2.393, "p95_ms": 2.551
+2026-11-23T00:18:25Z o2p2-ecdsa E2 rep 3: {"fresh_connection": {"n": 200, "mean_ms": 4.815, "p50_ms": 4.624, "p95_ms": 5.984, "p99_ms": 7.216, "max_ms": 7.82}, "open_connection": {"n": 200, "mean_ms": 2.482, "p50_ms": 2.409, "p95_ms": 2.557, 
+2026-11-23T00:18:27Z o2p2-ecdsa E2 rep 4: {"fresh_connection": {"n": 200, "mean_ms": 4.912, "p50_ms": 4.639, "p95_ms": 6.228, "p99_ms": 9.279, "max_ms": 9.836}, "open_connection": {"n": 200, "mean_ms": 2.402, "p50_ms": 2.365, "p95_ms": 2.579,
+2026-11-23T00:18:30Z o2p2-ecdsa E2 rep 5: {"fresh_connection": {"n": 200, "mean_ms": 5.954, "p50_ms": 4.863, "p95_ms": 9.812, "p99_ms": 24.65, "max_ms": 31.872}, "open_connection": {"n": 200, "mean_ms": 2.485, "p50_ms": 2.394, "p95_ms": 2.642
+2026-11-23T00:18:55Z network o2p2-ecdsa done (50 runs)
+2026-11-23T00:18:55Z network 14/30: {"identity": "mldsa44", "orgs": 2, "peers": 2}
+2026-11-23T00:19:21Z network o2p2-mldsa44 up in 26 s
+2026-11-23T00:19:56Z setup done in 32 s; canary 1386204/s
+2026-11-23T00:20:00Z o2p2-mldsa44 n14-r001 issue T=10 rep 2 att 1: ok=10 tps=4.769995275820529 p50=2093.678 ms flags=-
+2026-11-23T00:20:07Z o2p2-mldsa44 n14-r002 get T=10 rep 2 att 1: ok=10 tps=446.7145884208541 p50=15.684 ms flags=-
+2026-11-23T00:20:14Z o2p2-mldsa44 n14-r003 get T=10 rep 1 att 1: ok=10 tps=349.99611154320075 p50=20.388 ms flags=-
+2026-11-23T00:20:20Z o2p2-mldsa44 n14-r004 get T=1 rep 1 att 1: ok=1 tps=78.26825536614986 p50=12.777 ms flags=-
+2026-11-23T00:20:38Z o2p2-mldsa44 n14-r005 get T=10000 rep 5 att 1: ok=10000 tps=967.7703992034499 p50=298.41 ms flags=-
+2026-11-23T00:20:46Z o2p2-mldsa44 n14-r006 issue T=10 rep 1 att 1: ok=10 tps=4.637209313560569 p50=2156.327 ms flags=-
+2026-11-23T00:21:04Z o2p2-mldsa44 n14-r007 get T=10000 rep 2 att 1: ok=10000 tps=941.0592246172896 p50=310.398 ms flags=-
+2026-11-23T00:21:12Z o2p2-mldsa44 n14-r008 issue T=100 rep 1 att 1: ok=100 tps=121.15722113036747 p50=805.737 ms flags=-
+2026-11-23T00:21:19Z o2p2-mldsa44 n14-r009 issue T=100 rep 2 att 1: ok=100 tps=115.40399109331385 p50=850.573 ms flags=-
+2026-11-23T00:21:28Z o2p2-mldsa44 n14-r010 issue T=10 rep 3 att 1: ok=10 tps=4.778620054003463 p50=2091.841 ms flags=-
+2026-11-23T00:21:35Z o2p2-mldsa44 n14-r011 get T=1 rep 5 att 1: ok=1 tps=58.08427040202737 p50=17.216 ms flags=-
+2026-11-23T00:22:22Z o2p2-mldsa44 n14-r012 issue T=10000 rep 4 att 1: ok=10000 tps=247.3330695544944 p50=1177.932 ms flags=-
+2026-11-23T00:22:34Z o2p2-mldsa44 n14-r013 issue T=1000 rep 1 att 1: ok=1000 tps=187.1041898218587 p50=1214.587 ms flags=-
+2026-11-23T00:22:51Z o2p2-mldsa44 n14-r014 get T=10000 rep 3 att 1: ok=10000 tps=946.5874714923527 p50=314.581 ms flags=-
+2026-11-23T00:23:00Z o2p2-mldsa44 n14-r015 issue T=10 rep 4 att 1: ok=10 tps=4.714295893595449 p50=2118.278 ms flags=-
+2026-11-23T00:23:07Z o2p2-mldsa44 n14-r016 get T=100 rep 4 att 1: ok=100 tps=489.8115427557916 p50=162.48 ms flags=-
+2026-11-23T00:23:14Z o2p2-mldsa44 n14-r017 get T=1 rep 2 att 1: ok=1 tps=64.9945771774532 p50=15.386 ms flags=-
+2026-11-23T00:23:21Z o2p2-mldsa44 n14-r018 get T=100 rep 1 att 1: ok=100 tps=467.17635950084207 p50=176.896 ms flags=-
+2026-11-23T00:23:33Z o2p2-mldsa44 n14-r019 issue T=1000 rep 3 att 1: ok=1000 tps=188.73433605228698 p50=1211.134 ms flags=-
+2026-11-23T00:24:21Z o2p2-mldsa44 n14-r020 issue T=10000 rep 2 att 1: ok=10000 tps=242.98821465389253 p50=1219.826 ms flags=-
+2026-11-23T00:24:33Z o2p2-mldsa44 n14-r021 issue T=1000 rep 4 att 1: ok=1000 tps=201.85380948018584 p50=1188.285 ms flags=-
+2026-11-23T00:25:21Z o2p2-mldsa44 n14-r022 issue T=10000 rep 1 att 1: ok=10000 tps=242.46095165300738 p50=1215.24 ms flags=-
+2026-11-23T00:25:28Z o2p2-mldsa44 n14-r023 get T=100 rep 2 att 1: ok=100 tps=646.9693568010513 p50=129.787 ms flags=-
+2026-11-23T00:25:34Z o2p2-mldsa44 n14-r024 get T=100 rep 3 att 1: ok=100 tps=776.6238579687922 p50=107.757 ms flags=-
+2026-11-23T00:25:51Z o2p2-mldsa44 n14-r025 get T=10000 rep 4 att 1: ok=10000 tps=966.2128439401483 p50=305.59 ms flags=-
+2026-11-23T00:25:59Z o2p2-mldsa44 n14-r026 get T=1000 rep 2 att 1: ok=1000 tps=876.6434654207109 p50=338.877 ms flags=-
+2026-11-23T00:26:08Z o2p2-mldsa44 n14-r027 issue T=10 rep 5 att 1: ok=10 tps=4.792151785676398 p50=2086.303 ms flags=-
+2026-11-23T00:26:14Z o2p2-mldsa44 n14-r028 get T=1 rep 4 att 1: ok=1 tps=112.6934777973564 p50=8.874 ms flags=-
+2026-11-23T00:26:21Z o2p2-mldsa44 n14-r029 get T=1 rep 3 att 1: ok=1 tps=75.79255517015883 p50=13.194 ms flags=-
+2026-11-23T00:26:28Z o2p2-mldsa44 n14-r030 get T=10 rep 5 att 1: ok=10 tps=306.1350130104319 p50=28.612 ms flags=-
+2026-11-23T00:26:34Z o2p2-mldsa44 n14-r031 get T=10 rep 3 att 1: ok=10 tps=335.50421334578726 p50=26.902 ms flags=-
+2026-11-23T00:26:43Z o2p2-mldsa44 n14-r032 issue T=1 rep 4 att 1: ok=1 tps=0.4871775744203961 p50=2052.64 ms flags=-
+2026-11-23T00:26:50Z o2p2-mldsa44 n14-r033 get T=100 rep 5 att 1: ok=100 tps=498.72923541451763 p50=166.679 ms flags=-
+2026-11-23T00:26:58Z o2p2-mldsa44 n14-r034 issue T=100 rep 5 att 1: ok=100 tps=103.10706734174768 p50=962.439 ms flags=-
+2026-11-23T00:27:05Z o2p2-mldsa44 n14-r035 issue T=100 rep 3 att 1: ok=100 tps=104.83151523424945 p50=934.728 ms flags=-
+2026-11-23T00:27:54Z o2p2-mldsa44 n14-r036 issue T=10000 rep 5 att 1: ok=10000 tps=237.37459630544194 p50=1244.5 ms flags=-
+2026-11-23T00:28:06Z o2p2-mldsa44 n14-r037 issue T=1000 rep 5 att 1: ok=1000 tps=194.25194255541072 p50=1203.414 ms flags=-
+2026-11-23T00:28:15Z o2p2-mldsa44 n14-r038 issue T=1 rep 2 att 1: ok=1 tps=0.48681720809879386 p50=2054.159 ms flags=-
+2026-11-23T00:28:24Z o2p2-mldsa44 n14-r039 get T=1000 rep 4 att 1: ok=1000 tps=839.3691318392479 p50=332.466 ms flags=-
+2026-11-23T00:28:31Z o2p2-mldsa44 n14-r040 issue T=100 rep 4 att 1: ok=100 tps=117.93059866819796 p50=835.911 ms flags=-
+2026-11-23T00:28:40Z o2p2-mldsa44 n14-r041 issue T=1 rep 1 att 1: ok=1 tps=0.4894146523674877 p50=2043.257 ms flags=-
+2026-11-23T00:28:48Z o2p2-mldsa44 n14-r042 get T=1000 rep 3 att 1: ok=1000 tps=736.3465810639614 p50=383.261 ms flags=-
+2026-11-23T00:28:56Z o2p2-mldsa44 n14-r043 get T=1000 rep 1 att 1: ok=1000 tps=772.7457829392581 p50=380.875 ms flags=-
+2026-11-23T00:29:46Z o2p2-mldsa44 n14-r044 issue T=10000 rep 3 att 1: ok=10000 tps=231.8802876593719 p50=1265.392 ms flags=-
+2026-11-23T00:29:54Z o2p2-mldsa44 n14-r045 get T=1000 rep 5 att 1: ok=1000 tps=814.5865325506636 p50=354.183 ms flags=-
+2026-11-23T00:30:06Z o2p2-mldsa44 n14-r046 issue T=1000 rep 2 att 1: ok=1000 tps=197.27875924529323 p50=1286.292 ms flags=-
+2026-11-23T00:30:14Z o2p2-mldsa44 n14-r047 issue T=1 rep 3 att 1: ok=1 tps=0.4870986783455602 p50=2052.972 ms flags=-
+2026-11-23T00:30:21Z o2p2-mldsa44 n14-r048 get T=10 rep 4 att 1: ok=10 tps=517.6670712234828 p50=16.685 ms flags=-
+2026-11-23T00:30:38Z o2p2-mldsa44 n14-r049 get T=10000 rep 1 att 1: ok=10000 tps=949.7527663148227 p50=310.794 ms flags=-
+2026-11-23T00:30:47Z o2p2-mldsa44 n14-r050 issue T=1 rep 5 att 1: ok=1 tps=0.48730179813155006 p50=2052.116 ms flags=-
+2026-11-23T00:30:56Z o2p2-mldsa44 E2 rep 1: {"fresh_connection": {"n": 200, "mean_ms": 11.965, "p50_ms": 11.566, "p95_ms": 17.224, "p99_ms": 19.543, "max_ms": 21.474}, "open_connection": {"n": 200, "mean_ms": 4.591, "p50_ms": 4.294, "p95_ms": 6
+2026-11-23T00:30:59Z o2p2-mldsa44 E2 rep 2: {"fresh_connection": {"n": 200, "mean_ms": 7.117, "p50_ms": 6.871, "p95_ms": 9.189, "p99_ms": 9.909, "max_ms": 14.104}, "open_connection": {"n": 200, "mean_ms": 3.887, "p50_ms": 3.677, "p95_ms": 5.492
+2026-11-23T00:31:02Z o2p2-mldsa44 E2 rep 3: {"fresh_connection": {"n": 200, "mean_ms": 6.886, "p50_ms": 6.641, "p95_ms": 8.966, "p99_ms": 10.286, "max_ms": 11.441}, "open_connection": {"n": 200, "mean_ms": 3.998, "p50_ms": 3.795, "p95_ms": 5.60
+2026-11-23T00:31:05Z o2p2-mldsa44 E2 rep 4: {"fresh_connection": {"n": 200, "mean_ms": 6.612, "p50_ms": 6.462, "p95_ms": 8.262, "p99_ms": 9.067, "max_ms": 10.755}, "open_connection": {"n": 200, "mean_ms": 3.747, "p50_ms": 3.562, "p95_ms": 5.033
+2026-11-23T00:31:08Z o2p2-mldsa44 E2 rep 5: {"fresh_connection": {"n": 200, "mean_ms": 6.536, "p50_ms": 6.362, "p95_ms": 8.114, "p99_ms": 9.363, "max_ms": 10.426}, "open_connection": {"n": 200, "mean_ms": 3.786, "p50_ms": 3.602, "p95_ms": 4.925
+2026-11-23T00:31:53Z network o2p2-mldsa44 done (50 runs)
+2026-11-23T00:31:53Z network 15/30: {"identity": "ecdsa", "orgs": 1, "peers": 1}
+2026-11-23T00:32:13Z network o1p1-ecdsa up in 20 s
+2026-11-23T00:32:42Z setup done in 26 s; canary 1404529/s
+2026-11-23T00:32:43Z o1p1-ecdsa n15-r001 get T=1 rep 3 att 1: ok=1 tps=186.39040626212122 p50=5.365 ms flags=-
+2026-11-23T00:32:49Z o1p1-ecdsa n15-r002 get T=1 rep 5 att 1: ok=1 tps=185.59738322537441 p50=5.388 ms flags=-
+2026-11-23T00:33:05Z o1p1-ecdsa n15-r003 get T=10000 rep 1 att 1: ok=10000 tps=1089.1922449789683 p50=272.529 ms flags=-
+2026-11-23T00:33:12Z o1p1-ecdsa n15-r004 get T=1000 rep 1 att 1: ok=1000 tps=1070.9549783078712 p50=277.814 ms flags=-
+2026-11-23T00:33:21Z o1p1-ecdsa n15-r005 issue T=1 rep 1 att 1: ok=1 tps=0.4921364334322264 p50=2031.957 ms flags=-
+2026-11-23T00:33:27Z o1p1-ecdsa n15-r006 get T=1 rep 4 att 1: ok=1 tps=156.55300344588815 p50=6.388 ms flags=-
+2026-11-23T00:33:36Z o1p1-ecdsa n15-r007 issue T=1 rep 4 att 1: ok=1 tps=0.4939425896326956 p50=2024.527 ms flags=-
+2026-11-23T00:33:45Z o1p1-ecdsa n15-r008 issue T=1000 rep 2 att 1: ok=1000 tps=385.14713637975865 p50=698.295 ms flags=-
+2026-11-23T00:33:52Z o1p1-ecdsa n15-r009 issue T=100 rep 4 att 1: ok=100 tps=259.1862064750256 p50=378.152 ms flags=-
+2026-11-23T00:33:58Z o1p1-ecdsa n15-r010 get T=10 rep 4 att 1: ok=10 tps=445.74204907619963 p50=19.994 ms flags=-
+2026-11-23T00:34:14Z o1p1-ecdsa n15-r011 get T=10000 rep 3 att 1: ok=10000 tps=1178.4380929476247 p50=251.063 ms flags=-
+2026-11-23T00:34:22Z o1p1-ecdsa n15-r012 issue T=1 rep 5 att 1: ok=1 tps=0.496126357771143 p50=2015.616 ms flags=-
+2026-11-23T00:34:32Z o1p1-ecdsa n15-r013 issue T=1000 rep 4 att 1: ok=1000 tps=365.39116533745795 p50=724.314 ms flags=-
+2026-11-23T00:34:38Z o1p1-ecdsa n15-r014 get T=100 rep 5 att 1: ok=100 tps=888.5641246250992 p50=88.935 ms flags=-
+2026-11-23T00:35:07Z o1p1-ecdsa n15-r015 issue T=10000 rep 3 att 1: ok=10000 tps=442.79518768319656 p50=664.333 ms flags=-
+2026-11-23T00:35:16Z o1p1-ecdsa n15-r016 issue T=1000 rep 1 att 1: ok=1000 tps=394.81365502396716 p50=726.747 ms flags=-
+2026-11-23T00:35:45Z o1p1-ecdsa n15-r017 issue T=10000 rep 4 att 1: ok=10000 tps=447.4261437302119 p50=659.472 ms flags=-
+2026-11-23T00:35:52Z o1p1-ecdsa n15-r018 issue T=100 rep 5 att 1: ok=100 tps=272.7604136134548 p50=352.561 ms flags=-
+2026-11-23T00:36:01Z o1p1-ecdsa n15-r019 issue T=10 rep 5 att 1: ok=10 tps=4.915683739572663 p50=2033.953 ms flags=-
+2026-11-23T00:36:10Z o1p1-ecdsa n15-r020 issue T=1000 rep 5 att 1: ok=1000 tps=379.48086259035915 p50=748.596 ms flags=-
+2026-11-23T00:36:16Z o1p1-ecdsa n15-r021 issue T=100 rep 3 att 1: ok=100 tps=307.9182410436522 p50=313.319 ms flags=-
+2026-11-23T00:36:24Z o1p1-ecdsa n15-r022 get T=1000 rep 3 att 1: ok=1000 tps=1081.137269830389 p50=256.126 ms flags=-
+2026-11-23T00:36:53Z o1p1-ecdsa n15-r023 issue T=10000 rep 5 att 1: ok=10000 tps=451.97182558507495 p50=658.305 ms flags=-
+2026-11-23T00:37:08Z o1p1-ecdsa n15-r024 get T=10000 rep 5 att 1: ok=10000 tps=1199.8575846797758 p50=248.233 ms flags=-
+2026-11-23T00:37:16Z o1p1-ecdsa n15-r025 issue T=1 rep 2 att 1: ok=1 tps=0.4944011839508211 p50=2022.649 ms flags=-
+2026-11-23T00:37:32Z o1p1-ecdsa n15-r026 get T=10000 rep 2 att 1: ok=10000 tps=1101.0681670610757 p50=265.729 ms flags=-
+2026-11-23T00:37:38Z o1p1-ecdsa n15-r027 get T=10 rep 5 att 1: ok=10 tps=435.02694252363136 p50=21.574 ms flags=-
+2026-11-23T00:37:45Z o1p1-ecdsa n15-r028 get T=100 rep 3 att 1: ok=100 tps=533.3840261511788 p50=162.013 ms flags=-
+2026-11-23T00:37:53Z o1p1-ecdsa n15-r029 issue T=10 rep 3 att 1: ok=10 tps=4.832731372018729 p50=2068.651 ms flags=-
+2026-11-23T00:38:00Z o1p1-ecdsa n15-r030 get T=100 rep 1 att 1: ok=100 tps=583.6679686625866 p50=134.731 ms flags=-
+2026-11-23T00:38:09Z o1p1-ecdsa n15-r031 issue T=10 rep 4 att 1: ok=10 tps=4.845326419228257 p50=2063.519 ms flags=-
+2026-11-23T00:38:17Z o1p1-ecdsa n15-r032 issue T=1 rep 3 att 1: ok=1 tps=0.49406597930109497 p50=2024.021 ms flags=-
+2026-11-23T00:38:24Z o1p1-ecdsa n15-r033 get T=100 rep 2 att 1: ok=100 tps=538.8754968149171 p50=166.672 ms flags=-
+2026-11-23T00:38:31Z o1p1-ecdsa n15-r034 get T=1000 rep 5 att 1: ok=1000 tps=885.3688245632944 p50=324.317 ms flags=-
+2026-11-23T00:38:38Z o1p1-ecdsa n15-r035 get T=10 rep 1 att 1: ok=10 tps=478.44179545043954 p50=19.771 ms flags=-
+2026-11-23T00:39:07Z o1p1-ecdsa n15-r036 issue T=10000 rep 1 att 1: ok=10000 tps=445.34987974281773 p50=653.433 ms flags=-
+2026-11-23T00:39:14Z o1p1-ecdsa n15-r037 get T=1000 rep 4 att 1: ok=1000 tps=1150.8190204619546 p50=253.114 ms flags=-
+2026-11-23T00:39:21Z o1p1-ecdsa n15-r038 get T=1000 rep 2 att 1: ok=1000 tps=1112.0251043136818 p50=250.75 ms flags=-
+2026-11-23T00:39:28Z o1p1-ecdsa n15-r039 issue T=100 rep 1 att 1: ok=100 tps=265.3327068368215 p50=368.453 ms flags=-
+2026-11-23T00:39:43Z o1p1-ecdsa n15-r040 get T=10000 rep 4 att 1: ok=10000 tps=1168.4386450398579 p50=255.388 ms flags=-
+2026-11-23T00:39:52Z o1p1-ecdsa n15-r041 issue T=10 rep 2 att 1: ok=10 tps=4.8148585626197145 p50=2076.485 ms flags=-
+2026-11-23T00:39:59Z o1p1-ecdsa n15-r042 get T=1 rep 1 att 1: ok=1 tps=122.50055982755842 p50=8.163 ms flags=-
+2026-11-23T00:40:05Z o1p1-ecdsa n15-r043 get T=10 rep 2 att 1: ok=10 tps=306.7715117617271 p50=29.85 ms flags=-
+2026-11-23T00:40:35Z o1p1-ecdsa n15-r044 issue T=10000 rep 2 att 1: ok=10000 tps=436.9572677899954 p50=664.112 ms flags=-
+2026-11-23T00:40:44Z o1p1-ecdsa n15-r045 issue T=1000 rep 3 att 1: ok=1000 tps=405.1833327434134 p50=692.293 ms flags=-
+2026-11-23T00:40:50Z o1p1-ecdsa n15-r046 get T=1 rep 2 att 1: ok=1 tps=145.57570679189283 p50=6.869 ms flags=-
+2026-11-23T00:40:57Z o1p1-ecdsa n15-r047 issue T=100 rep 2 att 1: ok=100 tps=269.1432612330116 p50=361.13 ms flags=-
+2026-11-23T00:41:04Z o1p1-ecdsa n15-r048 get T=100 rep 4 att 1: ok=100 tps=950.549614440917 p50=83.382 ms flags=-
+2026-11-23T00:41:10Z o1p1-ecdsa n15-r049 get T=10 rep 3 att 1: ok=10 tps=469.6429821014363 p50=20.281 ms flags=-
+2026-11-23T00:41:18Z o1p1-ecdsa n15-r050 issue T=10 rep 1 att 1: ok=10 tps=4.890039663444233 p50=2044.592 ms flags=-
+2026-11-23T00:41:46Z network o1p1-ecdsa done (50 runs)
+2026-11-23T00:41:46Z network 16/30: {"identity": "mldsa44", "orgs": 1, "peers": 1}
+2026-11-23T00:42:08Z network o1p1-mldsa44 up in 22 s
+2026-11-23T00:42:38Z setup done in 28 s; canary 1392587/s
+2026-11-23T00:43:10Z o1p1-mldsa44 n16-r001 issue T=10000 rep 4 att 1: ok=10000 tps=330.07687638886665 p50=894.92 ms flags=-
+2026-11-23T00:43:47Z o1p1-mldsa44 n16-r002 issue T=10000 rep 3 att 1: ok=10000 tps=327.4710365423842 p50=895.936 ms flags=-
+2026-11-23T00:43:55Z o1p1-mldsa44 n16-r003 issue T=1 rep 4 att 1: ok=1 tps=0.49041672989977375 p50=2039.082 ms flags=-
+2026-11-23T00:44:12Z o1p1-mldsa44 n16-r004 get T=10000 rep 2 att 1: ok=10000 tps=979.5773621797283 p50=298.003 ms flags=-
+2026-11-23T00:44:20Z o1p1-mldsa44 n16-r005 get T=1000 rep 4 att 1: ok=1000 tps=925.404089702887 p50=310.655 ms flags=-
+2026-11-23T00:44:26Z o1p1-mldsa44 n16-r006 get T=10 rep 3 att 1: ok=10 tps=464.7391270563312 p50=16.544 ms flags=-
+2026-11-23T00:44:35Z o1p1-mldsa44 n16-r007 issue T=10 rep 2 att 1: ok=10 tps=4.843273791158577 p50=2064.317 ms flags=-
+2026-11-23T00:45:13Z o1p1-mldsa44 n16-r008 issue T=10000 rep 1 att 1: ok=10000 tps=325.399426574245 p50=907.245 ms flags=-
+2026-11-23T00:45:29Z o1p1-mldsa44 n16-r009 get T=10000 rep 1 att 1: ok=10000 tps=990.2251602725566 p50=298.009 ms flags=-
+2026-11-23T00:45:36Z o1p1-mldsa44 n16-r010 get T=1 rep 4 att 1: ok=1 tps=85.57313893398117 p50=11.686 ms flags=-
+2026-11-23T00:45:42Z o1p1-mldsa44 n16-r011 get T=100 rep 5 att 1: ok=100 tps=586.4333018676681 p50=151.369 ms flags=-
+2026-11-23T00:45:50Z o1p1-mldsa44 n16-r012 get T=1000 rep 2 att 1: ok=1000 tps=879.3695261692742 p50=318.218 ms flags=-
+2026-11-23T00:45:58Z o1p1-mldsa44 n16-r013 get T=1000 rep 1 att 1: ok=1000 tps=833.1589955078225 p50=350.172 ms flags=-
+2026-11-23T00:46:15Z o1p1-mldsa44 n16-r014 get T=10000 rep 3 att 1: ok=10000 tps=997.836739441593 p50=294.838 ms flags=-
+2026-11-23T00:46:21Z o1p1-mldsa44 n16-r015 get T=1 rep 5 att 1: ok=1 tps=79.71387183986312 p50=12.545 ms flags=-
+2026-11-23T00:46:28Z o1p1-mldsa44 n16-r016 get T=1 rep 3 att 1: ok=1 tps=88.47914002522894 p50=11.302 ms flags=-
+2026-11-23T00:46:34Z o1p1-mldsa44 n16-r017 get T=1 rep 2 att 1: ok=1 tps=96.7876095599445 p50=10.332 ms flags=-
+2026-11-23T00:46:41Z o1p1-mldsa44 n16-r018 issue T=100 rep 2 att 1: ok=100 tps=154.4968322293963 p50=633.306 ms flags=-
+2026-11-23T00:47:19Z o1p1-mldsa44 n16-r019 issue T=10000 rep 2 att 1: ok=10000 tps=323.0507612488814 p50=914.467 ms flags=-
+2026-11-23T00:47:27Z o1p1-mldsa44 n16-r020 issue T=1 rep 1 att 1: ok=1 tps=0.49044944220905384 p50=2038.946 ms flags=-
+2026-11-23T00:47:37Z o1p1-mldsa44 n16-r021 issue T=1000 rep 2 att 1: ok=1000 tps=268.57707956977333 p50=1017.662 ms flags=-
+2026-11-23T00:47:44Z o1p1-mldsa44 n16-r022 get T=1 rep 1 att 1: ok=1 tps=95.64615818554647 p50=10.455 ms flags=-
+2026-11-23T00:47:51Z o1p1-mldsa44 n16-r023 get T=10 rep 1 att 1: ok=10 tps=429.05288720414126 p50=17.806 ms flags=-
+2026-11-23T00:47:59Z o1p1-mldsa44 n16-r024 issue T=1 rep 3 att 1: ok=1 tps=0.49114300262194033 p50=2036.067 ms flags=-
+2026-11-23T00:48:06Z o1p1-mldsa44 n16-r025 get T=100 rep 4 att 1: ok=100 tps=494.3532109002352 p50=166.531 ms flags=-
+2026-11-23T00:48:12Z o1p1-mldsa44 n16-r026 get T=100 rep 3 att 1: ok=100 tps=603.2868467033885 p50=142.618 ms flags=-
+2026-11-23T00:48:21Z o1p1-mldsa44 n16-r027 issue T=10 rep 3 att 1: ok=10 tps=4.768428703530259 p50=2096.244 ms flags=-
+2026-11-23T00:48:28Z o1p1-mldsa44 n16-r028 issue T=100 rep 4 att 1: ok=100 tps=144.0807376123456 p50=675.655 ms flags=-
+2026-11-23T00:48:37Z o1p1-mldsa44 n16-r029 issue T=1 rep 2 att 1: ok=1 tps=0.49202024832576824 p50=2032.437 ms flags=-
+2026-11-23T00:48:47Z o1p1-mldsa44 n16-r030 issue T=1000 rep 5 att 1: ok=1000 tps=281.2985146757683 p50=932.862 ms flags=-
+2026-11-23T00:48:54Z o1p1-mldsa44 n16-r031 get T=1000 rep 5 att 1: ok=1000 tps=901.3536679009245 p50=317.327 ms flags=-
+2026-11-23T00:49:01Z o1p1-mldsa44 n16-r032 get T=10 rep 4 att 1: ok=10 tps=510.0105378377328 p50=14.907 ms flags=-
+2026-11-23T00:49:09Z o1p1-mldsa44 n16-r033 issue T=1 rep 5 att 1: ok=1 tps=0.491279300160296 p50=2035.502 ms flags=-
+2026-11-23T00:49:16Z o1p1-mldsa44 n16-r034 issue T=100 rep 5 att 1: ok=100 tps=164.45869574794608 p50=596.331 ms flags=-
+2026-11-23T00:49:23Z o1p1-mldsa44 n16-r035 get T=100 rep 2 att 1: ok=100 tps=591.8635569839722 p50=142.291 ms flags=-
+2026-11-23T00:49:31Z o1p1-mldsa44 n16-r036 get T=1000 rep 3 att 1: ok=1000 tps=751.0147256609221 p50=373.257 ms flags=-
+2026-11-23T00:49:37Z o1p1-mldsa44 n16-r037 get T=100 rep 1 att 1: ok=100 tps=735.0497622441117 p50=118.067 ms flags=-
+2026-11-23T00:49:45Z o1p1-mldsa44 n16-r038 issue T=100 rep 1 att 1: ok=100 tps=181.62571272018366 p50=544.934 ms flags=-
+2026-11-23T00:49:53Z o1p1-mldsa44 n16-r039 issue T=10 rep 4 att 1: ok=10 tps=4.786248332021174 p50=2086.721 ms flags=-
+2026-11-23T00:50:00Z o1p1-mldsa44 n16-r040 issue T=100 rep 3 att 1: ok=100 tps=176.8100003043077 p50=554.52 ms flags=-
+2026-11-23T00:50:09Z o1p1-mldsa44 n16-r041 issue T=10 rep 5 att 1: ok=10 tps=4.791243498850335 p50=2086.506 ms flags=-
+2026-11-23T00:50:46Z o1p1-mldsa44 n16-r042 issue T=10000 rep 5 att 1: ok=10000 tps=322.0017572057713 p50=917.017 ms flags=-
+2026-11-23T00:50:53Z o1p1-mldsa44 n16-r043 get T=10 rep 5 att 1: ok=10 tps=317.721201869408 p50=23.972 ms flags=-
+2026-11-23T00:51:03Z o1p1-mldsa44 n16-r044 issue T=1000 rep 1 att 1: ok=1000 tps=285.9579222725732 p50=954.031 ms flags=-
+2026-11-23T00:51:13Z o1p1-mldsa44 n16-r045 issue T=1000 rep 3 att 1: ok=1000 tps=288.37127195915764 p50=947.108 ms flags=-
+2026-11-23T00:51:29Z o1p1-mldsa44 n16-r046 get T=10000 rep 4 att 1: ok=10000 tps=981.9768899408192 p50=301.432 ms flags=-
+2026-11-23T00:51:46Z o1p1-mldsa44 n16-r047 get T=10000 rep 5 att 1: ok=10000 tps=952.1429930761636 p50=313.928 ms flags=-
+2026-11-23T00:51:53Z o1p1-mldsa44 n16-r048 get T=10 rep 2 att 1: ok=10 tps=491.7215481184201 p50=14.613 ms flags=-
+2026-11-23T00:52:03Z o1p1-mldsa44 n16-r049 issue T=1000 rep 4 att 1: ok=1000 tps=285.56220531920445 p50=980.87 ms flags=-
+2026-11-23T00:52:11Z o1p1-mldsa44 n16-r050 issue T=10 rep 1 att 1: ok=10 tps=4.816447114985626 p50=2075.786 ms flags=-
+2026-11-23T00:52:54Z network o1p1-mldsa44 done (50 runs)
+2026-11-23T00:52:54Z network 17/30: {"identity": "ecdsa", "orgs": 2, "peers": 2}
+2026-11-23T00:53:21Z network o2p2-ecdsa-e3r3 up in 26 s
+2026-11-23T00:54:03Z setup done in 40 s; canary 1387056/s
+2026-11-23T00:55:06Z o2p2-ecdsa-e3r3 E3 90% rep 3: {"achieved_tps": 302.39380810702517, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 18694, "mean_ms": 367.211, "p50_ms": 359.877, "p95_ms": 513.987, "p99_ms": 571.381, "
+2026-11-23T00:56:15Z o2p2-ecdsa-e3r3 E3 110% rep 3: {"achieved_tps": 346.48934714480924, "dropped": 1195, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 21653, "mean_ms": 1156.745, "p50_ms": 1164.747, "p95_ms": 1427.502, "p99_ms": 1574
+2026-11-23T00:57:22Z o2p2-ecdsa-e3r3 E3 25% rep 3: {"achieved_tps": 85.03532292931092, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 5193, "mean_ms": 738.498, "p50_ms": 733.006, "p95_ms": 1257.206, "p99_ms": 1542.846, "
+2026-11-23T00:58:30Z o2p2-ecdsa-e3r3 E3 100% rep 3: {"achieved_tps": 333.24092253353353, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 20772, "mean_ms": 590.936, "p50_ms": 577.331, "p95_ms": 840.339, "p99_ms": 983.914, "
+2026-11-23T00:59:37Z o2p2-ecdsa-e3r3 E3 10% rep 3: {"achieved_tps": 34.20361386722389, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 2077, "mean_ms": 1121.882, "p50_ms": 1125.657, "p95_ms": 2022.749, "p99_ms": 2105.972,
+2026-11-23T01:00:44Z o2p2-ecdsa-e3r3 E3 50% rep 3: {"achieved_tps": 168.53186246694392, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 10386, "mean_ms": 472.168, "p50_ms": 462.839, "p95_ms": 724.62, "p99_ms": 769.189, "m
+2026-11-23T01:01:52Z o2p2-ecdsa-e3r3 E3 75% rep 3: {"achieved_tps": 251.95389713496064, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 15578, "mean_ms": 408.158, "p50_ms": 401.214, "p95_ms": 578.46, "p99_ms": 614.173, "m
+2026-11-23T01:02:35Z network o2p2-ecdsa-e3r3 done (0 runs)
+2026-11-23T01:02:35Z network 18/30: {"identity": "mldsa44", "orgs": 2, "peers": 2}
+2026-11-23T01:03:01Z network o2p2-mldsa44-e3r3 up in 26 s
+2026-11-23T01:03:36Z setup done in 32 s; canary 1390505/s
+2026-11-23T01:04:39Z o2p2-mldsa44-e3r3 E3 90% rep 3: {"achieved_tps": 241.61705816637496, "dropped": 3555, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 15139, "mean_ms": 1692.776, "p50_ms": 1704.161, "p95_ms": 2132.251, "p99_ms": 23
+2026-11-23T01:05:47Z o2p2-mldsa44-e3r3 E3 25% rep 3: {"achieved_tps": 84.88963825135048, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 5193, "mean_ms": 859.478, "p50_ms": 854.379, "p95_ms": 1379.466, "p99_ms": 1647.779,
+2026-11-23T01:06:55Z o2p2-mldsa44-e3r3 E3 110% rep 3: {"achieved_tps": 237.71710815987043, "dropped": 7907, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14942, "mean_ms": 1784.665, "p50_ms": 1802.544, "p95_ms": 2205.66, "p99_ms": 244
+2026-11-23T01:08:02Z o2p2-mldsa44-e3r3 E3 10% rep 3: {"achieved_tps": 34.18189658571425, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 2077, "mean_ms": 1197.527, "p50_ms": 1200.935, "p95_ms": 2097.148, "p99_ms": 2181.82
+2026-11-23T01:09:11Z o2p2-mldsa44-e3r3 E3 75% rep 3: {"achieved_tps": 229.21876357283398, "dropped": 1248, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14330, "mean_ms": 1745.837, "p50_ms": 1773.182, "p95_ms": 2209.81, "p99_ms": 238
+2026-11-23T01:10:18Z o2p2-mldsa44-e3r3 E3 50% rep 3: {"achieved_tps": 168.17331358502946, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 10386, "mean_ms": 664.407, "p50_ms": 655.453, "p95_ms": 932.182, "p99_ms": 1002.714
+2026-11-23T01:11:27Z o2p2-mldsa44-e3r3 E3 100% rep 3: {"achieved_tps": 225.38432557688117, "dropped": 6592, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14180, "mean_ms": 1876.977, "p50_ms": 1897.993, "p95_ms": 2326.111, "p99_ms": 25
+2026-11-23T01:12:33Z network o2p2-mldsa44-e3r3 done (0 runs)
+2026-11-23T01:12:33Z network 19/30: {"identity": "ecdsa", "orgs": 4, "peers": 8}
+2026-11-23T01:13:15Z network o4p8-ecdsa up in 42 s
+2026-11-23T01:13:50Z setup done in 33 s; canary 1387116/s
+2026-11-23T01:13:54Z o4p8-ecdsa n19-r001 issue T=100 rep 1 att 1: ok=100 tps=117.60911950521373 p50=844.57 ms flags=-
+2026-11-23T01:14:10Z o4p8-ecdsa n19-r002 get T=10000 rep 1 att 1: ok=10000 tps=1118.1663696725097 p50=264.156 ms flags=-
+2026-11-23T01:14:18Z o4p8-ecdsa n19-r003 issue T=100 rep 2 att 1: ok=100 tps=108.86120355919005 p50=915.382 ms flags=-
+2026-11-23T01:14:26Z o4p8-ecdsa n19-r004 get T=100 rep 5 att 1: ok=100 tps=529.2975089888347 p50=158.018 ms flags=-
+2026-11-23T01:14:40Z o4p8-ecdsa n19-r005 issue T=1000 rep 4 att 1: ok=1000 tps=140.7334413506123 p50=1892.988 ms flags=-
+2026-11-23T01:14:54Z o4p8-ecdsa n19-r006 issue T=1000 rep 1 att 1: ok=1000 tps=145.87987738711695 p50=1849.571 ms flags=-
+2026-11-23T01:15:03Z o4p8-ecdsa n19-r007 issue T=100 rep 3 att 1: ok=100 tps=105.13451220689906 p50=948.47 ms flags=-
+2026-11-23T01:15:12Z o4p8-ecdsa n19-r008 issue T=10 rep 3 att 1: ok=10 tps=4.683743090628843 p50=2134.453 ms flags=-
+2026-11-23T01:15:21Z o4p8-ecdsa n19-r009 get T=1000 rep 3 att 1: ok=1000 tps=927.001697662705 p50=309.914 ms flags=-
+2026-11-23T01:15:28Z o4p8-ecdsa n19-r010 get T=1 rep 4 att 1: ok=1 tps=150.3425027726916 p50=6.651 ms flags=-
+2026-11-23T01:15:35Z o4p8-ecdsa n19-r011 get T=1 rep 2 att 1: ok=1 tps=182.14471762104426 p50=5.49 ms flags=-
+2026-11-23T01:15:43Z o4p8-ecdsa n19-r012 get T=10 rep 3 att 1: ok=10 tps=288.26525199917717 p50=32.197 ms flags=-
+2026-11-23T01:16:57Z o4p8-ecdsa n19-r013 issue T=10000 rep 3 att 1: ok=10000 tps=149.2793606577366 p50=1999.13 ms flags=-
+2026-11-23T01:17:12Z o4p8-ecdsa n19-r014 issue T=1000 rep 3 att 1: ok=1000 tps=135.3184921308432 p50=2102.995 ms flags=-
+2026-11-23T01:17:28Z o4p8-ecdsa n19-r015 get T=10000 rep 3 att 1: ok=10000 tps=1169.1519085603336 p50=254.023 ms flags=-
+2026-11-23T01:17:35Z o4p8-ecdsa n19-r016 get T=100 rep 2 att 1: ok=100 tps=917.7775484353659 p50=101.763 ms flags=-
+2026-11-23T01:17:45Z o4p8-ecdsa n19-r017 issue T=1 rep 1 att 1: ok=1 tps=0.48766880037404736 p50=2050.572 ms flags=-
+2026-11-23T01:18:00Z o4p8-ecdsa n19-r018 issue T=1000 rep 2 att 1: ok=1000 tps=130.57447543470187 p50=2086.065 ms flags=-
+2026-11-23T01:18:09Z o4p8-ecdsa n19-r019 issue T=10 rep 2 att 1: ok=10 tps=4.697556862965176 p50=2128.554 ms flags=-
+2026-11-23T01:18:25Z o4p8-ecdsa n19-r020 get T=10000 rep 2 att 1: ok=10000 tps=1133.8213546785455 p50=257.121 ms flags=-
+2026-11-23T01:18:35Z o4p8-ecdsa n19-r021 issue T=1 rep 5 att 1: ok=1 tps=0.490520790691339 p50=2038.65 ms flags=-
+2026-11-23T01:18:42Z o4p8-ecdsa n19-r022 get T=100 rep 1 att 1: ok=100 tps=537.4978321368685 p50=150.412 ms flags=-
+2026-11-23T01:18:51Z o4p8-ecdsa n19-r023 issue T=10 rep 1 att 1: ok=10 tps=4.675253034418748 p50=2137.911 ms flags=-
+2026-11-23T01:20:09Z o4p8-ecdsa n19-r024 issue T=10000 rep 5 att 1: ok=10000 tps=142.12725289189743 p50=2117.059 ms flags=-
+2026-11-23T01:20:16Z o4p8-ecdsa n19-r025 get T=10 rep 5 att 1: ok=10 tps=476.29036108334344 p50=18.625 ms flags=-
+2026-11-23T01:20:24Z o4p8-ecdsa n19-r026 get T=10 rep 2 att 1: ok=10 tps=543.5117281950024 p50=17.113 ms flags=-
+2026-11-23T01:20:32Z o4p8-ecdsa n19-r027 issue T=100 rep 5 att 1: ok=100 tps=103.03677133535156 p50=961.137 ms flags=-
+2026-11-23T01:21:51Z o4p8-ecdsa n19-r028 issue T=10000 rep 2 att 1: ok=10000 tps=140.61053356559634 p50=2133.944 ms flags=-
+2026-11-23T01:21:59Z o4p8-ecdsa n19-r029 get T=1 rep 1 att 1: ok=1 tps=111.76992027786896 p50=8.947 ms flags=-
+2026-11-23T01:23:21Z o4p8-ecdsa n19-r030 issue T=10000 rep 4 att 1: ok=10000 tps=133.09202946821816 p50=2259.787 ms flags=-
+2026-11-23T01:23:28Z o4p8-ecdsa n19-r031 get T=1 rep 3 att 1: ok=1 tps=111.2436764922644 p50=8.989 ms flags=-
+2026-11-23T01:23:45Z o4p8-ecdsa n19-r032 get T=10000 rep 5 att 1: ok=10000 tps=1142.4649338619436 p50=260.412 ms flags=-
+2026-11-23T01:23:54Z o4p8-ecdsa n19-r033 issue T=1 rep 3 att 1: ok=1 tps=0.48442485302450655 p50=2064.304 ms flags=-
+2026-11-23T01:24:04Z o4p8-ecdsa n19-r034 issue T=10 rep 4 att 1: ok=10 tps=4.644840186706932 p50=2152.072 ms flags=-
+2026-11-23T01:24:11Z o4p8-ecdsa n19-r035 get T=10 rep 1 att 1: ok=10 tps=431.708282625598 p50=21.569 ms flags=-
+2026-11-23T01:24:18Z o4p8-ecdsa n19-r036 get T=100 rep 4 att 1: ok=100 tps=503.77317036687725 p50=184.688 ms flags=-
+2026-11-23T01:24:25Z o4p8-ecdsa n19-r037 get T=100 rep 3 att 1: ok=100 tps=667.043786541826 p50=126.292 ms flags=-
+2026-11-23T01:24:42Z o4p8-ecdsa n19-r038 get T=10000 rep 4 att 1: ok=10000 tps=1054.4763331233385 p50=282.173 ms flags=-
+2026-11-23T01:24:52Z o4p8-ecdsa n19-r039 issue T=1 rep 4 att 1: ok=1 tps=0.48752959529516465 p50=2051.158 ms flags=-
+2026-11-23T01:26:16Z o4p8-ecdsa n19-r040 issue T=10000 rep 1 att 1: ok=10000 tps=130.61110391688607 p50=2294.194 ms flags=-
+2026-11-23T01:26:24Z o4p8-ecdsa n19-r041 get T=1000 rep 4 att 1: ok=1000 tps=978.6423663790852 p50=306.675 ms flags=-
+2026-11-23T01:26:32Z o4p8-ecdsa n19-r042 issue T=100 rep 4 att 1: ok=100 tps=100.98688585916022 p50=980.833 ms flags=-
+2026-11-23T01:26:42Z o4p8-ecdsa n19-r043 issue T=10 rep 5 att 1: ok=10 tps=4.6933781312396095 p50=2130.384 ms flags=-
+2026-11-23T01:26:50Z o4p8-ecdsa n19-r044 get T=1000 rep 2 att 1: ok=1000 tps=1001.6557951253784 p50=271.115 ms flags=-
+2026-11-23T01:26:57Z o4p8-ecdsa n19-r045 get T=1 rep 5 att 1: ok=1 tps=176.46765056793467 p50=5.667 ms flags=-
+2026-11-23T01:27:06Z o4p8-ecdsa n19-r046 get T=1000 rep 5 att 1: ok=1000 tps=894.2094910000408 p50=325.251 ms flags=-
+2026-11-23T01:27:14Z o4p8-ecdsa n19-r047 get T=1000 rep 1 att 1: ok=1000 tps=991.2757798787356 p50=287.896 ms flags=-
+2026-11-23T01:27:23Z o4p8-ecdsa n19-r048 issue T=1 rep 2 att 1: ok=1 tps=0.48869737653198225 p50=2046.256 ms flags=-
+2026-11-23T01:27:39Z o4p8-ecdsa n19-r049 issue T=1000 rep 5 att 1: ok=1000 tps=119.05890140928487 p50=2287.216 ms flags=-
+2026-11-23T01:27:46Z o4p8-ecdsa n19-r050 get T=10 rep 4 att 1: ok=10 tps=481.871976253349 p50=18.724 ms flags=-
+2026-11-23T01:28:32Z network o4p8-ecdsa done (50 runs)
+2026-11-23T01:28:32Z network 20/30: {"identity": "mldsa44", "orgs": 4, "peers": 8}
+2026-11-23T01:29:16Z network o4p8-mldsa44 up in 44 s
+2026-11-23T01:29:57Z setup done in 39 s; canary 1384852/s
+2026-11-23T01:30:10Z o4p8-mldsa44 n20-r001 get T=10000 rep 1 att 1: ok=10000 tps=975.8595630072889 p50=301.988 ms flags=-
+2026-11-23T01:30:19Z o4p8-mldsa44 n20-r002 issue T=1 rep 4 att 1: ok=1 tps=0.4870235789061433 p50=2053.289 ms flags=-
+2026-11-23T01:30:29Z o4p8-mldsa44 n20-r003 issue T=1 rep 5 att 1: ok=1 tps=0.48455551870543134 p50=2063.747 ms flags=-
+2026-11-23T01:30:38Z o4p8-mldsa44 n20-r004 get T=1000 rep 3 att 1: ok=1000 tps=698.0353023689746 p50=426.454 ms flags=-
+2026-11-23T01:32:31Z o4p8-mldsa44 n20-r005 issue T=10000 rep 2 att 1: ok=10000 tps=94.73104863822243 p50=3191.127 ms flags=-
+2026-11-23T01:34:29Z o4p8-mldsa44 n20-r006 issue T=10000 rep 5 att 1: ok=10000 tps=90.79504546128283 p50=3339.299 ms flags=-
+2026-11-23T01:36:29Z o4p8-mldsa44 n20-r007 issue T=10000 rep 1 att 1: ok=10000 tps=88.83246588061598 p50=3413.056 ms flags=-
+2026-11-23T01:36:36Z o4p8-mldsa44 n20-r008 get T=1 rep 4 att 1: ok=1 tps=159.53820708729342 p50=6.268 ms flags=-
+2026-11-23T01:36:54Z o4p8-mldsa44 n20-r009 get T=10000 rep 3 att 1: ok=10000 tps=977.5764156231456 p50=301.056 ms flags=-
+2026-11-23T01:37:03Z o4p8-mldsa44 n20-r010 issue T=1 rep 1 att 1: ok=1 tps=0.4813867981896529 p50=2077.332 ms flags=-
+2026-11-23T01:37:22Z o4p8-mldsa44 n20-r011 get T=10000 rep 4 att 1: ok=10000 tps=902.0702903760566 p50=323.623 ms flags=-
+2026-11-23T01:37:31Z o4p8-mldsa44 n20-r012 issue T=100 rep 1 att 1: ok=100 tps=71.4125032582758 p50=1380.268 ms flags=-
+2026-11-23T01:37:38Z o4p8-mldsa44 n20-r013 get T=100 rep 2 att 1: ok=100 tps=641.2644339245585 p50=132.623 ms flags=-
+2026-11-23T01:37:47Z o4p8-mldsa44 n20-r014 get T=1000 rep 2 att 1: ok=1000 tps=795.0935514785077 p50=364.412 ms flags=-
+2026-11-23T01:37:55Z o4p8-mldsa44 n20-r015 get T=1000 rep 4 att 1: ok=1000 tps=756.8413748952976 p50=375.756 ms flags=-
+2026-11-23T01:38:05Z o4p8-mldsa44 n20-r016 issue T=10 rep 2 att 1: ok=10 tps=4.595987760961805 p50=2175.667 ms flags=-
+2026-11-23T01:40:08Z o4p8-mldsa44 n20-r017 issue T=10000 rep 4 att 1: ok=10000 tps=86.83765282951158 p50=3486.105 ms flags=-
+2026-11-23T01:40:15Z o4p8-mldsa44 n20-r018 get T=10 rep 3 att 1: ok=10 tps=381.0407533754876 p50=24.02 ms flags=-
+2026-11-23T01:40:22Z o4p8-mldsa44 n20-r019 get T=10 rep 5 att 1: ok=10 tps=461.827082149709 p50=19.244 ms flags=-
+2026-11-23T01:40:30Z o4p8-mldsa44 n20-r020 get T=10 rep 1 att 1: ok=10 tps=274.54256815464345 p50=33.357 ms flags=-
+2026-11-23T01:40:39Z o4p8-mldsa44 n20-r021 issue T=10 rep 4 att 1: ok=10 tps=4.547119295433541 p50=2197.692 ms flags=-
+2026-11-23T01:40:47Z o4p8-mldsa44 n20-r022 get T=100 rep 1 att 1: ok=100 tps=499.06203287169893 p50=167.155 ms flags=-
+2026-11-23T01:40:54Z o4p8-mldsa44 n20-r023 get T=10 rep 2 att 1: ok=10 tps=386.0896232931267 p50=22.107 ms flags=-
+2026-11-23T01:41:03Z o4p8-mldsa44 n20-r024 get T=1000 rep 1 att 1: ok=1000 tps=704.2804427144048 p50=398.24 ms flags=-
+2026-11-23T01:41:12Z o4p8-mldsa44 n20-r025 issue T=1 rep 3 att 1: ok=1 tps=0.48255187064181043 p50=2072.316 ms flags=-
+2026-11-23T01:41:32Z o4p8-mldsa44 n20-r026 issue T=1000 rep 2 att 1: ok=1000 tps=81.56323209755263 p50=3639.302 ms flags=-
+2026-11-23T01:41:39Z o4p8-mldsa44 n20-r027 get T=100 rep 4 att 1: ok=100 tps=682.4155249422738 p50=117.913 ms flags=-
+2026-11-23T01:41:57Z o4p8-mldsa44 n20-r028 get T=10000 rep 2 att 1: ok=10000 tps=953.4229925902207 p50=303.392 ms flags=-
+2026-11-23T01:42:04Z o4p8-mldsa44 n20-r029 get T=100 rep 5 att 1: ok=100 tps=745.4088887535225 p50=116.966 ms flags=-
+2026-11-23T01:42:15Z o4p8-mldsa44 n20-r030 issue T=10 rep 5 att 1: ok=10 tps=4.565430061740429 p50=2189.264 ms flags=-
+2026-11-23T01:42:22Z o4p8-mldsa44 n20-r031 get T=10 rep 4 att 1: ok=10 tps=281.1855118602643 p50=30.935 ms flags=-
+2026-11-23T01:42:41Z o4p8-mldsa44 n20-r032 get T=10000 rep 5 att 1: ok=10000 tps=917.5419307961782 p50=314.227 ms flags=-
+2026-11-23T01:42:49Z o4p8-mldsa44 n20-r033 issue T=100 rep 3 att 1: ok=100 tps=73.4029607001987 p50=1348.964 ms flags=-
+2026-11-23T01:42:57Z o4p8-mldsa44 n20-r034 get T=1 rep 5 att 1: ok=1 tps=87.11737829658693 p50=11.479 ms flags=-
+2026-11-23T01:43:04Z o4p8-mldsa44 n20-r035 get T=100 rep 3 att 1: ok=100 tps=647.861791436717 p50=127.99 ms flags=-
+2026-11-23T01:43:13Z o4p8-mldsa44 n20-r036 get T=1000 rep 5 att 1: ok=1000 tps=863.2841592777335 p50=334.521 ms flags=-
+2026-11-23T01:43:22Z o4p8-mldsa44 n20-r037 issue T=1 rep 2 att 1: ok=1 tps=0.48398365170401475 p50=2066.185 ms flags=-
+2026-11-23T01:43:31Z o4p8-mldsa44 n20-r038 issue T=10 rep 3 att 1: ok=10 tps=4.5886913920651455 p50=2178.993 ms flags=-
+2026-11-23T01:43:39Z o4p8-mldsa44 n20-r039 get T=1 rep 2 att 1: ok=1 tps=103.30952048886066 p50=9.68 ms flags=-
+2026-11-23T01:43:49Z o4p8-mldsa44 n20-r040 issue T=10 rep 1 att 1: ok=10 tps=4.523834983845102 p50=2210.099 ms flags=-
+2026-11-23T01:44:08Z o4p8-mldsa44 n20-r041 issue T=1000 rep 5 att 1: ok=1000 tps=79.94837480162607 p50=3724.249 ms flags=-
+2026-11-23T01:44:17Z o4p8-mldsa44 n20-r042 issue T=100 rep 4 att 1: ok=100 tps=70.54901638212078 p50=1403.444 ms flags=-
+2026-11-23T01:44:37Z o4p8-mldsa44 n20-r043 issue T=1000 rep 3 att 1: ok=1000 tps=82.13574848713793 p50=3645.016 ms flags=-
+2026-11-23T01:44:46Z o4p8-mldsa44 n20-r044 issue T=100 rep 2 att 1: ok=100 tps=58.614288366506905 p50=1694.61 ms flags=-
+2026-11-23T01:45:06Z o4p8-mldsa44 n20-r045 issue T=1000 rep 1 att 1: ok=1000 tps=81.03591716910323 p50=3521.506 ms flags=-
+2026-11-23T01:47:15Z o4p8-mldsa44 n20-r046 issue T=10000 rep 3 att 1: ok=10000 tps=82.44105342512768 p50=3696.207 ms flags=-
+2026-11-23T01:47:22Z o4p8-mldsa44 n20-r047 get T=1 rep 1 att 1: ok=1 tps=99.82712936008714 p50=10.017 ms flags=-
+2026-11-23T01:47:30Z o4p8-mldsa44 n20-r048 get T=1 rep 3 att 1: ok=1 tps=106.45806563565579 p50=9.393 ms flags=-
+2026-11-23T01:47:39Z o4p8-mldsa44 n20-r049 issue T=100 rep 5 att 1: ok=100 tps=65.63695438876356 p50=1510.708 ms flags=-
+2026-11-23T01:47:59Z o4p8-mldsa44 n20-r050 issue T=1000 rep 4 att 1: ok=1000 tps=79.74497789562275 p50=3654.962 ms flags=-
+2026-11-23T01:49:08Z network o4p8-mldsa44 done (50 runs)
+2026-11-23T01:49:08Z network 21/30: {"identity": "ecdsa", "orgs": 2, "peers": 4}
+2026-11-23T01:49:36Z network o2p4-ecdsa up in 28 s
+2026-11-23T01:50:19Z setup done in 40 s; canary 1387274/s
+2026-11-23T01:50:20Z o2p4-ecdsa n21-r001 get T=100 rep 2 att 1: ok=100 tps=992.0683736697753 p50=93.809 ms flags=-
+2026-11-23T01:50:29Z o2p4-ecdsa n21-r002 issue T=10 rep 5 att 1: ok=10 tps=4.751310870395902 p50=2104.238 ms flags=-
+2026-11-23T01:50:37Z o2p4-ecdsa n21-r003 get T=1000 rep 5 att 1: ok=1000 tps=1027.4729350631371 p50=277.267 ms flags=-
+2026-11-23T01:50:46Z o2p4-ecdsa n21-r004 issue T=1 rep 3 att 1: ok=1 tps=0.4897375911399637 p50=2041.91 ms flags=-
+2026-11-23T01:50:54Z o2p4-ecdsa n21-r005 issue T=100 rep 2 att 1: ok=100 tps=126.29568686955663 p50=781.051 ms flags=-
+2026-11-23T01:51:01Z o2p4-ecdsa n21-r006 get T=1 rep 1 att 1: ok=1 tps=119.8834636826234 p50=8.341 ms flags=-
+2026-11-23T01:51:42Z o2p4-ecdsa n21-r007 issue T=10000 rep 5 att 1: ok=10000 tps=291.47124805844123 p50=1009.21 ms flags=-
+2026-11-23T01:51:51Z o2p4-ecdsa n21-r008 issue T=1 rep 1 att 1: ok=1 tps=0.4899890849443451 p50=2040.862 ms flags=-
+2026-11-23T01:52:00Z o2p4-ecdsa n21-r009 issue T=1 rep 2 att 1: ok=1 tps=0.49275795603053746 p50=2029.394 ms flags=-
+2026-11-23T01:52:07Z o2p4-ecdsa n21-r010 get T=100 rep 3 att 1: ok=100 tps=617.9906572666827 p50=146.622 ms flags=-
+2026-11-23T01:52:50Z o2p4-ecdsa n21-r011 issue T=10000 rep 2 att 1: ok=10000 tps=278.0677912686701 p50=1063.461 ms flags=-
+2026-11-23T01:52:57Z o2p4-ecdsa n21-r012 get T=10 rep 5 att 1: ok=10 tps=516.3124530897867 p50=16.8 ms flags=-
+2026-11-23T01:53:12Z o2p4-ecdsa n21-r013 get T=10000 rep 3 att 1: ok=10000 tps=1169.5419338367433 p50=255.784 ms flags=-
+2026-11-23T01:53:19Z o2p4-ecdsa n21-r014 get T=10 rep 2 att 1: ok=10 tps=577.9241749612271 p50=15.276 ms flags=-
+2026-11-23T01:53:25Z o2p4-ecdsa n21-r015 get T=100 rep 5 att 1: ok=100 tps=594.7285863021386 p50=135.103 ms flags=-
+2026-11-23T01:53:32Z o2p4-ecdsa n21-r016 get T=1 rep 2 att 1: ok=1 tps=130.46493135261474 p50=7.665 ms flags=-
+2026-11-23T01:53:40Z o2p4-ecdsa n21-r017 get T=1000 rep 1 att 1: ok=1000 tps=850.4958744328981 p50=326.878 ms flags=-
+2026-11-23T01:53:47Z o2p4-ecdsa n21-r018 get T=10 rep 3 att 1: ok=10 tps=461.0297329600529 p50=20.671 ms flags=-
+2026-11-23T01:53:55Z o2p4-ecdsa n21-r019 issue T=100 rep 4 att 1: ok=100 tps=136.75446976001402 p50=720.531 ms flags=-
+2026-11-23T01:54:03Z o2p4-ecdsa n21-r020 issue T=1 rep 4 att 1: ok=1 tps=0.4881256906822933 p50=2048.653 ms flags=-
+2026-11-23T01:54:20Z o2p4-ecdsa n21-r021 get T=10000 rep 4 att 1: ok=10000 tps=1049.6369272280335 p50=278.396 ms flags=-
+2026-11-23T01:54:36Z o2p4-ecdsa n21-r022 get T=10000 rep 1 att 1: ok=10000 tps=1116.6160438398663 p50=268.154 ms flags=-
+2026-11-23T01:54:43Z o2p4-ecdsa n21-r023 issue T=100 rep 3 att 1: ok=100 tps=140.51112574400221 p50=699.719 ms flags=-
+2026-11-23T01:54:55Z o2p4-ecdsa n21-r024 issue T=1000 rep 4 att 1: ok=1000 tps=220.30268085444513 p50=1131.162 ms flags=-
+2026-11-23T01:55:02Z o2p4-ecdsa n21-r025 get T=1000 rep 2 att 1: ok=1000 tps=1081.253155799523 p50=270.029 ms flags=-
+2026-11-23T01:55:13Z o2p4-ecdsa n21-r026 issue T=1000 rep 5 att 1: ok=1000 tps=225.81530543767374 p50=1111.21 ms flags=-
+2026-11-23T01:55:58Z o2p4-ecdsa n21-r027 issue T=10000 rep 3 att 1: ok=10000 tps=271.2817915009383 p50=1095.38 ms flags=-
+2026-11-23T01:56:09Z o2p4-ecdsa n21-r028 issue T=1000 rep 3 att 1: ok=1000 tps=227.87275357294286 p50=1177.183 ms flags=-
+2026-11-23T01:56:18Z o2p4-ecdsa n21-r029 issue T=10 rep 2 att 1: ok=10 tps=4.817234255197288 p50=2075.652 ms flags=-
+2026-11-23T01:56:25Z o2p4-ecdsa n21-r030 get T=100 rep 4 att 1: ok=100 tps=937.550158933503 p50=82.236 ms flags=-
+2026-11-23T01:57:10Z o2p4-ecdsa n21-r031 issue T=10000 rep 1 att 1: ok=10000 tps=260.4404293328266 p50=1140.725 ms flags=-
+2026-11-23T01:57:19Z o2p4-ecdsa n21-r032 issue T=10 rep 4 att 1: ok=10 tps=4.789655895879755 p50=2084.998 ms flags=-
+2026-11-23T01:57:35Z o2p4-ecdsa n21-r033 get T=10000 rep 5 att 1: ok=10000 tps=1117.28687658195 p50=267.765 ms flags=-
+2026-11-23T01:57:43Z o2p4-ecdsa n21-r034 get T=1000 rep 3 att 1: ok=1000 tps=1018.6435338098577 p50=275.225 ms flags=-
+2026-11-23T01:57:51Z o2p4-ecdsa n21-r035 get T=1000 rep 4 att 1: ok=1000 tps=1098.9942440978732 p50=266.963 ms flags=-
+2026-11-23T01:58:37Z o2p4-ecdsa n21-r036 issue T=10000 rep 4 att 1: ok=10000 tps=255.75753926655509 p50=1153.99 ms flags=-
+2026-11-23T01:58:44Z o2p4-ecdsa n21-r037 get T=1 rep 5 att 1: ok=1 tps=157.19859527335265 p50=6.361 ms flags=-
+2026-11-23T01:58:50Z o2p4-ecdsa n21-r038 get T=1 rep 3 att 1: ok=1 tps=140.0963442559448 p50=7.138 ms flags=-
+2026-11-23T01:58:57Z o2p4-ecdsa n21-r039 get T=100 rep 1 att 1: ok=100 tps=882.6705961513956 p50=87.575 ms flags=-
+2026-11-23T01:59:09Z o2p4-ecdsa n21-r040 issue T=1000 rep 1 att 1: ok=1000 tps=211.27884615941863 p50=1207.024 ms flags=-
+2026-11-23T01:59:20Z o2p4-ecdsa n21-r041 issue T=1000 rep 2 att 1: ok=1000 tps=213.53279355276712 p50=1288.581 ms flags=-
+2026-11-23T01:59:27Z o2p4-ecdsa n21-r042 get T=1 rep 4 att 1: ok=1 tps=123.09452748811584 p50=8.124 ms flags=-
+2026-11-23T01:59:34Z o2p4-ecdsa n21-r043 get T=10 rep 1 att 1: ok=10 tps=481.8037189465458 p50=17.631 ms flags=-
+2026-11-23T01:59:41Z o2p4-ecdsa n21-r044 issue T=100 rep 1 att 1: ok=100 tps=144.60877782743225 p50=686.397 ms flags=-
+2026-11-23T01:59:50Z o2p4-ecdsa n21-r045 issue T=10 rep 3 att 1: ok=10 tps=4.765750032281761 p50=2098.186 ms flags=-
+2026-11-23T02:00:06Z o2p4-ecdsa n21-r046 get T=10000 rep 2 att 1: ok=10000 tps=1122.2210229270593 p50=266.731 ms flags=-
+2026-11-23T02:00:13Z o2p4-ecdsa n21-r047 get T=10 rep 4 att 1: ok=10 tps=604.890088748869 p50=14.834 ms flags=-
+2026-11-23T02:00:21Z o2p4-ecdsa n21-r048 issue T=10 rep 1 att 1: ok=10 tps=4.725260191360969 p50=2113.086 ms flags=-
+2026-11-23T02:00:29Z o2p4-ecdsa n21-r049 issue T=100 rep 5 att 1: ok=100 tps=132.3863949848602 p50=742.697 ms flags=-
+2026-11-23T02:00:38Z o2p4-ecdsa n21-r050 issue T=1 rep 5 att 1: ok=1 tps=0.48997052842460614 p50=2040.939 ms flags=-
+2026-11-23T02:01:13Z network o2p4-ecdsa done (50 runs)
+2026-11-23T02:01:13Z network 22/30: {"identity": "mldsa44", "orgs": 2, "peers": 4}
+2026-11-23T02:01:42Z network o2p4-mldsa44 up in 28 s
+2026-11-23T02:02:17Z setup done in 33 s; canary 1385963/s
+2026-11-23T02:02:19Z o2p4-mldsa44 n22-r001 get T=10 rep 3 att 1: ok=10 tps=395.50713388082596 p50=20.935 ms flags=-
+2026-11-23T02:02:32Z o2p4-mldsa44 n22-r002 issue T=1000 rep 4 att 1: ok=1000 tps=168.18845650833424 p50=1543.047 ms flags=-
+2026-11-23T02:02:41Z o2p4-mldsa44 n22-r003 issue T=10 rep 1 att 1: ok=10 tps=4.6879226213517295 p50=2132.867 ms flags=-
+2026-11-23T02:02:48Z o2p4-mldsa44 n22-r004 get T=1 rep 4 att 1: ok=1 tps=102.25757107386913 p50=9.779 ms flags=-
+2026-11-23T02:02:56Z o2p4-mldsa44 n22-r005 issue T=100 rep 2 att 1: ok=100 tps=94.16931973657934 p50=1048.759 ms flags=-
+2026-11-23T02:03:55Z o2p4-mldsa44 n22-r006 issue T=10000 rep 5 att 1: ok=10000 tps=191.08097025652492 p50=1550.179 ms flags=-
+2026-11-23T02:04:03Z o2p4-mldsa44 n22-r007 get T=1000 rep 4 att 1: ok=1000 tps=808.8011024871354 p50=358.617 ms flags=-
+2026-11-23T02:04:12Z o2p4-mldsa44 n22-r008 issue T=10 rep 2 att 1: ok=10 tps=4.726327596496731 p50=2114.809 ms flags=-
+2026-11-23T02:04:20Z o2p4-mldsa44 n22-r009 get T=1000 rep 1 att 1: ok=1000 tps=700.8702973513796 p50=405.263 ms flags=-
+2026-11-23T02:04:29Z o2p4-mldsa44 n22-r010 issue T=1 rep 4 att 1: ok=1 tps=0.48622674873047433 p50=2056.654 ms flags=-
+2026-11-23T02:04:46Z o2p4-mldsa44 n22-r011 get T=10000 rep 2 att 1: ok=10000 tps=956.6778000166822 p50=303.109 ms flags=-
+2026-11-23T02:04:53Z o2p4-mldsa44 n22-r012 get T=10 rep 1 att 1: ok=10 tps=474.6885390487099 p50=17.176 ms flags=-
+2026-11-23T02:05:01Z o2p4-mldsa44 n22-r013 issue T=100 rep 4 att 1: ok=100 tps=92.09330948267652 p50=1071.193 ms flags=-
+2026-11-23T02:05:08Z o2p4-mldsa44 n22-r014 get T=1 rep 1 att 1: ok=1 tps=92.99149165047994 p50=10.754 ms flags=-
+2026-11-23T02:05:16Z o2p4-mldsa44 n22-r015 get T=1000 rep 2 att 1: ok=1000 tps=711.4990575849905 p50=389.794 ms flags=-
+2026-11-23T02:05:23Z o2p4-mldsa44 n22-r016 get T=100 rep 4 att 1: ok=100 tps=804.6871546131853 p50=101.564 ms flags=-
+2026-11-23T02:05:31Z o2p4-mldsa44 n22-r017 issue T=1 rep 1 att 1: ok=1 tps=0.48797284377642564 p50=2049.294 ms flags=-
+2026-11-23T02:05:45Z o2p4-mldsa44 n22-r018 issue T=1000 rep 5 att 1: ok=1000 tps=154.39285426381088 p50=1631.146 ms flags=-
+2026-11-23T02:05:54Z o2p4-mldsa44 n22-r019 issue T=1 rep 5 att 1: ok=1 tps=0.48930191683541513 p50=2043.728 ms flags=-
+2026-11-23T02:06:00Z o2p4-mldsa44 n22-r020 get T=100 rep 1 att 1: ok=100 tps=636.3031580622923 p50=132.847 ms flags=-
+2026-11-23T02:06:14Z o2p4-mldsa44 n22-r021 issue T=1000 rep 1 att 1: ok=1000 tps=162.1057187384416 p50=1720.217 ms flags=-
+2026-11-23T02:06:31Z o2p4-mldsa44 n22-r022 get T=10000 rep 5 att 1: ok=10000 tps=921.9843588740887 p50=315.883 ms flags=-
+2026-11-23T02:07:33Z o2p4-mldsa44 n22-r023 issue T=10000 rep 1 att 1: ok=10000 tps=182.4219574191311 p50=1648.048 ms flags=-
+2026-11-23T02:07:46Z o2p4-mldsa44 n22-r024 issue T=1000 rep 2 att 1: ok=1000 tps=163.3272843336867 p50=1668.676 ms flags=-
+2026-11-23T02:07:55Z o2p4-mldsa44 n22-r025 issue T=10 rep 3 att 1: ok=10 tps=4.727383907606515 p50=2113.324 ms flags=-
+2026-11-23T02:08:02Z o2p4-mldsa44 n22-r026 get T=1 rep 3 att 1: ok=1 tps=103.22073465087033 p50=9.688 ms flags=-
+2026-11-23T02:08:10Z o2p4-mldsa44 n22-r027 issue T=100 rep 5 att 1: ok=100 tps=102.06827248352609 p50=969.709 ms flags=-
+2026-11-23T02:08:18Z o2p4-mldsa44 n22-r028 issue T=1 rep 3 att 1: ok=1 tps=0.4887368579923492 p50=2046.091 ms flags=-
+2026-11-23T02:08:25Z o2p4-mldsa44 n22-r029 get T=100 rep 5 att 1: ok=100 tps=588.9771905743247 p50=142.858 ms flags=-
+2026-11-23T02:09:28Z o2p4-mldsa44 n22-r030 issue T=10000 rep 2 att 1: ok=10000 tps=178.60071585806992 p50=1666.721 ms flags=-
+2026-11-23T02:09:36Z o2p4-mldsa44 n22-r031 get T=1000 rep 5 att 1: ok=1000 tps=821.4484150405838 p50=355.028 ms flags=-
+2026-11-23T02:09:43Z o2p4-mldsa44 n22-r032 get T=100 rep 2 att 1: ok=100 tps=744.6036673487881 p50=116.764 ms flags=-
+2026-11-23T02:09:50Z o2p4-mldsa44 n22-r033 get T=10 rep 2 att 1: ok=10 tps=377.898200497896 p50=23.771 ms flags=-
+2026-11-23T02:10:03Z o2p4-mldsa44 n22-r034 issue T=1000 rep 3 att 1: ok=1000 tps=156.98931108730073 p50=1661.139 ms flags=-
+2026-11-23T02:11:08Z o2p4-mldsa44 n22-r035 issue T=10000 rep 4 att 1: ok=10000 tps=171.05360961509697 p50=1754.722 ms flags=-
+2026-11-23T02:11:15Z o2p4-mldsa44 n22-r036 get T=10 rep 5 att 1: ok=10 tps=369.48898860000844 p50=24.156 ms flags=-
+2026-11-23T02:11:22Z o2p4-mldsa44 n22-r037 get T=1 rep 5 att 1: ok=1 tps=100.2397232982678 p50=9.976 ms flags=-
+2026-11-23T02:11:40Z o2p4-mldsa44 n22-r038 get T=10000 rep 1 att 1: ok=10000 tps=894.624456296963 p50=328.053 ms flags=-
+2026-11-23T02:11:48Z o2p4-mldsa44 n22-r039 issue T=1 rep 2 att 1: ok=1 tps=0.4888268913218728 p50=2045.714 ms flags=-
+2026-11-23T02:12:06Z o2p4-mldsa44 n22-r040 get T=10000 rep 4 att 1: ok=10000 tps=906.5630955317796 p50=320.11 ms flags=-
+2026-11-23T02:12:13Z o2p4-mldsa44 n22-r041 get T=100 rep 3 att 1: ok=100 tps=595.9329566127257 p50=145.031 ms flags=-
+2026-11-23T02:12:21Z o2p4-mldsa44 n22-r042 issue T=100 rep 3 att 1: ok=100 tps=92.13033724137664 p50=1080.09 ms flags=-
+2026-11-23T02:12:28Z o2p4-mldsa44 n22-r043 get T=1 rep 2 att 1: ok=1 tps=84.33310226063314 p50=11.858 ms flags=-
+2026-11-23T02:13:34Z o2p4-mldsa44 n22-r044 issue T=10000 rep 3 att 1: ok=10000 tps=170.69348994310553 p50=1760.185 ms flags=-
+2026-11-23T02:13:52Z o2p4-mldsa44 n22-r045 get T=10000 rep 3 att 1: ok=10000 tps=892.0220563386051 p50=328.071 ms flags=-
+2026-11-23T02:13:59Z o2p4-mldsa44 n22-r046 issue T=100 rep 1 att 1: ok=100 tps=113.9647967119205 p50=862.716 ms flags=-
+2026-11-23T02:14:06Z o2p4-mldsa44 n22-r047 get T=10 rep 4 att 1: ok=10 tps=483.3863495368627 p50=17.684 ms flags=-
+2026-11-23T02:14:15Z o2p4-mldsa44 n22-r048 issue T=10 rep 5 att 1: ok=10 tps=4.644272198523436 p50=2152.987 ms flags=-
+2026-11-23T02:14:24Z o2p4-mldsa44 n22-r049 issue T=10 rep 4 att 1: ok=10 tps=4.6310252469756215 p50=2159.239 ms flags=-
+2026-11-23T02:14:32Z o2p4-mldsa44 n22-r050 get T=1000 rep 3 att 1: ok=1000 tps=746.2299413046646 p50=391.332 ms flags=-
+2026-11-23T02:15:28Z network o2p4-mldsa44 done (50 runs)
+2026-11-23T02:15:28Z network 23/30: {"identity": "mldsa44", "orgs": 2, "peers": 8}
+2026-11-23T02:16:00Z network o2p8-mldsa44 up in 32 s
+2026-11-23T02:16:51Z setup done in 49 s; canary 1386020/s
+2026-11-23T02:16:54Z o2p8-mldsa44 n23-r001 get T=1 rep 4 att 1: ok=1 tps=125.52199892277021 p50=7.967 ms flags=-
+2026-11-23T02:17:11Z o2p8-mldsa44 n23-r002 get T=10000 rep 4 att 1: ok=10000 tps=980.5313793409903 p50=298.402 ms flags=-
+2026-11-23T02:17:21Z o2p8-mldsa44 n23-r003 issue T=10 rep 1 att 1: ok=10 tps=4.692366588294259 p50=2130.737 ms flags=-
+2026-11-23T02:17:28Z o2p8-mldsa44 n23-r004 get T=10 rep 3 att 1: ok=10 tps=212.4638609595701 p50=39.877 ms flags=-
+2026-11-23T02:17:35Z o2p8-mldsa44 n23-r005 get T=1 rep 1 att 1: ok=1 tps=62.201127470076756 p50=16.077 ms flags=-
+2026-11-23T02:18:55Z o2p8-mldsa44 n23-r006 issue T=10000 rep 2 att 1: ok=10000 tps=135.48177285076895 p50=2208.427 ms flags=-
+2026-11-23T02:19:03Z o2p8-mldsa44 n23-r007 get T=10 rep 4 att 1: ok=10 tps=308.4663208759209 p50=21.364 ms flags=-
+2026-11-23T02:20:28Z o2p8-mldsa44 n23-r008 issue T=10000 rep 4 att 1: ok=10000 tps=127.33922094112991 p50=2381.615 ms flags=-
+2026-11-23T02:20:37Z o2p8-mldsa44 n23-r009 get T=1000 rep 4 att 1: ok=1000 tps=830.377680098975 p50=351.015 ms flags=-
+2026-11-23T02:20:45Z o2p8-mldsa44 n23-r010 issue T=100 rep 2 att 1: ok=100 tps=97.19362788389701 p50=1015.874 ms flags=-
+2026-11-23T02:21:01Z o2p8-mldsa44 n23-r011 issue T=1000 rep 2 att 1: ok=1000 tps=118.26662065254642 p50=2270.086 ms flags=-
+2026-11-23T02:21:10Z o2p8-mldsa44 n23-r012 issue T=1 rep 3 att 1: ok=1 tps=0.48759177784614516 p50=2050.896 ms flags=-
+2026-11-23T02:21:18Z o2p8-mldsa44 n23-r013 issue T=100 rep 4 att 1: ok=100 tps=88.70970883976138 p50=1111.26 ms flags=-
+2026-11-23T02:21:36Z o2p8-mldsa44 n23-r014 get T=10000 rep 5 att 1: ok=10000 tps=971.0065470422301 p50=303.128 ms flags=-
+2026-11-23T02:21:43Z o2p8-mldsa44 n23-r015 get T=100 rep 2 att 1: ok=100 tps=654.0379225445519 p50=131.074 ms flags=-
+2026-11-23T02:21:53Z o2p8-mldsa44 n23-r016 issue T=1 rep 4 att 1: ok=1 tps=0.4824417200620659 p50=2072.789 ms flags=-
+2026-11-23T02:22:09Z o2p8-mldsa44 n23-r017 issue T=1000 rep 5 att 1: ok=1000 tps=111.08476474248909 p50=2530.496 ms flags=-
+2026-11-23T02:22:24Z o2p8-mldsa44 n23-r018 issue T=1000 rep 3 att 1: ok=1000 tps=117.34827156928144 p50=2376.512 ms flags=-
+2026-11-23T02:22:32Z o2p8-mldsa44 n23-r019 get T=1000 rep 5 att 1: ok=1000 tps=836.79054532588 p50=347.639 ms flags=-
+2026-11-23T02:22:41Z o2p8-mldsa44 n23-r020 get T=1000 rep 1 att 1: ok=1000 tps=797.9306434774829 p50=363.335 ms flags=-
+2026-11-23T02:22:50Z o2p8-mldsa44 n23-r021 issue T=1 rep 5 att 1: ok=1 tps=0.48580377646075407 p50=2058.444 ms flags=-
+2026-11-23T02:22:59Z o2p8-mldsa44 n23-r022 issue T=1 rep 1 att 1: ok=1 tps=0.48418771991213105 p50=2065.315 ms flags=-
+2026-11-23T02:23:06Z o2p8-mldsa44 n23-r023 get T=100 rep 5 att 1: ok=100 tps=516.562672958097 p50=157.979 ms flags=-
+2026-11-23T02:23:25Z o2p8-mldsa44 n23-r024 get T=10000 rep 1 att 1: ok=10000 tps=907.6001241537795 p50=311.852 ms flags=-
+2026-11-23T02:23:34Z o2p8-mldsa44 n23-r025 issue T=10 rep 3 att 1: ok=10 tps=4.676498878357645 p50=2137.856 ms flags=-
+2026-11-23T02:23:41Z o2p8-mldsa44 n23-r026 get T=100 rep 4 att 1: ok=100 tps=618.7047066778835 p50=139.527 ms flags=-
+2026-11-23T02:25:09Z o2p8-mldsa44 n23-r027 issue T=10000 rep 3 att 1: ok=10000 tps=123.84471963375094 p50=2456.532 ms flags=-
+2026-11-23T02:25:16Z o2p8-mldsa44 n23-r028 get T=100 rep 3 att 1: ok=100 tps=679.1445256496045 p50=125.228 ms flags=-
+2026-11-23T02:25:25Z o2p8-mldsa44 n23-r029 issue T=10 rep 5 att 1: ok=10 tps=4.640064249076511 p50=2152.803 ms flags=-
+2026-11-23T02:25:34Z o2p8-mldsa44 n23-r030 get T=1000 rep 3 att 1: ok=1000 tps=854.1685565679836 p50=340.378 ms flags=-
+2026-11-23T02:25:42Z o2p8-mldsa44 n23-r031 issue T=100 rep 3 att 1: ok=100 tps=88.55244313002709 p50=1115.492 ms flags=-
+2026-11-23T02:25:59Z o2p8-mldsa44 n23-r032 get T=10000 rep 2 att 1: ok=10000 tps=992.3377484242508 p50=296.274 ms flags=-
+2026-11-23T02:27:32Z o2p8-mldsa44 n23-r033 issue T=10000 rep 5 att 1: ok=10000 tps=116.9488376577266 p50=2579.338 ms flags=-
+2026-11-23T02:27:40Z o2p8-mldsa44 n23-r034 issue T=100 rep 1 att 1: ok=100 tps=76.38677693773177 p50=1295.827 ms flags=-
+2026-11-23T02:27:47Z o2p8-mldsa44 n23-r035 get T=1 rep 3 att 1: ok=1 tps=77.90261845502125 p50=12.837 ms flags=-
+2026-11-23T02:27:54Z o2p8-mldsa44 n23-r036 get T=10 rep 5 att 1: ok=10 tps=436.1780370575116 p50=20.868 ms flags=-
+2026-11-23T02:28:02Z o2p8-mldsa44 n23-r037 get T=1000 rep 2 att 1: ok=1000 tps=873.028744854684 p50=306.896 ms flags=-
+2026-11-23T02:28:10Z o2p8-mldsa44 n23-r038 get T=1 rep 2 att 1: ok=1 tps=145.88877410684339 p50=6.855 ms flags=-
+2026-11-23T02:28:17Z o2p8-mldsa44 n23-r039 get T=100 rep 1 att 1: ok=100 tps=507.5293836547432 p50=157.028 ms flags=-
+2026-11-23T02:28:24Z o2p8-mldsa44 n23-r040 get T=10 rep 2 att 1: ok=10 tps=407.66077763983895 p50=19.98 ms flags=-
+2026-11-23T02:28:32Z o2p8-mldsa44 n23-r041 issue T=100 rep 5 att 1: ok=100 tps=80.45028539618069 p50=1224.908 ms flags=-
+2026-11-23T02:28:51Z o2p8-mldsa44 n23-r042 get T=10000 rep 3 att 1: ok=10000 tps=917.0028968668962 p50=318.632 ms flags=-
+2026-11-23T02:29:07Z o2p8-mldsa44 n23-r043 issue T=1000 rep 1 att 1: ok=1000 tps=107.00003262420294 p50=2771.018 ms flags=-
+2026-11-23T02:29:16Z o2p8-mldsa44 n23-r044 issue T=10 rep 2 att 1: ok=10 tps=4.639320820727233 p50=2154.614 ms flags=-
+2026-11-23T02:29:25Z o2p8-mldsa44 n23-r045 issue T=1 rep 2 att 1: ok=1 tps=0.48876670894205443 p50=2045.966 ms flags=-
+2026-11-23T02:29:32Z o2p8-mldsa44 n23-r046 get T=10 rep 1 att 1: ok=10 tps=403.0467594294905 p50=18.23 ms flags=-
+2026-11-23T02:31:07Z o2p8-mldsa44 n23-r047 issue T=10000 rep 1 att 1: ok=10000 tps=114.39853335708996 p50=2641.284 ms flags=-
+2026-11-23T02:31:14Z o2p8-mldsa44 n23-r048 get T=1 rep 5 att 1: ok=1 tps=106.52380546068723 p50=9.388 ms flags=-
+2026-11-23T02:31:31Z o2p8-mldsa44 n23-r049 issue T=1000 rep 4 att 1: ok=1000 tps=104.55657797902633 p50=2724.851 ms flags=-
+2026-11-23T02:31:40Z o2p8-mldsa44 n23-r050 issue T=10 rep 4 att 1: ok=10 tps=4.638082412432446 p50=2155.858 ms flags=-
+2026-11-23T02:32:42Z network o2p8-mldsa44 done (50 runs)
+2026-11-23T02:32:42Z network 24/30: {"identity": "ecdsa", "orgs": 2, "peers": 8}
+2026-11-23T02:33:14Z network o2p8-ecdsa up in 32 s
+2026-11-23T02:33:58Z setup done in 42 s; canary 1386885/s
+2026-11-23T02:34:02Z o2p8-ecdsa n24-r001 issue T=1 rep 3 att 1: ok=1 tps=0.4921246742606481 p50=2032.005 ms flags=-
+2026-11-23T02:34:10Z o2p8-ecdsa n24-r002 get T=1000 rep 2 att 1: ok=1000 tps=1052.9281311679576 p50=272.056 ms flags=-
+2026-11-23T02:34:17Z o2p8-ecdsa n24-r003 get T=10 rep 2 att 1: ok=10 tps=520.4355525138989 p50=17.194 ms flags=-
+2026-11-23T02:34:25Z o2p8-ecdsa n24-r004 get T=1000 rep 1 att 1: ok=1000 tps=776.922553516329 p50=387.014 ms flags=-
+2026-11-23T02:34:33Z o2p8-ecdsa n24-r005 issue T=100 rep 4 att 1: ok=100 tps=125.72694913376559 p50=785.31 ms flags=-
+2026-11-23T02:34:46Z o2p8-ecdsa n24-r006 issue T=1000 rep 3 att 1: ok=1000 tps=189.4161557565533 p50=1325.157 ms flags=-
+2026-11-23T02:34:53Z o2p8-ecdsa n24-r007 get T=10 rep 4 att 1: ok=10 tps=438.50388613106486 p50=21.842 ms flags=-
+2026-11-23T02:35:05Z o2p8-ecdsa n24-r008 issue T=1000 rep 2 att 1: ok=1000 tps=199.293411546891 p50=1323.653 ms flags=-
+2026-11-23T02:36:05Z o2p8-ecdsa n24-r009 issue T=10000 rep 2 att 1: ok=10000 tps=208.07425048229814 p50=1437.234 ms flags=-
+2026-11-23T02:36:22Z o2p8-ecdsa n24-r010 get T=10000 rep 3 att 1: ok=10000 tps=1043.6768207295763 p50=282.987 ms flags=-
+2026-11-23T02:36:29Z o2p8-ecdsa n24-r011 get T=100 rep 2 att 1: ok=100 tps=860.3124374310895 p50=112.397 ms flags=-
+2026-11-23T02:36:36Z o2p8-ecdsa n24-r012 get T=10 rep 1 att 1: ok=10 tps=355.24160407783256 p50=27.203 ms flags=-
+2026-11-23T02:36:52Z o2p8-ecdsa n24-r013 get T=10000 rep 5 att 1: ok=10000 tps=1144.342320279117 p50=254.071 ms flags=-
+2026-11-23T02:36:59Z o2p8-ecdsa n24-r014 get T=1 rep 1 att 1: ok=1 tps=174.0024958918011 p50=5.747 ms flags=-
+2026-11-23T02:37:07Z o2p8-ecdsa n24-r015 get T=1000 rep 4 att 1: ok=1000 tps=949.6650126468265 p50=294.562 ms flags=-
+2026-11-23T02:37:16Z o2p8-ecdsa n24-r016 issue T=10 rep 1 att 1: ok=10 tps=4.650955606849653 p50=2148.92 ms flags=-
+2026-11-23T02:37:26Z o2p8-ecdsa n24-r017 issue T=10 rep 3 att 1: ok=10 tps=4.708313156426223 p50=2123.306 ms flags=-
+2026-11-23T02:37:35Z o2p8-ecdsa n24-r018 issue T=10 rep 5 att 1: ok=10 tps=4.669461212504302 p50=2141.461 ms flags=-
+2026-11-23T02:37:48Z o2p8-ecdsa n24-r019 issue T=1000 rep 4 att 1: ok=1000 tps=166.17189894930425 p50=1565.238 ms flags=-
+2026-11-23T02:37:55Z o2p8-ecdsa n24-r020 get T=1 rep 3 att 1: ok=1 tps=173.46345636691547 p50=5.765 ms flags=-
+2026-11-23T02:38:03Z o2p8-ecdsa n24-r021 get T=1000 rep 5 att 1: ok=1000 tps=999.4310778566545 p50=299.603 ms flags=-
+2026-11-23T02:38:10Z o2p8-ecdsa n24-r022 issue T=100 rep 5 att 1: ok=100 tps=126.29721942185152 p50=782.445 ms flags=-
+2026-11-23T02:38:20Z o2p8-ecdsa n24-r023 issue T=10 rep 2 att 1: ok=10 tps=4.75684619575031 p50=2101.526 ms flags=-
+2026-11-23T02:38:27Z o2p8-ecdsa n24-r024 get T=10 rep 5 att 1: ok=10 tps=510.78830879114696 p50=18.335 ms flags=-
+2026-11-23T02:38:35Z o2p8-ecdsa n24-r025 issue T=100 rep 3 att 1: ok=100 tps=103.82052266347036 p50=957.065 ms flags=-
+2026-11-23T02:38:42Z o2p8-ecdsa n24-r026 get T=10 rep 3 att 1: ok=10 tps=451.47183429755677 p50=21.608 ms flags=-
+2026-11-23T02:38:55Z o2p8-ecdsa n24-r027 issue T=1000 rep 5 att 1: ok=1000 tps=168.5987758738185 p50=1497.099 ms flags=-
+2026-11-23T02:39:02Z o2p8-ecdsa n24-r028 get T=100 rep 3 att 1: ok=100 tps=973.2930243378441 p50=92.099 ms flags=-
+2026-11-23T02:39:09Z o2p8-ecdsa n24-r029 get T=1 rep 5 att 1: ok=1 tps=137.03266721753798 p50=7.298 ms flags=-
+2026-11-23T02:39:25Z o2p8-ecdsa n24-r030 get T=10000 rep 2 att 1: ok=10000 tps=1164.385419907263 p50=257.483 ms flags=-
+2026-11-23T02:39:34Z o2p8-ecdsa n24-r031 issue T=1 rep 2 att 1: ok=1 tps=0.491466573971877 p50=2034.726 ms flags=-
+2026-11-23T02:39:47Z o2p8-ecdsa n24-r032 issue T=1000 rep 1 att 1: ok=1000 tps=165.9753124638909 p50=1601.451 ms flags=-
+2026-11-23T02:40:46Z o2p8-ecdsa n24-r033 issue T=10000 rep 4 att 1: ok=10000 tps=193.10078548581285 p50=1555.893 ms flags=-
+2026-11-23T02:40:55Z o2p8-ecdsa n24-r034 issue T=10 rep 4 att 1: ok=10 tps=4.791243328975836 p50=2086.982 ms flags=-
+2026-11-23T02:41:02Z o2p8-ecdsa n24-r035 get T=1 rep 4 att 1: ok=1 tps=133.17469563589185 p50=7.509 ms flags=-
+2026-11-23T02:41:09Z o2p8-ecdsa n24-r036 get T=100 rep 4 att 1: ok=100 tps=747.0815371812246 p50=108.926 ms flags=-
+2026-11-23T02:41:18Z o2p8-ecdsa n24-r037 issue T=1 rep 5 att 1: ok=1 tps=0.4899749541756559 p50=2040.921 ms flags=-
+2026-11-23T02:42:19Z o2p8-ecdsa n24-r038 issue T=10000 rep 1 att 1: ok=10000 tps=188.7587517513915 p50=1572.38 ms flags=-
+2026-11-23T02:42:26Z o2p8-ecdsa n24-r039 get T=100 rep 5 att 1: ok=100 tps=930.6482592382521 p50=85.462 ms flags=-
+2026-11-23T02:42:35Z o2p8-ecdsa n24-r040 issue T=1 rep 1 att 1: ok=1 tps=0.4904227701063679 p50=2039.057 ms flags=-
+2026-11-23T02:42:43Z o2p8-ecdsa n24-r041 get T=1000 rep 3 att 1: ok=1000 tps=1049.5049556490542 p50=268.969 ms flags=-
+2026-11-23T02:42:50Z o2p8-ecdsa n24-r042 get T=1 rep 2 att 1: ok=1 tps=152.8230388677891 p50=6.544 ms flags=-
+2026-11-23T02:43:00Z o2p8-ecdsa n24-r043 issue T=1 rep 4 att 1: ok=1 tps=0.4895894583728516 p50=2042.528 ms flags=-
+2026-11-23T02:43:07Z o2p8-ecdsa n24-r044 get T=100 rep 1 att 1: ok=100 tps=623.5319252585749 p50=127.578 ms flags=-
+2026-11-23T02:44:11Z o2p8-ecdsa n24-r045 issue T=10000 rep 5 att 1: ok=10000 tps=177.77686044285693 p50=1684.039 ms flags=-
+2026-11-23T02:44:19Z o2p8-ecdsa n24-r046 issue T=100 rep 1 att 1: ok=100 tps=131.34946309205986 p50=753.521 ms flags=-
+2026-11-23T02:44:35Z o2p8-ecdsa n24-r047 get T=10000 rep 4 att 1: ok=10000 tps=1181.9868956297153 p50=253.525 ms flags=-
+2026-11-23T02:44:51Z o2p8-ecdsa n24-r048 get T=10000 rep 1 att 1: ok=10000 tps=1198.6374916945927 p50=254.372 ms flags=-
+2026-11-23T02:44:58Z o2p8-ecdsa n24-r049 issue T=100 rep 2 att 1: ok=100 tps=123.92375994165351 p50=800.025 ms flags=-
+2026-11-23T02:46:01Z o2p8-ecdsa n24-r050 issue T=10000 rep 3 att 1: ok=10000 tps=182.01604460985513 p50=1651.794 ms flags=-
+2026-11-23T02:46:44Z network o2p8-ecdsa done (50 runs)
+2026-11-23T02:46:44Z network 25/30: {"identity": "ecdsa", "orgs": 2, "peers": 2}
+2026-11-23T02:47:09Z network o2p2-ecdsa-e3r1 up in 26 s
+2026-11-23T02:47:52Z setup done in 41 s; canary 1394101/s
+2026-11-23T02:48:54Z o2p2-ecdsa-e3r1 E3 10% rep 1: {"achieved_tps": 34.20999597468321, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 2077, "mean_ms": 1119.145, "p50_ms": 1125.384, "p95_ms": 2022.694, "p99_ms": 2105.843,
+2026-11-23T02:50:01Z o2p2-ecdsa-e3r1 E3 50% rep 1: {"achieved_tps": 168.55231873318021, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 10386, "mean_ms": 448.995, "p50_ms": 439.532, "p95_ms": 700.942, "p99_ms": 732.261, "
+2026-11-23T02:51:09Z o2p2-ecdsa-e3r1 E3 90% rep 1: {"achieved_tps": 302.3269083549601, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 18694, "mean_ms": 386.348, "p50_ms": 379.062, "p95_ms": 539.568, "p99_ms": 600.766, "m
+2026-11-23T02:52:17Z o2p2-ecdsa-e3r1 E3 110% rep 1: {"achieved_tps": 341.39445802443134, "dropped": 1584, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 21265, "mean_ms": 1183.696, "p50_ms": 1194.927, "p95_ms": 1483.164, "p99_ms": 1605
+2026-11-23T02:53:26Z o2p2-ecdsa-e3r1 E3 100% rep 1: {"achieved_tps": 332.93751636547995, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 20772, "mean_ms": 642.146, "p50_ms": 624.828, "p95_ms": 910.715, "p99_ms": 1040.528, 
+2026-11-23T02:54:33Z o2p2-ecdsa-e3r1 E3 25% rep 1: {"achieved_tps": 85.04812344297466, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 5193, "mean_ms": 737.877, "p50_ms": 732.043, "p95_ms": 1258.044, "p99_ms": 1532.995, "
+2026-11-23T02:55:41Z o2p2-ecdsa-e3r1 E3 75% rep 1: {"achieved_tps": 252.0293043741205, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 15578, "mean_ms": 409.117, "p50_ms": 402.129, "p95_ms": 581.426, "p99_ms": 620.415, "m
+2026-11-23T02:56:23Z network o2p2-ecdsa-e3r1 done (0 runs)
+2026-11-23T02:56:23Z network 26/30: {"identity": "mldsa44", "orgs": 2, "peers": 2}
+2026-11-23T02:56:49Z network o2p2-mldsa44-e3r1 up in 27 s
+2026-11-23T02:57:34Z setup done in 42 s; canary 1394459/s
+2026-11-23T02:58:37Z o2p2-mldsa44-e3r1 E3 75% rep 1: {"achieved_tps": 241.5359353957205, "dropped": 469, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 15109, "mean_ms": 1520.849, "p50_ms": 1563.958, "p95_ms": 1996.164, "p99_ms": 2188
+2026-11-23T02:59:45Z o2p2-mldsa44-e3r1 E3 25% rep 1: {"achieved_tps": 84.9053554804806, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 5193, "mean_ms": 862.068, "p50_ms": 857.394, "p95_ms": 1381.682, "p99_ms": 1636.34, "
+2026-11-23T03:00:51Z o2p2-mldsa44-e3r1 E3 10% rep 1: {"achieved_tps": 34.184080917077175, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 2077, "mean_ms": 1235.457, "p50_ms": 1236.11, "p95_ms": 2133.285, "p99_ms": 2453.94
+2026-11-23T03:02:00Z o2p2-mldsa44-e3r1 E3 100% rep 1: {"achieved_tps": 232.4294951293973, "dropped": 6192, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14580, "mean_ms": 1798.811, "p50_ms": 1817.077, "p95_ms": 2257.887, "p99_ms": 247
+2026-11-23T03:03:08Z o2p2-mldsa44-e3r1 E3 50% rep 1: {"achieved_tps": 168.26043714705128, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 10386, "mean_ms": 646.351, "p50_ms": 637.529, "p95_ms": 912.809, "p99_ms": 1000.891
+2026-11-23T03:04:16Z o2p2-mldsa44-e3r1 E3 90% rep 1: {"achieved_tps": 224.66485670542582, "dropped": 4614, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14080, "mean_ms": 1866.847, "p50_ms": 1882.643, "p95_ms": 2298.447, "p99_ms": 24
+2026-11-23T03:05:25Z o2p2-mldsa44-e3r1 E3 110% rep 1: {"achieved_tps": 223.50970195783674, "dropped": 8803, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14046, "mean_ms": 1919.619, "p50_ms": 1946.503, "p95_ms": 2371.776, "p99_ms": 26
+2026-11-23T03:06:30Z network o2p2-mldsa44-e3r1 done (0 runs)
+2026-11-23T03:06:30Z network 27/30: {"identity": "ecdsa", "orgs": 2, "peers": 2}
+2026-11-23T03:06:56Z network o2p2-ecdsa-e3r5 up in 26 s
+2026-11-23T03:07:43Z setup done in 46 s; canary 1387762/s
+2026-11-23T03:08:47Z o2p2-ecdsa-e3r5 E3 75% rep 5: {"achieved_tps": 252.03930584174537, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 15578, "mean_ms": 403.94, "p50_ms": 376.08, "p95_ms": 596.854, "p99_ms": 1515.683, "m
+2026-11-23T03:09:55Z o2p2-ecdsa-e3r5 E3 110% rep 5: {"achieved_tps": 354.3644911451563, "dropped": 759, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 22090, "mean_ms": 1062.056, "p50_ms": 1109.021, "p95_ms": 1391.097, "p99_ms": 1557.3
+2026-11-23T03:11:02Z o2p2-ecdsa-e3r5 E3 50% rep 5: {"achieved_tps": 168.54948072763725, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 10386, "mean_ms": 464.299, "p50_ms": 455.17, "p95_ms": 716.477, "p99_ms": 768.419, "m
+2026-11-23T03:12:09Z o2p2-ecdsa-e3r5 E3 10% rep 5: {"achieved_tps": 34.20835182198331, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 2077, "mean_ms": 1122.656, "p50_ms": 1126.534, "p95_ms": 2025.812, "p99_ms": 2107.525,
+2026-11-23T03:13:16Z o2p2-ecdsa-e3r5 E3 25% rep 5: {"achieved_tps": 85.03264384587654, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 5193, "mean_ms": 736.212, "p50_ms": 731.301, "p95_ms": 1255.6, "p99_ms": 1544.132, "ma
+2026-11-23T03:14:24Z o2p2-ecdsa-e3r5 E3 100% rep 5: {"achieved_tps": 334.4923618846941, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 20772, "mean_ms": 644.824, "p50_ms": 637.566, "p95_ms": 869.158, "p99_ms": 971.375, "m
+2026-11-23T03:15:32Z o2p2-ecdsa-e3r5 E3 90% rep 5: {"achieved_tps": 301.5616539274148, "dropped": 0, "duration_s": 60, "identity": "ecdsa", "latency_gateway": {"n": 18694, "mean_ms": 461.774, "p50_ms": 453.789, "p95_ms": 629.569, "p99_ms": 698.304, "m
+2026-11-23T03:16:15Z network o2p2-ecdsa-e3r5 done (0 runs)
+2026-11-23T03:16:15Z network 28/30: {"identity": "mldsa44", "orgs": 2, "peers": 2}
+2026-11-23T03:16:42Z network o2p2-mldsa44-e3r5 up in 27 s
+2026-11-23T03:17:17Z setup done in 33 s; canary 1391324/s
+2026-11-23T03:18:20Z o2p2-mldsa44-e3r5 E3 75% rep 5: {"achieved_tps": 243.64747596258366, "dropped": 372, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 15206, "mean_ms": 1492.119, "p50_ms": 1533.125, "p95_ms": 1937.73, "p99_ms": 2139
+2026-11-23T03:19:29Z o2p2-mldsa44-e3r5 E3 90% rep 5: {"achieved_tps": 240.24126004459092, "dropped": 3709, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14985, "mean_ms": 1740.004, "p50_ms": 1738.432, "p95_ms": 2186.721, "p99_ms": 23
+2026-11-23T03:20:36Z o2p2-mldsa44-e3r5 E3 10% rep 5: {"achieved_tps": 34.16700761451171, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 2077, "mean_ms": 1197.971, "p50_ms": 1203.032, "p95_ms": 2100.267, "p99_ms": 2183.04
+2026-11-23T03:21:43Z o2p2-mldsa44-e3r5 E3 50% rep 5: {"achieved_tps": 168.29267833317022, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 10386, "mean_ms": 631.858, "p50_ms": 623.851, "p95_ms": 890.312, "p99_ms": 987.889,
+2026-11-23T03:22:50Z o2p2-mldsa44-e3r5 E3 25% rep 5: {"achieved_tps": 84.89860407517429, "dropped": 0, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 5193, "mean_ms": 863.506, "p50_ms": 859.52, "p95_ms": 1383.183, "p99_ms": 1640.266, 
+2026-11-23T03:23:59Z o2p2-mldsa44-e3r5 E3 100% rep 5: {"achieved_tps": 228.00205136013028, "dropped": 6492, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14280, "mean_ms": 1857.723, "p50_ms": 1879.421, "p95_ms": 2296.209, "p99_ms": 25
+2026-11-23T03:25:08Z o2p2-mldsa44-e3r5 E3 110% rep 5: {"achieved_tps": 224.49993249121206, "dropped": 8769, "duration_s": 60, "identity": "mldsa44", "latency_gateway": {"n": 14080, "mean_ms": 1912.707, "p50_ms": 1919.998, "p95_ms": 2387.268, "p99_ms": 27
+2026-11-23T03:26:13Z network o2p2-mldsa44-e3r5 done (0 runs)
+2026-11-23T03:26:13Z network 29/30: {"identity": "ecdsa", "orgs": 1, "peers": 8}
+2026-11-23T03:26:42Z network o1p8-ecdsa up in 28 s
+2026-11-23T03:27:12Z setup done in 28 s; canary 1386538/s
+2026-11-23T03:27:14Z o1p8-ecdsa n29-r001 get T=10 rep 1 att 1: ok=10 tps=412.96923267714857 p50=22.543 ms flags=-
+2026-11-23T03:27:21Z o1p8-ecdsa n29-r002 get T=100 rep 4 att 1: ok=100 tps=784.1149969254067 p50=115.396 ms flags=-
+2026-11-23T03:27:29Z o1p8-ecdsa n29-r003 issue T=100 rep 4 att 1: ok=100 tps=164.78176241592473 p50=597.109 ms flags=-
+2026-11-23T03:27:39Z o1p8-ecdsa n29-r004 issue T=1000 rep 4 att 1: ok=1000 tps=254.43799322340635 p50=1076.808 ms flags=-
+2026-11-23T03:27:46Z o1p8-ecdsa n29-r005 get T=1 rep 5 att 1: ok=1 tps=122.47461927846037 p50=8.165 ms flags=-
+2026-11-23T03:28:31Z o1p8-ecdsa n29-r006 issue T=10000 rep 2 att 1: ok=10000 tps=265.6452638009275 p50=1114.874 ms flags=-
+2026-11-23T03:28:38Z o1p8-ecdsa n29-r007 get T=10 rep 3 att 1: ok=10 tps=422.8595147365695 p50=23.022 ms flags=-
+2026-11-23T03:28:45Z o1p8-ecdsa n29-r008 get T=1 rep 4 att 1: ok=1 tps=136.90897593044366 p50=7.304 ms flags=-
+2026-11-23T03:28:52Z o1p8-ecdsa n29-r009 get T=10 rep 4 att 1: ok=10 tps=397.7657497834663 p50=24.437 ms flags=-
+2026-11-23T03:28:59Z o1p8-ecdsa n29-r010 get T=100 rep 2 att 1: ok=100 tps=719.4378243774283 p50=120.027 ms flags=-
+2026-11-23T03:29:14Z o1p8-ecdsa n29-r011 get T=10000 rep 1 att 1: ok=10000 tps=1162.0746749588207 p50=252.706 ms flags=-
+2026-11-23T03:29:22Z o1p8-ecdsa n29-r012 get T=1000 rep 1 att 1: ok=1000 tps=1094.140997610999 p50=262.71 ms flags=-
+2026-11-23T03:29:30Z o1p8-ecdsa n29-r013 get T=1000 rep 4 att 1: ok=1000 tps=1064.963309255741 p50=263.066 ms flags=-
+2026-11-23T03:29:37Z o1p8-ecdsa n29-r014 get T=10 rep 5 att 1: ok=10 tps=601.469064130376 p50=15.261 ms flags=-
+2026-11-23T03:29:48Z o1p8-ecdsa n29-r015 issue T=1000 rep 5 att 1: ok=1000 tps=227.2227519523044 p50=1263.103 ms flags=-
+2026-11-23T03:29:56Z o1p8-ecdsa n29-r016 issue T=100 rep 2 att 1: ok=100 tps=197.37606405115395 p50=494.931 ms flags=-
+2026-11-23T03:30:03Z o1p8-ecdsa n29-r017 get T=100 rep 3 att 1: ok=100 tps=811.9837894257105 p50=94.341 ms flags=-
+2026-11-23T03:30:14Z o1p8-ecdsa n29-r018 issue T=1000 rep 1 att 1: ok=1000 tps=220.98361705315696 p50=1257.17 ms flags=-
+2026-11-23T03:30:23Z o1p8-ecdsa n29-r019 issue T=10 rep 2 att 1: ok=10 tps=4.813798198757394 p50=2077.122 ms flags=-
+2026-11-23T03:30:32Z o1p8-ecdsa n29-r020 issue T=1 rep 2 att 1: ok=1 tps=0.492568408372189 p50=2030.175 ms flags=-
+2026-11-23T03:30:40Z o1p8-ecdsa n29-r021 issue T=100 rep 1 att 1: ok=100 tps=181.01702154462419 p50=545.15 ms flags=-
+2026-11-23T03:31:28Z o1p8-ecdsa n29-r022 issue T=10000 rep 5 att 1: ok=10000 tps=241.89173561257138 p50=1232.615 ms flags=-
+2026-11-23T03:32:17Z o1p8-ecdsa n29-r023 issue T=10000 rep 4 att 1: ok=10000 tps=238.93958310996166 p50=1247.147 ms flags=-
+2026-11-23T03:32:25Z o1p8-ecdsa n29-r024 get T=1000 rep 2 att 1: ok=1000 tps=1141.891927059077 p50=258.129 ms flags=-
+2026-11-23T03:32:34Z o1p8-ecdsa n29-r025 issue T=1 rep 3 att 1: ok=1 tps=0.4928591782528955 p50=2028.977 ms flags=-
+2026-11-23T03:32:42Z o1p8-ecdsa n29-r026 get T=1000 rep 5 att 1: ok=1000 tps=849.7423610902157 p50=304.312 ms flags=-
+2026-11-23T03:32:58Z o1p8-ecdsa n29-r027 get T=10000 rep 5 att 1: ok=10000 tps=1133.51931026975 p50=261.849 ms flags=-
+2026-11-23T03:33:05Z o1p8-ecdsa n29-r028 get T=10 rep 2 att 1: ok=10 tps=734.8266382298555 p50=12.177 ms flags=-
+2026-11-23T03:33:14Z o1p8-ecdsa n29-r029 issue T=10 rep 4 att 1: ok=10 tps=4.766267646702617 p50=2097.073 ms flags=-
+2026-11-23T03:33:23Z o1p8-ecdsa n29-r030 issue T=10 rep 5 att 1: ok=10 tps=4.7485243496415235 p50=2105.643 ms flags=-
+2026-11-23T03:33:30Z o1p8-ecdsa n29-r031 get T=1 rep 2 att 1: ok=1 tps=108.7913649247501 p50=9.192 ms flags=-
+2026-11-23T03:33:46Z o1p8-ecdsa n29-r032 get T=10000 rep 4 att 1: ok=10000 tps=1115.5502729911877 p50=266.304 ms flags=-
+2026-11-23T03:33:55Z o1p8-ecdsa n29-r033 issue T=1 rep 5 att 1: ok=1 tps=0.4931432866743232 p50=2027.808 ms flags=-
+2026-11-23T03:34:11Z o1p8-ecdsa n29-r034 get T=10000 rep 2 att 1: ok=10000 tps=1125.2263312874313 p50=258.275 ms flags=-
+2026-11-23T03:34:20Z o1p8-ecdsa n29-r035 issue T=1 rep 1 att 1: ok=1 tps=0.4914930664743813 p50=2034.617 ms flags=-
+2026-11-23T03:34:28Z o1p8-ecdsa n29-r036 get T=1000 rep 3 att 1: ok=1000 tps=1061.5238423790845 p50=268.263 ms flags=-
+2026-11-23T03:34:35Z o1p8-ecdsa n29-r037 get T=1 rep 1 att 1: ok=1 tps=244.4083046031371 p50=4.092 ms flags=-
+2026-11-23T03:34:43Z o1p8-ecdsa n29-r038 issue T=1 rep 4 att 1: ok=1 tps=0.49027171918644774 p50=2039.685 ms flags=-
+2026-11-23T03:34:55Z o1p8-ecdsa n29-r039 issue T=1000 rep 2 att 1: ok=1000 tps=219.18131699576136 p50=1330.162 ms flags=-
+2026-11-23T03:35:04Z o1p8-ecdsa n29-r040 issue T=10 rep 1 att 1: ok=10 tps=4.827271022719445 p50=2071.298 ms flags=-
+2026-11-23T03:35:13Z o1p8-ecdsa n29-r041 issue T=10 rep 3 att 1: ok=10 tps=4.793381342757558 p50=2085.362 ms flags=-
+2026-11-23T03:35:21Z o1p8-ecdsa n29-r042 issue T=100 rep 3 att 1: ok=100 tps=168.3468116167731 p50=587.57 ms flags=-
+2026-11-23T03:36:11Z o1p8-ecdsa n29-r043 issue T=10000 rep 1 att 1: ok=10000 tps=235.99234518917353 p50=1267.142 ms flags=-
+2026-11-23T03:36:26Z o1p8-ecdsa n29-r044 get T=10000 rep 3 att 1: ok=10000 tps=1172.8462786723187 p50=255.54 ms flags=-
+2026-11-23T03:36:33Z o1p8-ecdsa n29-r045 get T=100 rep 5 att 1: ok=100 tps=835.9290602512255 p50=110.189 ms flags=-
+2026-11-23T03:36:40Z o1p8-ecdsa n29-r046 get T=1 rep 3 att 1: ok=1 tps=170.37597889518673 p50=5.869 ms flags=-
+2026-11-23T03:36:47Z o1p8-ecdsa n29-r047 get T=100 rep 1 att 1: ok=100 tps=533.4382741556294 p50=161.61 ms flags=-
+2026-11-23T03:37:38Z o1p8-ecdsa n29-r048 issue T=10000 rep 3 att 1: ok=10000 tps=228.9009155706731 p50=1306.411 ms flags=-
+2026-11-23T03:37:49Z o1p8-ecdsa n29-r049 issue T=1000 rep 3 att 1: ok=1000 tps=219.8258688684624 p50=1240.645 ms flags=-
+2026-11-23T03:37:57Z o1p8-ecdsa n29-r050 issue T=100 rep 5 att 1: ok=100 tps=188.46292433814972 p50=523.139 ms flags=-
+2026-11-23T03:38:37Z network o1p8-ecdsa done (50 runs)
+2026-11-23T03:38:37Z network 30/30: {"identity": "mldsa44", "orgs": 1, "peers": 8}
+2026-11-23T03:39:06Z network o1p8-mldsa44 up in 29 s
+2026-11-23T03:39:38Z setup done in 30 s; canary 1385839/s
+2026-11-23T03:39:40Z o1p8-mldsa44 n30-r001 get T=1 rep 3 att 1: ok=1 tps=162.24400329939405 p50=6.164 ms flags=-
+2026-11-23T03:39:47Z o1p8-mldsa44 n30-r002 get T=10 rep 3 att 1: ok=10 tps=429.0869827109699 p50=19.905 ms flags=-
+2026-11-23T03:39:54Z o1p8-mldsa44 n30-r003 get T=10 rep 1 att 1: ok=10 tps=292.81966361345553 p50=28.342 ms flags=-
+2026-11-23T03:40:01Z o1p8-mldsa44 n30-r004 get T=100 rep 4 att 1: ok=100 tps=579.5469277142303 p50=142.79 ms flags=-
+2026-11-23T03:40:14Z o1p8-mldsa44 n30-r005 issue T=1000 rep 5 att 1: ok=1000 tps=174.67948858924024 p50=1584.134 ms flags=-
+2026-11-23T03:40:22Z o1p8-mldsa44 n30-r006 issue T=100 rep 5 att 1: ok=100 tps=138.81852582702084 p50=706.766 ms flags=-
+2026-11-23T03:40:29Z o1p8-mldsa44 n30-r007 get T=100 rep 5 att 1: ok=100 tps=709.7025414511883 p50=118.111 ms flags=-
+2026-11-23T03:40:38Z o1p8-mldsa44 n30-r008 get T=1000 rep 3 att 1: ok=1000 tps=798.5544662877795 p50=353.029 ms flags=-
+2026-11-23T03:40:45Z o1p8-mldsa44 n30-r009 get T=1 rep 4 att 1: ok=1 tps=98.28756523714284 p50=10.174 ms flags=-
+2026-11-23T03:41:02Z o1p8-mldsa44 n30-r010 get T=10000 rep 2 att 1: ok=10000 tps=971.4912609713462 p50=299.855 ms flags=-
+2026-11-23T03:42:02Z o1p8-mldsa44 n30-r011 issue T=10000 rep 1 att 1: ok=10000 tps=188.9862874389164 p50=1575.737 ms flags=-
+2026-11-23T03:42:11Z o1p8-mldsa44 n30-r012 issue T=1 rep 3 att 1: ok=1 tps=0.4900658371892024 p50=2040.542 ms flags=-
+2026-11-23T03:42:20Z o1p8-mldsa44 n30-r013 issue T=10 rep 3 att 1: ok=10 tps=4.776318252947807 p50=2093.42 ms flags=-
+2026-11-23T03:42:27Z o1p8-mldsa44 n30-r014 get T=10 rep 4 att 1: ok=10 tps=349.8440482693827 p50=23.534 ms flags=-
+2026-11-23T03:42:34Z o1p8-mldsa44 n30-r015 get T=1 rep 1 att 1: ok=1 tps=116.66045449746468 p50=8.572 ms flags=-
+2026-11-23T03:42:43Z o1p8-mldsa44 n30-r016 issue T=10 rep 1 att 1: ok=10 tps=4.710004560014465 p50=2122.382 ms flags=-
+2026-11-23T03:42:57Z o1p8-mldsa44 n30-r017 issue T=1000 rep 3 att 1: ok=1000 tps=162.88072828862644 p50=1690.111 ms flags=-
+2026-11-23T03:43:10Z o1p8-mldsa44 n30-r018 issue T=1000 rep 1 att 1: ok=1000 tps=165.09371955165696 p50=1692.729 ms flags=-
+2026-11-23T03:43:23Z o1p8-mldsa44 n30-r019 issue T=1000 rep 4 att 1: ok=1000 tps=169.53766397830782 p50=1646.781 ms flags=-
+2026-11-23T03:44:28Z o1p8-mldsa44 n30-r020 issue T=10000 rep 2 att 1: ok=10000 tps=173.6683050316957 p50=1730.425 ms flags=-
+2026-11-23T03:44:34Z o1p8-mldsa44 n30-r021 get T=100 rep 2 att 1: ok=100 tps=727.5296801735146 p50=118.323 ms flags=-
+2026-11-23T03:44:43Z o1p8-mldsa44 n30-r022 get T=1000 rep 5 att 1: ok=1000 tps=851.2632108452799 p50=331.108 ms flags=-
+2026-11-23T03:44:50Z o1p8-mldsa44 n30-r023 get T=10 rep 5 att 1: ok=10 tps=386.263392234638 p50=20.951 ms flags=-
+2026-11-23T03:44:59Z o1p8-mldsa44 n30-r024 issue T=1 rep 2 att 1: ok=1 tps=0.48993848942790097 p50=2041.073 ms flags=-
+2026-11-23T03:45:06Z o1p8-mldsa44 n30-r025 get T=1 rep 5 att 1: ok=1 tps=57.33744075823949 p50=17.441 ms flags=-
+2026-11-23T03:45:14Z o1p8-mldsa44 n30-r026 get T=1000 rep 1 att 1: ok=1000 tps=729.1310362355092 p50=393.999 ms flags=-
+2026-11-23T03:45:23Z o1p8-mldsa44 n30-r027 issue T=10 rep 5 att 1: ok=10 tps=4.754408648796501 p50=2103.065 ms flags=-
+2026-11-23T03:45:31Z o1p8-mldsa44 n30-r028 issue T=100 rep 3 att 1: ok=100 tps=116.59263535669848 p50=836.935 ms flags=-
+2026-11-23T03:45:40Z o1p8-mldsa44 n30-r029 get T=1000 rep 2 att 1: ok=1000 tps=815.895450086571 p50=346.703 ms flags=-
+2026-11-23T03:46:45Z o1p8-mldsa44 n30-r030 issue T=10000 rep 4 att 1: ok=10000 tps=171.44816854891678 p50=1744.589 ms flags=-
+2026-11-23T03:46:52Z o1p8-mldsa44 n30-r031 get T=100 rep 1 att 1: ok=100 tps=679.1903711181087 p50=127.578 ms flags=-
+2026-11-23T03:47:00Z o1p8-mldsa44 n30-r032 issue T=100 rep 1 att 1: ok=100 tps=123.60987653000039 p50=793.88 ms flags=-
+2026-11-23T03:47:07Z o1p8-mldsa44 n30-r033 get T=10 rep 2 att 1: ok=10 tps=530.1804140327304 p50=16.313 ms flags=-
+2026-11-23T03:47:15Z o1p8-mldsa44 n30-r034 issue T=100 rep 2 att 1: ok=100 tps=121.12114381769582 p50=809.42 ms flags=-
+2026-11-23T03:47:23Z o1p8-mldsa44 n30-r035 get T=1000 rep 4 att 1: ok=1000 tps=782.5709418440528 p50=351.57 ms flags=-
+2026-11-23T03:48:33Z o1p8-mldsa44 n30-r036 issue T=10000 rep 3 att 1: ok=10000 tps=159.04894304118423 p50=1874.253 ms flags=-
+2026-11-23T03:48:42Z o1p8-mldsa44 n30-r037 issue T=1 rep 4 att 1: ok=1 tps=0.48855353247725397 p50=2046.859 ms flags=-
+2026-11-23T03:48:51Z o1p8-mldsa44 n30-r038 issue T=1 rep 5 att 1: ok=1 tps=0.4907234603775446 p50=2037.808 ms flags=-
+2026-11-23T03:49:00Z o1p8-mldsa44 n30-r039 issue T=10 rep 2 att 1: ok=10 tps=4.761704008463766 p50=2099.197 ms flags=-
+2026-11-23T03:49:17Z o1p8-mldsa44 n30-r040 get T=10000 rep 3 att 1: ok=10000 tps=974.2250145225773 p50=301.256 ms flags=-
+2026-11-23T03:49:34Z o1p8-mldsa44 n30-r041 get T=10000 rep 5 att 1: ok=10000 tps=995.0158406800441 p50=296.648 ms flags=-
+2026-11-23T03:49:51Z o1p8-mldsa44 n30-r042 get T=10000 rep 4 att 1: ok=10000 tps=992.1574355926783 p50=295.04 ms flags=-
+2026-11-23T03:50:00Z o1p8-mldsa44 n30-r043 issue T=10 rep 4 att 1: ok=10 tps=4.711855737651917 p50=2120.477 ms flags=-
+2026-11-23T03:50:18Z o1p8-mldsa44 n30-r044 get T=10000 rep 1 att 1: ok=10000 tps=908.2066869041424 p50=313.913 ms flags=-
+2026-11-23T03:50:26Z o1p8-mldsa44 n30-r045 issue T=100 rep 4 att 1: ok=100 tps=127.04578153559832 p50=772.56 ms flags=-
+2026-11-23T03:50:34Z o1p8-mldsa44 n30-r046 issue T=1 rep 1 att 1: ok=1 tps=0.48790696270358525 p50=2049.571 ms flags=-
+2026-11-23T03:50:41Z o1p8-mldsa44 n30-r047 get T=1 rep 2 att 1: ok=1 tps=129.28834908991993 p50=7.735 ms flags=-
+2026-11-23T03:50:55Z o1p8-mldsa44 n30-r048 issue T=1000 rep 2 att 1: ok=1000 tps=149.74824759632764 p50=1934.089 ms flags=-
+2026-11-23T03:51:02Z o1p8-mldsa44 n30-r049 get T=100 rep 3 att 1: ok=100 tps=701.9475668612603 p50=117.065 ms flags=-
+2026-11-23T03:52:14Z o1p8-mldsa44 n30-r050 issue T=10000 rep 5 att 1: ok=10000 tps=156.42855638758584 p50=1924.671 ms flags=-
+2026-11-23T03:53:08Z network o1p8-mldsa44 done (50 runs)
+2026-11-23T03:53:08Z session main-1 finished
+2026-11-23T05:22:15Z network 2/30: {"identity": "mldsa44", "orgs": 8, "peers": 8}
+2026-11-23T05:23:19Z network o8p8-mldsa44 up in 64 s
+2026-11-23T05:24:16Z setup done in 55 s; canary 1379695/s
+2026-11-23T05:24:19Z o8p8-mldsa44 n02-r001 get T=10 rep 5 att 1: ok=10 tps=443.2420960847805 p50=17.564 ms flags=-
+2026-11-23T05:24:28Z o8p8-mldsa44 n02-r002 get T=1000 rep 5 att 1: ok=1000 tps=787.5128472680243 p50=352.464 ms flags=-
+2026-11-23T05:24:38Z o8p8-mldsa44 n02-r003 issue T=1 rep 3 att 1: ok=1 tps=0.4796666004000863 p50=2084.781 ms flags=-
+2026-11-23T05:24:47Z o8p8-mldsa44 n02-r004 get T=100 rep 3 att 1: ok=100 tps=488.866696513608 p50=170.791 ms flags=-
+2026-11-23T05:24:54Z o8p8-mldsa44 n02-r005 get T=1 rep 3 att 1: ok=1 tps=77.42760712303014 p50=12.915 ms flags=-
+2026-11-23T05:25:04Z o8p8-mldsa44 n02-r006 get T=1000 rep 4 att 1: ok=1000 tps=718.3820482843296 p50=388.981 ms flags=-
+2026-11-23T05:25:14Z o8p8-mldsa44 n02-r007 issue T=10 rep 4 att 1: ok=10 tps=4.367857182545365 p50=2288.753 ms flags=-
+2026-11-23T05:28:53Z o8p8-mldsa44 n02-r008 issue T=10000 rep 3 att 1: ok=10000 tps=47.569121979621556 p50=6381.046 ms flags=-
+2026-11-23T05:29:01Z o8p8-mldsa44 n02-r009 get T=10 rep 3 att 1: ok=10 tps=431.1016937425115 p50=19.679 ms flags=-
+2026-11-23T05:29:31Z o8p8-mldsa44 n02-r010 issue T=1000 rep 2 att 1: ok=1000 tps=44.92380818649578 p50=6339.87 ms flags=-
+2026-11-23T05:29:39Z o8p8-mldsa44 n02-r011 get T=1 rep 2 att 1: ok=1 tps=100.87940613504162 p50=9.913 ms flags=-
+2026-11-23T05:29:47Z o8p8-mldsa44 n02-r012 get T=100 rep 2 att 1: ok=100 tps=512.4157805592947 p50=171.121 ms flags=-
+2026-11-23T05:29:57Z o8p8-mldsa44 n02-r013 issue T=100 rep 4 att 1: ok=100 tps=41.219775344681146 p50=2406.736 ms flags=-
+2026-11-23T05:33:41Z o8p8-mldsa44 n02-r014 issue T=10000 rep 1 att 1: ok=10000 tps=46.21516040888201 p50=6550.562 ms flags=-
+2026-11-23T05:37:28Z o8p8-mldsa44 n02-r015 issue T=10000 rep 2 att 1: ok=10000 tps=45.76818184128233 p50=6595.145 ms flags=-
+2026-11-23T05:37:59Z o8p8-mldsa44 n02-r016 issue T=1000 rep 3 att 1: ok=1000 tps=43.08717039418811 p50=6528.69 ms flags=-
+2026-11-23T05:38:09Z o8p8-mldsa44 n02-r017 issue T=10 rep 5 att 1: ok=10 tps=4.386799227620822 p50=2279.362 ms flags=-
+2026-11-23T05:38:20Z o8p8-mldsa44 n02-r018 issue T=100 rep 3 att 1: ok=100 tps=41.49174600589022 p50=2393.954 ms flags=-
+2026-11-23T05:38:30Z o8p8-mldsa44 n02-r019 issue T=1 rep 2 att 1: ok=1 tps=0.48079444612641836 p50=2079.891 ms flags=-
+2026-11-23T05:39:00Z o8p8-mldsa44 n02-r020 issue T=1000 rep 4 att 1: ok=1000 tps=43.67064707871463 p50=6456.011 ms flags=-
+2026-11-23T05:39:11Z o8p8-mldsa44 n02-r021 issue T=100 rep 2 att 1: ok=100 tps=41.536660484579954 p50=2392.073 ms flags=-
+2026-11-23T05:39:21Z o8p8-mldsa44 n02-r022 issue T=10 rep 2 att 1: ok=10 tps=4.375582884249286 p50=2283.358 ms flags=-
+2026-11-23T05:39:30Z o8p8-mldsa44 n02-r023 get T=10 rep 1 att 1: ok=10 tps=350.6861121180673 p50=20.363 ms flags=-
+2026-11-23T05:39:40Z o8p8-mldsa44 n02-r024 issue T=100 rep 1 att 1: ok=100 tps=38.68999668669315 p50=2570.957 ms flags=-
+2026-11-23T05:39:58Z o8p8-mldsa44 n02-r025 get T=10000 rep 1 att 1: ok=10000 tps=962.8882388271619 p50=305.274 ms flags=-
+2026-11-23T05:40:07Z o8p8-mldsa44 n02-r026 get T=1000 rep 2 att 1: ok=1000 tps=906.7548209834805 p50=324.531 ms flags=-
+2026-11-23T05:40:15Z o8p8-mldsa44 n02-r027 get T=1 rep 4 att 1: ok=1 tps=97.18561159245525 p50=10.29 ms flags=-
+2026-11-23T05:40:26Z o8p8-mldsa44 n02-r028 issue T=10 rep 1 att 1: ok=10 tps=4.277947259947508 p50=2334.123 ms flags=-
+2026-11-23T05:40:34Z o8p8-mldsa44 n02-r029 get T=100 rep 4 att 1: ok=100 tps=499.0126236820253 p50=165.537 ms flags=-
+2026-11-23T05:40:44Z o8p8-mldsa44 n02-r030 get T=1000 rep 3 att 1: ok=1000 tps=708.7651415853841 p50=403.341 ms flags=-
+2026-11-23T05:44:35Z o8p8-mldsa44 n02-r031 issue T=10000 rep 4 att 1: ok=10000 tps=44.69956101543399 p50=6678.016 ms flags=-
+2026-11-23T05:44:43Z o8p8-mldsa44 n02-r032 get T=100 rep 5 att 1: ok=100 tps=593.5467766320492 p50=142.402 ms flags=-
+2026-11-23T05:44:53Z o8p8-mldsa44 n02-r033 issue T=1 rep 5 att 1: ok=1 tps=0.47349332809571426 p50=2111.962 ms flags=-
+2026-11-23T05:45:03Z o8p8-mldsa44 n02-r034 issue T=1 rep 1 att 1: ok=1 tps=0.480453484592723 p50=2081.367 ms flags=-
+2026-11-23T05:45:13Z o8p8-mldsa44 n02-r035 issue T=1 rep 4 att 1: ok=1 tps=0.4797495431816454 p50=2084.421 ms flags=-
+2026-11-23T05:45:32Z o8p8-mldsa44 n02-r036 get T=10000 rep 5 att 1: ok=10000 tps=942.802170414204 p50=310.618 ms flags=-
+2026-11-23T05:45:39Z o8p8-mldsa44 n02-r037 get T=10 rep 2 att 1: ok=10 tps=426.1501590371086 p50=20.094 ms flags=-
+2026-11-23T05:45:51Z o8p8-mldsa44 n02-r038 issue T=100 rep 5 att 1: ok=100 tps=31.80883479641446 p50=3120.75 ms flags=-
+2026-11-23T05:45:59Z o8p8-mldsa44 n02-r039 get T=10 rep 4 att 1: ok=10 tps=345.9633121821743 p50=25.41 ms flags=-
+2026-11-23T05:46:07Z o8p8-mldsa44 n02-r040 get T=1 rep 1 att 1: ok=1 tps=115.71177261988694 p50=8.642 ms flags=-
+2026-11-23T05:46:26Z o8p8-mldsa44 n02-r041 get T=10000 rep 3 att 1: ok=10000 tps=879.4704837534659 p50=332.064 ms flags=-
+2026-11-23T05:46:57Z o8p8-mldsa44 n02-r042 issue T=1000 rep 5 att 1: ok=1000 tps=42.53513034901329 p50=7127.723 ms flags=-
+2026-11-23T05:47:16Z o8p8-mldsa44 n02-r043 get T=10000 rep 2 att 1: ok=10000 tps=941.9468363783209 p50=314.587 ms flags=-
+2026-11-23T05:47:25Z o8p8-mldsa44 n02-r044 get T=1000 rep 1 att 1: ok=1000 tps=875.764257573478 p50=335.553 ms flags=-
+2026-11-23T05:47:32Z o8p8-mldsa44 n02-r045 get T=100 rep 1 att 1: ok=100 tps=804.2664857217203 p50=97.391 ms flags=-
+2026-11-23T05:47:40Z o8p8-mldsa44 n02-r046 get T=1 rep 5 att 1: ok=1 tps=118.81571623004861 p50=8.416 ms flags=-
+2026-11-23T05:47:51Z o8p8-mldsa44 n02-r047 issue T=10 rep 3 att 1: ok=10 tps=4.282008881138202 p50=2331.507 ms flags=-
+2026-11-23T05:48:10Z o8p8-mldsa44 n02-r048 get T=10000 rep 4 att 1: ok=10000 tps=898.7517088143743 p50=319.135 ms flags=-
+2026-11-23T05:52:10Z o8p8-mldsa44 n02-r049 issue T=10000 rep 5 att 1: ok=10000 tps=43.03927969809393 p50=7140.168 ms flags=-
+2026-11-23T05:52:42Z o8p8-mldsa44 n02-r050 issue T=1000 rep 1 att 1: ok=1000 tps=40.358246182566475 p50=6801.254 ms flags=-
+2026-11-23T05:54:10Z network o8p8-mldsa44 done (50 runs)
+2026-11-23T05:54:10Z session main-1 finished
